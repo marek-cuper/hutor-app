@@ -9,9 +9,12 @@ class PostController extends Controller
 {
     public function domovGet(Request $request){
         $posts = $request->session()->get('posts', []);
-        $postNum = $request->session()->get('postNum', 1);
+        return view('/domov')->with('post', $posts[0]);
 
-        return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
+        #$posts = $request->session()->get('posts', []);
+        #$postNum = $request->session()->get('postNum', 1);
+
+        #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
     }
 
     public function domov_prispevok_dalsiGet(Request $request){
