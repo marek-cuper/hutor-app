@@ -18,8 +18,16 @@
         <div class="navbar-icon">
             <i class="fa fa-user fa-2x"></i>
         </div>
-        <a href="{{URL::route('odhlasenie') }}" class="navbar-icon">
+        <a id="button-logout" href="{{URL::route('odhlasenie') }}" class="navbar-icon">
             <i class="fa fa-sign-out fa-2x"></i>
         </a>
     </div>
 </div>
+
+<script>
+    var buttonLogout = document.getElementById('button-logout');
+
+    buttonLogout.addEventListener('click', function() {
+        localStorage.removeItem("oldIndex");
+    });
+</script>

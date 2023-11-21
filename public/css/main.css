@@ -188,6 +188,7 @@ html, body {
 
 .home_prispevok_telo{
     display: flex;
+
     flex-direction: column;
     border-radius: 5px;
     padding-bottom: 1.75%;
@@ -252,6 +253,33 @@ html, body {
 
 }
 
+
+.home_prispevok_prieskum2{
+    display: flex;
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+
+.home_prispevok_prieskum_ikona{
+    text-align: center;
+    width: 10%;
+    margin: auto 1%;
+}
+
+.home_prispevok_prieskum_otazka{
+    width: 90%;
+    text-align: center;
+}
+
+.home_prispevok_prieskum_otazka p{
+    float: left;
+    margin-left: 2%;
+
+}
+
 .home_prispevok_prieskum_moznost{
     width: 95%;
     display: flex;
@@ -312,6 +340,19 @@ html, body {
 
 .home_prispevok_pravy_bok i{
     scale: 0.8;
+}
+
+.animate {
+    animation: moveUpDown 2s infinite alternate;
+}
+
+@keyframes moveUpDown {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: calc(100vh - 100px);
+    }
 }
 
 /* Vobec netusim preco icona share hneva */
@@ -502,6 +543,8 @@ input:checked + .slider:before {
     background-color: #ff3d00;
     color: white;
 }
+
+/* Pridaj prispevok */
 
 
 /* Prisposobenie k displayu */

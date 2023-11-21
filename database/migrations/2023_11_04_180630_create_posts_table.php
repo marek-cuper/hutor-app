@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('text');
             $table->string('image_name')->nullable();
+            $table->string('poll_text')->nullable();
         #    $table->unsignedBigInteger('pool_id')->nullable();
         #    $table->unsignedBigInteger('location_id')->nullable();
         #    $table->unsignedBigInteger('comment_section_id')->nullable();

@@ -28,10 +28,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $posts = app('App\Http\Controllers\PostController')->vrat_prispevky();
-            $postNum = 0;
-            $request->session()->put('postNum', $postNum);
             $request->session()->put('posts', $posts);
-
             return redirect()->route('domov');
             #app('App\Http\Controllers\PostController')->domov_prispevokGet($posts->first()->id);
             #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
@@ -64,8 +61,8 @@ class AuthController extends Controller
         return redirect(route(('prihlasenie')))->with(['success', 'Uspesna registracia']);
     }
 
-    function odhlasenie(){
-        #Session::flush();
+    function odhlasenie(Request $request){
+        $request->session()->flush();
         Auth::logout();
         return redirect(route(('prihlasenie')));
     }

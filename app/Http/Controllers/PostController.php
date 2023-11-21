@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Tag;
 
 class PostController extends Controller
 {
     public function domovGet(Request $request){
-        $posts = $request->session()->get('posts', []);
-        return view('/domov')->with('post', $posts[0]);
+        $request->session()->get('posts', []);
+        return view('/domov');
 
         #$posts = $request->session()->get('posts', []);
         #$postNum = $request->session()->get('postNum', 1);
@@ -45,14 +46,16 @@ class PostController extends Controller
     }
 
     public function pridaj_prispevokGet(){
-        return view('pridaj_prispevok');
+        $tags = Tag::all();
+        return view('pridaj_prispevok')->with('tags', $tags);
     }
 
     public function pridaj_prispevokPost(Request $request){
         $request->validate([
             'title' => 'required|string|max:255',
             'text' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:4096', // Adjust image file requirements as needed
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
+            'poll_text' => 'nullable',
         ]);
 
         if ($request->hasFile('image')) {
@@ -65,10 +68,10 @@ class PostController extends Controller
             'title' => $request->input('title'),
             'text' => $request->input('text'),
             'image_name' => $imagePath,
+            'poll_text' => $request->input('poll_text'),
         ]);
 
-        $result = $post->save();
-        #dd($result);
+        $post->save();
 
         return redirect('/domov')->with('success', 'Post created successfully');
     }

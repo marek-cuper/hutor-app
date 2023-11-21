@@ -32,6 +32,29 @@
                     <label><b>Image</b></label>
                     <input type="file" name="image" id="image" class="form-control-file">
                 </div>
+                <div class="prihlasenie_formular_kolonka">
+                    <label><b>Nadpis prieskum</b></label>
+                    <input type="text" name="poll_text" id="poll_text" class="form-control">
+                </div>
+                <div class="prihlasenie_formular_kolonka">
+                    <label><b>Oznacenie prispevku</b></label>
+                    <select id="select-state" placeholder="Vyber oznacenie">
+                        <?php
+
+                        for ($i = 0;
+                             $i < $tags->count();
+                             $i++) {
+                            ?>
+                        <option value={{$tags[$i]->id}}>{{$tags[$i]->name}}</option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="prihlasenie_formular_kolonka">
+
+                </div>
+
                 <button type="submit" class="btn btn-primary">Create Post</button>
             </form>
 
@@ -39,8 +62,12 @@
     </div>
 </div>
 
-
 @include('include.footbar')
+
+<script>
+
+
+</script>
 
 </body>
 </html>

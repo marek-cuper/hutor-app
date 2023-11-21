@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('poll_options', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('poll_id');
+            $table->unsignedBigInteger('post_id');
             $table->string('text');
             $table->string('image_name');
             $table->timestamps();

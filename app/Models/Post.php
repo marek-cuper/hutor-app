@@ -15,6 +15,7 @@ class Post extends Model
         'title',
         'text',
         'image_name',
+        'poll_text',
     #    'pool_id',
     #    'pref_id',
     #    'location_id',
