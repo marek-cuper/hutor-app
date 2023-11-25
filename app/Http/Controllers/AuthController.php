@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Post_tag;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +30,17 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $posts = app('App\Http\Controllers\PostController')->vrat_prispevky();
+            $posts_tags = [];
+            $tags = Tag::all();
+
+            foreach ($posts as $post) {
+                $post_id = $post->id;
+                $posts_tags[$post_id] = Post_tag::all()->where('post_id', $post_id);
+            }
+
             $request->session()->put('posts', $posts);
+            $request->session()->put('posts_tags', $posts_tags);
+            $request->session()->put('tags', $tags);
             return redirect()->route('domov');
             #app('App\Http\Controllers\PostController')->domov_prispevokGet($posts->first()->id);
             #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);

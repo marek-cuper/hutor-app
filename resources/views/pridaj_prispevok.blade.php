@@ -56,7 +56,9 @@
                     <div id="pridaj_prispevok_vybrate_oznacenia">
 
                     </div>
+                    <div id="pridaj_prispevok_skryte_oznacenia" style="display: none;">
 
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Create Post</button>
@@ -69,6 +71,9 @@
 @include('include.footbar')
 
 <script>
+
+    var hiddenInputsDiv = document.getElementById("pridaj_prispevok_skryte_oznacenia");
+
     function pridajOznacenie() {
         // Get the select element
         var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
@@ -77,26 +82,30 @@
         var selectedOption = selectElement.options[selectElement.selectedIndex];
 
         // Create a new div element
-        var newDiv = document.createElement("div");
+        var newTag = document.createElement("div");
+        var newHiddenInput = document.createElement("input");
 
         // Set the text content of the new div to the selected option's text
-        newDiv.className = 'pridaj_prispevok_vybrate_oznacenie';
-        newDiv.textContent = selectedOption.text;
-        newDiv.setAttribute("data-value", selectedOption.value);
-
+        newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
+        newTag.textContent = selectedOption.text;
+        newHiddenInput.value = selectedOption.value;
+        newHiddenInput.name = 'tags[]';
+        newHiddenInput.type = 'number';
 
         // Get the output div by its ID
         var outputDiv = document.getElementById("pridaj_prispevok_vybrate_oznacenia");
 
         // Append the new div to the output div
-        outputDiv.appendChild(newDiv);
+        outputDiv.appendChild(newTag);
+        hiddenInputsDiv.append(newHiddenInput);
 
-        newDiv.addEventListener("click", function() {
+        newTag.addEventListener("click", function() {
             // Show the corresponding option
             selectedOption.style.display = "block";
 
+            hiddenInputsDiv.removeChild(newHiddenInput);
             // Remove the created div
-            outputDiv.removeChild(newDiv);
+            outputDiv.removeChild(newTag);
         });
     }
 

@@ -21,4 +21,9 @@ class Post extends Model
     #    'location_id',
     ];
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
 }

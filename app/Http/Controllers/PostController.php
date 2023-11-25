@@ -56,6 +56,7 @@ class PostController extends Controller
             'text' => 'required',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
             'poll_text' => 'nullable',
+            'tags' => 'nullable',
         ]);
 
         if ($request->hasFile('image')) {
@@ -72,6 +73,9 @@ class PostController extends Controller
         ]);
 
         $post->save();
+
+        $tags = $request->input('tags');
+        $post->tags()->attach($tags);
 
         return redirect('/domov')->with('success', 'Post created successfully');
     }
