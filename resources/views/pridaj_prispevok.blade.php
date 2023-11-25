@@ -38,7 +38,7 @@
                 </div>
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
-                    <select id="select-state" placeholder="Vyber oznacenie">
+                    <select id="pridaj_prispevok_select_oznacenia" placeholder="Vyber oznacenie" onchange="hideSelectedOption()">
                         <?php
 
                         for ($i = 0;
@@ -52,6 +52,10 @@
                     </select>
                 </div>
                 <div class="prihlasenie_formular_kolonka">
+                    <label><b>Vybrate oznacenia</b></label>
+                    <div id="pridaj_prispevok_vybrate_oznacenia">
+
+                    </div>
 
                 </div>
 
@@ -65,7 +69,50 @@
 @include('include.footbar')
 
 <script>
+    function pridajOznacenie() {
+        // Get the select element
+        var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
 
+        // Get the selected option
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        // Create a new div element
+        var newDiv = document.createElement("div");
+
+        // Set the text content of the new div to the selected option's text
+        newDiv.className = 'pridaj_prispevok_vybrate_oznacenie';
+        newDiv.textContent = selectedOption.text;
+        newDiv.setAttribute("data-value", selectedOption.value);
+
+
+        // Get the output div by its ID
+        var outputDiv = document.getElementById("pridaj_prispevok_vybrate_oznacenia");
+
+        // Append the new div to the output div
+        outputDiv.appendChild(newDiv);
+
+        newDiv.addEventListener("click", function() {
+            // Show the corresponding option
+            selectedOption.style.display = "block";
+
+            // Remove the created div
+            outputDiv.removeChild(newDiv);
+        });
+    }
+
+    function hideSelectedOption() {
+        // Get the select element
+        var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
+
+        // Get the selected option
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        // Hide the selected option
+        selectedOption.style.display = "none";
+    }
+
+    // Attach the createDiv function to the change event of the select element
+    document.getElementById("pridaj_prispevok_select_oznacenia").addEventListener("change", pridajOznacenie);
 
 </script>
 

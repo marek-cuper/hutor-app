@@ -545,7 +545,25 @@ input:checked + .slider:before {
 }
 
 /* Pridaj prispevok */
+#pridaj_prispevok_vybrate_oznacenia{
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    margin-top: 1%;
+}
 
+.pridaj_prispevok_vybrate_oznacenie{
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    padding: 0.5%;
+    border-radius: 5%;
+    border: 1px solid #333;
+}
+
+.pridaj_prispevok_vybrate_oznacenie:hover {
+    background-color: #ff3d00;
+    color: white;
+}
 
 /* Prisposobenie k displayu */
 @media (max-width: 1200px){
