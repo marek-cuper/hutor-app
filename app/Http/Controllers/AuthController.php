@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\PostController;
+use function Sodium\add;
 
 class AuthController extends Controller
 {
@@ -35,7 +36,13 @@ class AuthController extends Controller
 
             foreach ($posts as $post) {
                 $post_id = $post->id;
-                $posts_tags[$post_id] = Post_tag::all()->where('post_id', $post_id);
+                $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
+
+                $tags_in_array = [];
+                foreach ($tags_on_post as $tag) {
+                    $tags_in_array[] = $tag->tag_id;
+                }
+                $posts_tags[sizeof($posts_tags)] = $tags_in_array;
             }
 
             $request->session()->put('posts', $posts);

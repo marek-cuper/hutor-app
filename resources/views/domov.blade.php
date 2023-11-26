@@ -37,13 +37,7 @@
             </div>
         </div>
 
-        <div class="home_prispevok_oznacenia">
-            <div class="oznacenie" style="background-color: lightsalmon">
-                Koníček
-            </div>
-            <div class="oznacenie" style="background-color: burlywood">
-                Anketa
-            </div>
+        <div id="home_prispevok_oznacenia" class="home_prispevok_oznacenia">
 
         </div>
     </div>
@@ -59,6 +53,8 @@
     let canScroll = true;
     var index = 0;
     var posts = @json(session('posts'));
+    var posts_tags = @json(session('posts_tags'));
+    var tags = @json(session('tags'));
 
     const divTittle = document.getElementById('nadpis');
     const divText = document.getElementById('text');
@@ -68,6 +64,7 @@
     const divPostWhole = document.getElementById('home_prispevok_telo');
     const divImageWhole = document.getElementById('home_obrazok_prispevok');
     const divPollTextWhole = document.getElementById('home_prispevok_prieskum');
+    const divTagsWhole = document.getElementById('home_prispevok_oznacenia');
 
     function startAnimation() {
         divPostWhole.classList.add('animate');
@@ -136,6 +133,16 @@
             divPollText.textContent = post.poll_text;
         }
 
+        while (divTagsWhole.firstChild) {
+            divTagsWhole.removeChild(divTagsWhole.firstChild);
+        }
+
+        for (let i = 0; i < posts_tags[index].length; i++) {
+            var newTag = document.createElement("div");
+            newTag.className = 'home_prispevok_oznacenie';
+            newTag.textContent = tags.find(tag => tag.id === posts_tags[index][i]).name;
+            divTagsWhole.appendChild(newTag);
+        }
 
         // Save index to localStorage
         localStorage.setItem('oldIndex', index);
