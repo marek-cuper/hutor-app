@@ -82,6 +82,7 @@ html, body {
     width: 100%;
     background-color: white;
     border-bottom:1px solid lightgray;
+    z-index: 2;
 }
 
 #navbar-logo{
@@ -140,6 +141,7 @@ html, body {
     width: 100%;
     background-color: white;
     border-top:1px solid lightgray;
+    z-index: 2;
 }
 
 .footbar_icon{
@@ -162,7 +164,6 @@ html, body {
     height: 85%;
     width: 50%;
     display: inline;
-    transition: transform 0.5s ease-in-out;
 }
 
 .home_prispevok_lavy_bok{
@@ -200,6 +201,8 @@ html, body {
     transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
+    transition: top 0.25s;
+    z-index: 1;
 
 }
 

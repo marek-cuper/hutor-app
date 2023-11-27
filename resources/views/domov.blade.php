@@ -51,6 +51,7 @@
             }else {
                 loadedPosts[2] = null;
             }
+            direction = 1;
             //loadedPosts[1].style.transform = "translateY(-100%)";
             //loadedPosts[0].style.transform = "translateY(-100%)";
         }else {
@@ -68,11 +69,13 @@
             }else {
                 loadedPosts[0] = null;
             }
+            direction = -1;
             //loadedPosts[1].style.transform = "top(100%)";
             //loadedPosts[2].style.transform = "top(100%)";
         }
         localStorage.setItem('oldIndex', index);
-        updateLocation();
+        //updateLocation();
+        animate()
     }
 
     function updateLocation(){
@@ -86,6 +89,29 @@
             loadedPosts[2].style.top = '150%';
         }
     }
+
+    let top0 = -50;
+    let top1 = 50;
+    let top2 = 150;
+    let direction = 1; // 1 for moving down, -1 for moving up
+
+    function animate() {
+
+        // Apply positions
+        if (loadedPosts[0] !== null) {
+            loadedPosts[0].style.top = top0 + '%';
+        }
+
+        loadedPosts[1].style.top = top1 + '%';
+
+        if (loadedPosts[2] !== null) {
+            loadedPosts[2].style.top = top2 + '%';
+        }
+
+        // Request the next animation frame
+        requestAnimationFrame(animate);
+    }
+
 
     function createPost(positionInLoadedPosts){
         let postIndex = parseInt(index) + (parseInt(positionInLoadedPosts) - 1);
