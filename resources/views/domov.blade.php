@@ -13,34 +13,9 @@
 <body>
 @include('include.navbar')
 
-<div class="home_prispevok" onscroll="changeBackgroundColor()">
-
-    <div id="home_prispevok_telo" class="home_prispevok_telo" onclick="">
-        <div class="home_nadpis_prispevok">
-            <p id="nadpis"></p>
-        </div>
-        <div class="home_popis_prispevok">
-            <p id="text"></p>
-            <div class="fadeout"></div>
-        </div>
-        <div id="home_obrazok_prispevok" class="home_obrazok_prispevok">
-            <img id="obrazok" src="" alt="" style="max-width: 250px; max-height: 250px;">
-        </div>
+<div id="home_container" class="home_prispevok">
 
 
-        <div id="home_prispevok_prieskum" class="home_prispevok_prieskum2">
-            <div class="home_prispevok_prieskum_ikona">
-                <i class="fa fa-pie-chart fa-2x"></i>
-            </div>
-            <div class="home_prispevok_prieskum_otazka">
-                <p id="prieskum_text"></p>
-            </div>
-        </div>
-
-        <div id="home_prispevok_oznacenia" class="home_prispevok_oznacenia">
-
-        </div>
-    </div>
 
 </div>
 
@@ -51,27 +26,174 @@
 
     // Listen for the scroll event
     let canScroll = true;
-    var index = 0;
+    let index = 0;
     var posts = @json(session('posts'));
     var posts_tags = @json(session('posts_tags'));
     var tags = @json(session('tags'));
 
-    const divTittle = document.getElementById('nadpis');
-    const divText = document.getElementById('text');
-    const divImage = document.getElementById('obrazok');
-    const divPollText = document.getElementById('prieskum_text');
+    var loadedPosts = [];
+    const homeContainer = document.getElementById('home_container');
 
-    const divPostWhole = document.getElementById('home_prispevok_telo');
-    const divImageWhole = document.getElementById('home_obrazok_prispevok');
-    const divPollTextWhole = document.getElementById('home_prispevok_prieskum');
-    const divTagsWhole = document.getElementById('home_prispevok_oznacenia');
+    function updateLoadPosts(next){
+        //position 0-is previous, 1 is actuall and 2 is next post
+        if(next){
+            if (loadedPosts[0] !== null) {
+                while (loadedPosts[0].firstChild) {
+                    loadedPosts[0].removeChild(loadedPosts[0].firstChild);
+                }
+                loadedPosts[0].parentNode.removeChild(loadedPosts[0]);
+            }
 
-    function startAnimation() {
-        divPostWhole.classList.add('animate');
+            loadedPosts[0] = loadedPosts[1];
+            loadedPosts[1] = loadedPosts[2];
+            if(posts.length - 1 > index ){
+                createPost(2);
+            }else {
+                loadedPosts[2] = null;
+            }
+            //loadedPosts[1].style.transform = "translateY(-100%)";
+            //loadedPosts[0].style.transform = "translateY(-100%)";
+        }else {
+            if (loadedPosts[2] !== null) {
+                while (loadedPosts[2].firstChild) {
+                    loadedPosts[2].removeChild(loadedPosts[2].firstChild);
+                }
+                loadedPosts[2].parentNode.removeChild(loadedPosts[2]);
+            }
+
+            loadedPosts[2] = loadedPosts[1];
+            loadedPosts[1] = loadedPosts[0];
+            if(0 < index){
+                createPost(0);
+            }else {
+                loadedPosts[0] = null;
+            }
+            //loadedPosts[1].style.transform = "top(100%)";
+            //loadedPosts[2].style.transform = "top(100%)";
+        }
+        localStorage.setItem('oldIndex', index);
+        updateLocation();
     }
 
-    function stopAnimation() {
-        divPostWhole.classList.remove('animate');
+    function updateLocation(){
+        if (loadedPosts[0] !== null) {
+            loadedPosts[0].style.top = '-50%';
+        }
+        if (loadedPosts[1] !== null) {
+            loadedPosts[1].style.top = '50%';
+        }
+        if (loadedPosts[2] !== null) {
+            loadedPosts[2].style.top = '150%';
+        }
+    }
+
+    function createPost(positionInLoadedPosts){
+        let postIndex = parseInt(index) + (parseInt(positionInLoadedPosts) - 1);
+        const post = posts[postIndex];
+
+        // Create the main container div
+        const containerDiv = document.createElement('div');
+        containerDiv.id = 'home_prispevok_telo' + post.id;
+        containerDiv.className = 'home_prispevok_telo home_prispevok_telo';
+
+// Create the nadpis (title) div
+        const nadpisDiv = document.createElement('div');
+        nadpisDiv.className = 'home_nadpis_prispevok';
+        const nadpisParagraph = document.createElement('p');
+        nadpisParagraph.id = 'nadpis' + post.id;
+        nadpisParagraph.textContent = post.title;
+        nadpisDiv.appendChild(nadpisParagraph);
+
+// Create the popis (description) div
+        const popisDiv = document.createElement('div');
+        popisDiv.className = 'home_popis_prispevok';
+        const textParagraph = document.createElement('p');
+        textParagraph.id = 'text' + post.id;
+        textParagraph.textContent = post.text.substring(0, 350);
+        popisDiv.appendChild(textParagraph);
+        const fadeoutDiv = document.createElement('div');
+        fadeoutDiv.className = 'fadeout';
+        popisDiv.appendChild(fadeoutDiv);
+
+// Create the obrazok (image) div
+        const obrazokDiv = document.createElement('div');
+        obrazokDiv.id = 'home_obrazok_prispevok' + post.id;
+        obrazokDiv.className = 'home_obrazok_prispevok';
+        const obrazokImage = document.createElement('img');
+        obrazokImage.id = 'obrazok' + post.id;
+        if(post.image_name == null){
+            obrazokDiv.style.display = "none";
+        }else {
+            obrazokDiv.style.display = "block";
+            obrazokImage.src = '/storage/' + post.image_name;
+        }
+        obrazokImage.alt = '';
+        obrazokImage.style.maxWidth = '250px';
+        obrazokImage.style.maxHeight = '250px';
+        obrazokDiv.appendChild(obrazokImage);
+
+// Create the prieskum (chart) div
+        const prieskumDiv = document.createElement('div');
+        prieskumDiv.id = 'home_prispevok_prieskum' + post.id;
+        prieskumDiv.className = 'home_prispevok_prieskum2';
+        const prieskumIkonaDiv = document.createElement('div');
+        prieskumIkonaDiv.className = 'home_prispevok_prieskum_ikona';
+        const ikonaElement = document.createElement('i');
+        ikonaElement.className = 'fa fa-pie-chart fa-2x';
+        prieskumIkonaDiv.appendChild(ikonaElement);
+        const prieskumOtazkaDiv = document.createElement('div');
+        prieskumOtazkaDiv.className = 'home_prispevok_prieskum_otazka';
+        const prieskumTextParagraph = document.createElement('p');
+        prieskumTextParagraph.id = 'prieskum_text' + post.id;
+        if(post.poll_text == null){
+            prieskumDiv.style.display = "none";
+        }else {
+            prieskumDiv.style.display = "flex";
+            prieskumTextParagraph.textContent = post.poll_text;
+        }
+        prieskumOtazkaDiv.appendChild(prieskumTextParagraph);
+        prieskumDiv.appendChild(prieskumIkonaDiv);
+        prieskumDiv.appendChild(prieskumOtazkaDiv);
+
+
+// Create the oznacenia (tags) div
+        const oznaceniaDiv = document.createElement('div');
+        oznaceniaDiv.id = 'home_prispevok_oznacenia' + post.id;
+        oznaceniaDiv.className = 'home_prispevok_oznacenia';
+
+        while (oznaceniaDiv.firstChild) {
+            oznaceniaDiv.removeChild(divTagsWhole.firstChild);
+        }
+
+        for (let i = 0; i < posts_tags[postIndex].length; i++) {
+            var newTag = document.createElement("div");
+            newTag.className = 'home_prispevok_oznacenie';
+            newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
+            oznaceniaDiv.appendChild(newTag);
+        }
+
+
+// Append all created elements to the main container
+        containerDiv.appendChild(nadpisDiv);
+        containerDiv.appendChild(popisDiv);
+        containerDiv.appendChild(obrazokDiv);
+        containerDiv.appendChild(prieskumDiv);
+        containerDiv.appendChild(oznaceniaDiv);
+
+// Append the main container to the document body or any other desired parent element
+        homeContainer.appendChild(containerDiv);
+
+        loadedPosts[positionInLoadedPosts] = containerDiv;
+
+        if(positionInLoadedPosts === 0){
+            containerDiv.style.top = '-50%';
+        }
+        if(positionInLoadedPosts === 1){
+            containerDiv.style.top = '50%';
+        }
+        if(positionInLoadedPosts === 2){
+            containerDiv.style.top = '150%';
+        }
     }
 
     window.addEventListener("wheel", (event) => {
@@ -83,13 +205,16 @@
         if (event.deltaY > 0) {
             if(posts.length - 1 > index ){
                 index++;
-                updatePost(index);
+                updateLoadPosts(true);
+                //updatePost(index);
+
             }
 
         } else if (event.deltaY < 0) {
             if(0 < index){
                 index--;
-                updatePost(index);
+                updateLoadPosts(false);
+                //updatePost(index);
             }
         }
 
@@ -106,47 +231,21 @@
             index = oldIndex;
         }
 
-        updatePost(index);
+        loadedPosts[0] = null;
+        loadedPosts[1] = null;
+        loadedPosts[2] = null;
+
+
+        if (index > 0){
+            createPost(0);
+        }
+        createPost(1);
+        if (index < posts.length - 1){
+            createPost(2);
+        }
 
     });
 
-    function updatePost(index) {
-        const post = posts[index];
-
-        // Update elements in the DOM
-        divTittle.textContent = post.title;
-        divText.textContent = post.text.substring(0, 350);
-        divImage.src = '/storage/' + post.image_name;
-        divPollText.textContent = post.poll_text;
-
-        if(post.image_name == null){
-            divImageWhole.style.display = "none";
-        }else {
-            divImageWhole.style.display = "block";
-            divImage.src = '/storage/' + post.image_name;
-        }
-
-        if(post.poll_text == null){
-            divPollTextWhole.style.display = "none";
-        }else {
-            divPollTextWhole.style.display = "flex";
-            divPollText.textContent = post.poll_text;
-        }
-
-        while (divTagsWhole.firstChild) {
-            divTagsWhole.removeChild(divTagsWhole.firstChild);
-        }
-
-        for (let i = 0; i < posts_tags[index].length; i++) {
-            var newTag = document.createElement("div");
-            newTag.className = 'home_prispevok_oznacenie';
-            newTag.textContent = tags.find(tag => tag.id === posts_tags[index][i]).name;
-            divTagsWhole.appendChild(newTag);
-        }
-
-        // Save index to localStorage
-        localStorage.setItem('oldIndex', index);
-    }
 
 </script>
 

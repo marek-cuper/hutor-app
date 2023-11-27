@@ -9,7 +9,7 @@ use App\Models\Tag;
 class PostController extends Controller
 {
     public function domovGet(Request $request){
-        $request->session()->get('posts', []);
+        //$request->session()->get('posts', []);
         return view('/domov');
 
         #$posts = $request->session()->get('posts', []);

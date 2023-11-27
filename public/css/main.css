@@ -161,7 +161,8 @@ html, body {
     text-align: center;
     height: 85%;
     width: 50%;
-    display: flex;
+    display: inline;
+    transition: transform 0.5s ease-in-out;
 }
 
 .home_prispevok_lavy_bok{
@@ -188,13 +189,17 @@ html, body {
 
 .home_prispevok_telo{
     display: flex;
-
     flex-direction: column;
     border-radius: 5px;
     padding-bottom: 1.75%;
     border:2px solid lightgray;
-    width: 100%;
+    height: 80%;
+    width: 50%;
     background-color: white;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
 
 }
 
@@ -585,7 +590,6 @@ input:checked + .slider:before {
     }
 
     .home_prispevok{
-
         width: 60%;
     }
     .home_prispevok_telo img{
