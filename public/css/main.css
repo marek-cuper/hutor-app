@@ -251,6 +251,10 @@ html, body {
     max-height: 35vh;
     max-width: 35vh;
 }
+.home_obrazok_prispevok img{
+    max-height: 350px;
+    max-width: 350px;
+}
 
 .home_prispevok_prieskum{
     margin-left: auto;
@@ -285,6 +289,7 @@ html, body {
 .home_prispevok_prieskum_otazka p{
     float: left;
     margin-left: 2%;
+    font-size: 2vh;
 
 }
 
@@ -323,6 +328,7 @@ html, body {
     display: flex;
     width: 100%;
     margin-top: auto;
+    overflow-x: auto;
 
 }
 .home_prispevok_oznacenie{
@@ -334,6 +340,7 @@ html, body {
     padding-right: 1%;
     border-radius: 5px;
     border: 1px solid #333;
+    white-space: nowrap;
 }
 
 .home_prispevok_pravy_bok{
@@ -483,8 +490,8 @@ input:checked + .slider:before {
 }
 
 .preferencia_oznacenie_ikona_zakaz i{
-    margin-top: 8%;
-    margin-left: 14%;
+    margin-top: 10%;
+    margin-left: 16%;
     scale: 0.9;
     color: black;
 }
@@ -567,6 +574,7 @@ input:checked + .slider:before {
     padding: 0.5%;
     border-radius: 5%;
     border: 1px solid #333;
+    white-space: nowrap;
 }
 
 .pridaj_prispevok_vybrate_oznacenie:hover {
@@ -592,12 +600,12 @@ input:checked + .slider:before {
         width: 40%;
     }
 
-    .home_prispevok{
+    .home_prispevok_telo{
         width: 60%;
     }
-    .home_prispevok_telo img{
-        max-height: 30vh;
-        max-width: 30vh;
+    .home_obrazok_prispevok img{
+        max-height: 300px;
+        max-width: 300px;
     }
     #footbar i {
         transform: scale(0.8);
@@ -630,12 +638,12 @@ input:checked + .slider:before {
     .prihlasenie_stranka_formular{
         transform: scale(1.5);
     }
-    .home_prispevok{
+    .home_prispevok_telo{
         width: 75%;
     }
-    .home_prispevok_telo img{
-        max-height: 25vh;
-        max-width: 25vh;
+    .home_obrazok_prispevok img{
+        max-height: 250px;
+        max-width: 250px;
     }
     #footbar i {
         transform: scale(0.7);
@@ -678,13 +686,13 @@ input:checked + .slider:before {
     .prihlasenie_stranka_idea img{
         transform: scale(0.5);
     }
-    .home_prispevok{
+    .home_prispevok_telo{
         width: 85%;
         height: 80%;
     }
-    .home_prispevok_telo img{
-        max-height: 20vh;
-        max-width: 20vh;
+    .home_obrazok_prispevok img{
+        max-height: 200px;
+        max-width: 200px;
     }
     #footbar i {
         transform: scale(0.6);
@@ -705,6 +713,11 @@ input:checked + .slider:before {
     }
     .home_prispevok_prieskum{
         width: 80%;
+    }
+    .home_prispevok_prieskum_otazka p{
+        font-size: 1.5vh;
+        margin-left: 15px;
+
     }
     .home_prispevok_icon_pozadie{
         transform: scale(0.8);

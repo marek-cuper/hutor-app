@@ -7,7 +7,7 @@
         <i class="fa fa-globe fa-3x"></i>
     </a>
 
-    <a class="footbar_icon icon {{ Request::is('preferencie') ? 'active_footbar_icon' : 'inactive_footbar_icon' }}" href="{{ route('preferencie') }}">
+    <a class="footbar_icon icon {{ Request::is('prefe   rencie') ? 'active_footbar_icon' : 'inactive_footbar_icon' }}" href="{{ route('preferencie') }}">
         <i class="fa fa-tasks fa-3x"></i>
     </a>
 

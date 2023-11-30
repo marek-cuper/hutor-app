@@ -93,7 +93,6 @@
     let top0 = -50;
     let top1 = 50;
     let top2 = 150;
-    let direction = 1; // 1 for moving down, -1 for moving up
 
     function animate() {
 
@@ -111,6 +110,56 @@
         // Request the next animation frame
         requestAnimationFrame(animate);
     }
+
+    window.addEventListener("wheel", (event) => {
+        if (!canScroll) {
+            return;
+        }
+        canScroll = false;
+
+        if (event.deltaY > 0) {
+            if(posts.length - 1 > index ){
+                index++;
+                updateLoadPosts(true);
+                //updatePost(index);
+
+            }
+
+        } else if (event.deltaY < 0) {
+            if(0 < index){
+                index--;
+                updateLoadPosts(false);
+                //updatePost(index);
+            }
+        }
+
+        // Set a timeout to re-enable scrolling after a delay (e.g., 1000 milliseconds)
+        setTimeout(() => {
+            canScroll = true;
+        }, 450);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var oldIndex = localStorage.getItem('oldIndex');
+
+        if (oldIndex !== null) {
+            index = oldIndex;
+        }
+
+        loadedPosts[0] = null;
+        loadedPosts[1] = null;
+        loadedPosts[2] = null;
+
+
+        if (index > 0){
+            createPost(0);
+        }
+        createPost(1);
+        if (index < posts.length - 1){
+            createPost(2);
+        }
+
+    });
 
 
     function createPost(positionInLoadedPosts){
@@ -154,8 +203,7 @@
             obrazokImage.src = '/storage/' + post.image_name;
         }
         obrazokImage.alt = '';
-        obrazokImage.style.maxWidth = '250px';
-        obrazokImage.style.maxHeight = '250px';
+
         obrazokDiv.appendChild(obrazokImage);
 
 // Create the prieskum (chart) div
@@ -221,56 +269,6 @@
             containerDiv.style.top = '150%';
         }
     }
-
-    window.addEventListener("wheel", (event) => {
-        if (!canScroll) {
-            return;
-        }
-        canScroll = false;
-
-        if (event.deltaY > 0) {
-            if(posts.length - 1 > index ){
-                index++;
-                updateLoadPosts(true);
-                //updatePost(index);
-
-            }
-
-        } else if (event.deltaY < 0) {
-            if(0 < index){
-                index--;
-                updateLoadPosts(false);
-                //updatePost(index);
-            }
-        }
-
-        // Set a timeout to re-enable scrolling after a delay (e.g., 1000 milliseconds)
-        setTimeout(() => {
-            canScroll = true;
-        }, 450);
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var oldIndex = localStorage.getItem('oldIndex');
-
-        if (oldIndex !== null) {
-            index = oldIndex;
-        }
-
-        loadedPosts[0] = null;
-        loadedPosts[1] = null;
-        loadedPosts[2] = null;
-
-
-        if (index > 0){
-            createPost(0);
-        }
-        createPost(1);
-        if (index < posts.length - 1){
-            createPost(2);
-        }
-
-    });
 
 
 </script>

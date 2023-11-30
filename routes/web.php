@@ -16,14 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/preferencie', function () {
-    return view('preferencie');
-})->name('preferencie');
 
 Route::get('/spravy', function () {
     return view('spravy');
 })->name('spravy');
 
+#TAG
+Route::get('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieGet'])->name('preferencie');
 
 #POST
 Route::get('/domov', [\App\Http\Controllers\PostController::class, 'domovGet'])->name('domov');
