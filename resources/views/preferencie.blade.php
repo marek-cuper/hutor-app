@@ -48,6 +48,8 @@
 <script>
 
     var tags = @json(session('tags'));
+    var user_tags_pref = @json(session('user_tags_pref'));
+    var user_tags_block = @json(session('user_tags_block'));
 
     const prefSwitchsContainer = document.getElementById('prepinace_preferencie');
 
@@ -62,15 +64,25 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < tags.length; i++) {
-            createTag(tags[i].name, 'neutral')
+            if(user_tags_pref.includes(tags[i].id)){
+                createTag(tags[i].id ,tags[i].name, 'prefer')
+            }
+            else if(user_tags_block.includes(tags[i].id)){
+                createTag(tags[i].id ,tags[i].name, 'block')
+            }
+            else {
+                createTag(tags[i].id ,tags[i].name, 'neutral')
+            }
+
         }
 
     });
 
-    function createTag(tagName, choosedOption){
+    function createTag(tagId, tagName, choosedOption){
         // Create div elements
         const preferenciaOznacenieTelo = document.createElement("div");
         preferenciaOznacenieTelo.classList.add("preferencia_oznacenie_telo");
+        preferenciaOznacenieTelo.id = 'pref' + tagId;
 
         const sportParagraph = document.createElement("p");
         sportParagraph.textContent = tagName;

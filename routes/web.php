@@ -24,6 +24,7 @@ Route::get('/spravy', function () {
 #TAG
 Route::get('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieGet'])->name('preferencie');
 
+
 #POST
 Route::get('/domov', [\App\Http\Controllers\PostController::class, 'domovGet'])->name('domov');
 Route::get('/domov/prispevok/dalsi', [\App\Http\Controllers\PostController::class, 'domov_prispevok_dalsiGet'])->name('domov_dalsi');
