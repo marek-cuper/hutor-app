@@ -31,21 +31,28 @@
             <i class="fa fa-map fa-3x"></i>
         </div>
     </div>
+    <form action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
+        @csrf
 
-    <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
+        <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
 
-    <div class="preferencie_tlacitka_okno">
-        <button class="preferencie_tlacitko_uloz">ULOZ</button>
+        <div class="preferencie_tlacitka_okno">
+            <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
 
-        <button class="preferencie_tlacitko_reset">RESET</button>
+            <button class="preferencie_tlacitko_reset">RESET</button>
 
-    </div>
+        </div>
+
+
+    </form>
 </div>
 
 
 @include('include.footbar')
 
 <script>
+
+
 
     var tags = @json(session('tags'));
     var user_tags_pref = @json(session('user_tags_pref'));
@@ -65,24 +72,32 @@
     document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < tags.length; i++) {
             if(user_tags_pref.includes(tags[i].id)){
-                createTag(tags[i].id ,tags[i].name, 'prefer')
+                createTag(tags[i].id ,tags[i].name, 1)
             }
             else if(user_tags_block.includes(tags[i].id)){
-                createTag(tags[i].id ,tags[i].name, 'block')
+                createTag(tags[i].id ,tags[i].name, -1)
             }
             else {
-                createTag(tags[i].id ,tags[i].name, 'neutral')
+                createTag(tags[i].id ,tags[i].name, 0)
             }
 
         }
 
     });
 
+    //choosedOption -1 blokovat, 0 neutral, 1 je preferuje
     function createTag(tagId, tagName, choosedOption){
         // Create div elements
         const preferenciaOznacenieTelo = document.createElement("div");
         preferenciaOznacenieTelo.classList.add("preferencia_oznacenie_telo");
         preferenciaOznacenieTelo.id = 'pref' + tagId;
+
+        var hiddenInput = document.createElement("input");
+        hiddenInput.name = 'user_tags[]';
+        hiddenInput.type = 'number';
+        hiddenInput.value = choosedOption;
+        hiddenInput.style.display = "none";
+        preferenciaOznacenieTelo.appendChild(hiddenInput);
 
         const sportParagraph = document.createElement("p");
         sportParagraph.textContent = tagName;
@@ -97,6 +112,7 @@
         zakazFontAwesome.classList.add("fa", "fa-ban", "fa-2x");
 
         zakazIkona.appendChild(zakazFontAwesome);
+        zakazIkona.addEventListener('click', function(){setHiddenInput(preferenciaOznacenieTelo, -1)});
 
         const neutralIkona = document.createElement("div");
         neutralIkona.classList.add("preferencia_oznacenie_ikona_neutral");
@@ -105,6 +121,7 @@
         neutralFontAwesome.classList.add("fa", "fa-minus", "fa-2x");
 
         neutralIkona.appendChild(neutralFontAwesome);
+        neutralIkona.addEventListener('click', function(){setHiddenInput(preferenciaOznacenieTelo, 0)});
 
         const oblubenaIkona = document.createElement("div");
         oblubenaIkona.classList.add("preferencia_oznacenie_ikona_oblubena");
@@ -113,16 +130,17 @@
         oblubenaFontAwesome.classList.add("fa", "fa-heart", "fa-2x");
 
         zakazIkona.addEventListener("click", () =>
-            chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, 'block')
+            chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, -1)
         );
         neutralIkona.addEventListener("click", () =>
-            chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, 'neutral')
+            chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, 0)
         );
         oblubenaIkona.addEventListener("click", () =>
-            chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, 'prefer')
+            chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, 1)
         );
 
         oblubenaIkona.appendChild(oblubenaFontAwesome);
+        oblubenaIkona.addEventListener('click', function(){setHiddenInput(preferenciaOznacenieTelo, 1)});
 
         chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, choosedOption)
 
@@ -136,14 +154,14 @@
     }
 
     function chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, choosedOption){
-        if(choosedOption === 'block'){
+        if(choosedOption === -1){
             zakazIkona.style.backgroundColor = blockBackColour;
             zakazFontAwesome.style.color = chooseIconColour;
             neutralIkona.style.backgroundColor = AnyBackColour;
             neutralFontAwesome.style.color = notChooseIconColour;
             oblubenaIkona.style.backgroundColor = AnyBackColour;
             oblubenaFontAwesome.style.color = notChooseIconColour;
-        }else if(choosedOption === 'neutral'){
+        }else if(choosedOption === 0){
             zakazIkona.style.backgroundColor = AnyBackColour;
             zakazFontAwesome.style.color = notChooseIconColour;
             neutralIkona.style.backgroundColor = neutralBackColour;
@@ -158,6 +176,11 @@
             oblubenaIkona.style.backgroundColor = PreferBackColour;
             oblubenaFontAwesome.style.color = chooseIconColour;
         }
+    }
+
+    function setHiddenInput(fatherDiv, value){
+        const inputElement = fatherDiv.querySelector('input');
+        inputElement.value = value;
     }
 </script>
 </body>

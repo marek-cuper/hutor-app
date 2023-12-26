@@ -451,7 +451,7 @@ input:checked + .slider:before {
     border-radius: 5px;
     border:2px solid lightgray;
     width: 100%;
-    height: 80%;
+    /*height: 80%;*/
     overflow: auto;
 }
 
@@ -534,6 +534,7 @@ input:checked + .slider:before {
     display: flex;
     justify-content: space-around;
     margin-top: 2%;
+    margin-bottom: 10%;
 }
 
 .preferencie_tlacitko_uloz, .preferencie_tlacitko_reset {
@@ -631,6 +632,7 @@ input:checked + .slider:before {
     }
     .preferencie_tlacitka_okno{
         margin-top: 2.5%;
+        margin-bottom: 13%;
     }
 }
 
@@ -675,6 +677,7 @@ input:checked + .slider:before {
     }
     .preferencie_tlacitka_okno{
         margin-top: 3%;
+        margin-bottom: 17%;
     }
 }
 
@@ -733,6 +736,7 @@ input:checked + .slider:before {
     }
     .preferencie_tlacitka_okno{
         margin-top: 4%;
+        margin-bottom: 20%;
     }
 }
 
