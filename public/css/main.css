@@ -446,6 +446,32 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
+#mapa_preferencie{
+    position: relative;
+    background-color: white;
+    border-radius: 5px;
+    border:2px solid lightgray;
+    width: 475px;
+    height: 280px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 5%;
+}
+
+#mapa_preferencie img{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.mapa_preferencie :hover{
+    fill: #00b0ff;
+}
+#map_form .prihlasenie_formular_kolonka{
+    width: 475px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .prepinace_preferencie{
     background-color: white;
     border-radius: 5px;
@@ -583,6 +609,21 @@ input:checked + .slider:before {
     color: white;
 }
 
+#mapa_stranka{
+    position: relative;
+    display: inline;
+    height: 80%;
+    width: 90%;
+    margin: auto;
+}
+
+#mapa_stranka #mapa_area{
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 /* Prisposobenie k displayu */
 @media (max-width: 1200px){
     .prihlasenie_stranka{
@@ -637,6 +678,14 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 900px){
+    #mapa_preferencie{
+        width: 265px;
+        height: 160px;
+    }
+    #map_form .prihlasenie_formular_kolonka{
+        width: 265px;
+    }
+
     .prihlasenie_stranka_formular{
         transform: scale(1.5);
     }

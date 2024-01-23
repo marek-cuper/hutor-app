@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User_tag;
 use Illuminate\Http\Request;
@@ -24,7 +25,6 @@ class TagController extends Controller
         }
         $request->session()->put('user_tags_pref', $user_tags_pref);
         $request->session()->put('user_tags_block', $user_tags_block);
-
 
         return view('/preferencie');
     }
@@ -80,4 +80,15 @@ class TagController extends Controller
         return view('/preferencie');
         //$this->pouzivatelPreferencieGet($request);
     }
+
+    public function pouzivatelMapGet(Request $request){
+
+        return view('/map');
+    }
+
+    public function pouzivatelMapSet(Request $request){
+
+        return view('/preferencie');
+    }
+
 }

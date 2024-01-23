@@ -24,6 +24,8 @@ Route::get('/spravy', function () {
 #TAG
 Route::get('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieGet'])->name('preferencie');
 Route::post('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieSet'])->name('preferencie.post');
+Route::get('/map', [\App\Http\Controllers\TagController::class, 'pouzivatelMapGet'])->name('map');
+Route::post('/map', [\App\Http\Controllers\TagController::class, 'pouzivatelMapSet'])->name('map.post');
 
 #POST
 Route::get('/domov', [\App\Http\Controllers\PostController::class, 'domovGet'])->name('domov');

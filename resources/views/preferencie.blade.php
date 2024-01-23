@@ -23,7 +23,7 @@
 
         <!-- Rounded switch -->
         <label class="switch">
-            <input type="checkbox">
+            <input type="checkbox" id="mapSwitch">
             <span class="slider"></span>
         </label>
 
@@ -31,7 +31,7 @@
             <i class="fa fa-map fa-3x"></i>
         </div>
     </div>
-    <form action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
+    <form id="pref_form" action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
@@ -42,8 +42,44 @@
             <button class="preferencie_tlacitko_reset">RESET</button>
 
         </div>
+    </form>
 
 
+    <div id="mapa_preferencie" class="mapa_preferencie">
+
+        <img id="sk_regs" src="{{ asset('images/regions/Slovak_reg_map_trans.png') }}">
+
+        <img id="reg1" src="{{ asset('images/regions/org_reg1.png') }}">
+        <img id="reg2" src="{{ asset('images/regions/org_reg2.png') }}">
+        <img id="reg3" src="{{ asset('images/regions/org_reg3.png') }}">
+        <img id="reg4" src="{{ asset('images/regions/org_reg4.png') }}">
+
+    </div>
+    <form id="map_form" action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
+        @csrf
+
+        <div class="prihlasenie_formular_kolonka">
+            <label><b>Regiony na vyber:</b></label>
+            <select id="pridaj_prispevok_select_oznacenia" placeholder="Vyber region(max 5)" onchange="hideSelectedOption()">
+                <option value="" disabled selected>Vyber region(max 5)</option>
+            </select>
+        </div>
+        <div class="prihlasenie_formular_kolonka">
+            <label><b>Vybrate preferovane regiony:</b></label>
+            <div id="pridaj_prispevok_vybrate_oznacenia">
+
+            </div>
+            <div id="pridaj_prispevok_skryte_oznacenia" style="display: none;">
+
+            </div>
+        </div>
+
+        <div class="preferencie_tlacitka_okno">
+            <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
+
+            <button class="preferencie_tlacitko_reset">RESET</button>
+
+        </div>
     </form>
 </div>
 
@@ -52,13 +88,29 @@
 
 <script>
 
-
-
     var tags = @json(session('tags'));
     var user_tags_pref = @json(session('user_tags_pref'));
     var user_tags_block = @json(session('user_tags_block'));
 
+    var regions = @json(session('regions'));
+
     const prefSwitchsContainer = document.getElementById('prepinace_preferencie');
+    const mapSwitch = document.getElementById('mapSwitch');
+
+    const prefForm = document.getElementById('pref_form');
+    const mapForm = document.getElementById('map_form');
+    const mapPref = document.getElementById('mapa_preferencie');
+
+    const reg1 = document.getElementById('reg1');
+    const reg2 = document.getElementById('reg2');
+    const reg3 = document.getElementById('reg3');
+    const reg4 = document.getElementById('reg4');
+
+    const regionsDiv = [reg1, reg2, reg3, reg4];
+
+    mapForm.style.display = "none";
+    mapPref.style.display = "none";
+
 
     let blockBackColour = '#ff3d00';
     let neutralBackColour = '#00b0ff';
@@ -67,6 +119,24 @@
 
     let chooseIconColour = 'white';
     let notChooseIconColour = 'black';
+
+
+    mapSwitch.addEventListener('change', function () {
+        // Check the current state of the switch
+        if (mapSwitch.checked) {
+            prefForm.style.display = "none";
+            mapForm.style.display = "block";
+            mapPref.style.display = "block";
+
+            //regionsDiv.forEach(function (region) {
+            //    region.style.display = "none";
+            //});
+        } else {
+            prefForm.style.display = "block";
+            mapForm.style.display = "none";
+            mapPref.style.display = "none";
+        }
+    });
 
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -80,9 +150,10 @@
             else {
                 createTag(tags[i].id ,tags[i].name, 0)
             }
-
         }
-
+        for (let i = 0; i < regions.length; i++) {
+            createRegion(regions[i].id, regions[i].name);
+        }
     });
 
     //choosedOption -1 blokovat, 0 neutral, 1 je preferuje
@@ -178,10 +249,74 @@
         }
     }
 
+    var outputDiv = document.getElementById("pridaj_prispevok_vybrate_oznacenia");
+    var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
+
+
     function setHiddenInput(fatherDiv, value){
         const inputElement = fatherDiv.querySelector('input');
         inputElement.value = value;
     }
+
+    //map
+    function createRegion(regId, regName){
+        var newRegion = document.createElement("option");
+        newRegion.value=regId;
+        newRegion.textContent=regName;
+        selectElement.appendChild(newRegion);
+    }
+
+    var hiddenInputsDiv = document.getElementById("pridaj_prispevok_skryte_oznacenia");
+
+    function pridajOznacenie() {
+
+        if(outputDiv.childElementCount <5){
+
+
+            // Get the selected option
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // Create a new div element
+            var newTag = document.createElement("div");
+            var newHiddenInput = document.createElement("input");
+
+            // Set the text content of the new div to the selected option's text
+            newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
+            newTag.textContent = selectedOption.text;
+            newHiddenInput.value = selectedOption.value;
+            newHiddenInput.name = 'regions[]';
+            newHiddenInput.type = 'number';
+
+
+            // Append the new div to the output div
+            outputDiv.appendChild(newTag);
+            hiddenInputsDiv.append(newHiddenInput);
+
+            newTag.addEventListener("click", function() {
+                // Show the corresponding option
+                selectedOption.style.display = "block";
+
+                hiddenInputsDiv.removeChild(newHiddenInput);
+                // Remove the created div
+                outputDiv.removeChild(newTag);
+            });
+        }
+    }
+
+    function hideSelectedOption() {
+        // Get the select element
+        if(outputDiv.childElementCount < 5){
+
+            // Get the selected option
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // Hide the selected option
+            selectedOption.style.display = "none";
+        }
+    }
+
+    // Attach the createDiv function to the change event of the select element
+    document.getElementById("pridaj_prispevok_select_oznacenia").addEventListener("change", pridajOznacenie);
 </script>
 </body>
 </html>

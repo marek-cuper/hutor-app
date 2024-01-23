@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Post_tag;
+use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class AuthController extends Controller
             $posts = app('App\Http\Controllers\PostController')->vrat_prispevky();
             $posts_tags = [];
             $tags = Tag::all();
+            $regions = Region::all();
 
             foreach ($posts as $post) {
                 $post_id = $post->id;
@@ -48,6 +50,7 @@ class AuthController extends Controller
             $request->session()->put('posts', $posts);
             $request->session()->put('posts_tags', $posts_tags);
             $request->session()->put('tags', $tags);
+            $request->session()->put('regions', $regions);
             return redirect()->route('domov');
             #app('App\Http\Controllers\PostController')->domov_prispevokGet($posts->first()->id);
             #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
