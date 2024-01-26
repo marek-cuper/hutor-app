@@ -7,6 +7,8 @@ use App\Models\Post_tag;
 use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\User_region;
+use App\Models\User_tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,10 +34,14 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $posts = app('App\Http\Controllers\PostController')->vrat_prispevky();
-            $posts_tags = [];
             $tags = Tag::all();
             $regions = Region::all();
 
+            $request->session()->put('posts', $posts);
+            $request->session()->put('tags', $tags);
+            $request->session()->put('regions', $regions);
+
+            $posts_tags = [];
             foreach ($posts as $post) {
                 $post_id = $post->id;
                 $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
@@ -47,10 +53,26 @@ class AuthController extends Controller
                 $posts_tags[sizeof($posts_tags)] = $tags_in_array;
             }
 
-            $request->session()->put('posts', $posts);
             $request->session()->put('posts_tags', $posts_tags);
-            $request->session()->put('tags', $tags);
-            $request->session()->put('regions', $regions);
+
+            $user_tags_pref = [];
+            $user_tags_block = [];
+            $user_tags = (User_tag::all()->where('user_id', Auth::user()->id));
+            foreach ($user_tags as $tag) {
+                if($tag->tag_status === 1){
+                    $user_tags_pref[] = $tag->tag_id;
+                } else{
+                    $user_tags_block[] = $tag->tag_id;
+                }
+            }
+
+            $request->session()->put('user_tags_pref', $user_tags_pref);
+            $request->session()->put('user_tags_block', $user_tags_block);
+
+            $user_regions = (User_region::all()->where('user_id', Auth::user()->id));
+            $request->session()->put('user_regions', $user_regions);
+
+
             return redirect()->route('domov');
             #app('App\Http\Controllers\PostController')->domov_prispevokGet($posts->first()->id);
             #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);

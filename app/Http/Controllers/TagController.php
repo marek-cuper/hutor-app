@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Region;
 use App\Models\Tag;
+use App\Models\User_region;
 use App\Models\User_tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,20 +13,6 @@ use function Sodium\add;
 class TagController extends Controller
 {
     public function pouzivatelPreferencieGet(Request $request){
-        $user_tags_pref = [];
-        $user_tags_block = [];
-
-        $user_tags = (User_tag::all()->where('user_id', Auth::user()->id));
-        foreach ($user_tags as $tag) {
-            if($tag->tag_status === 1){
-                $user_tags_pref[] = $tag->tag_id;
-            } else{
-                $user_tags_block[] = $tag->tag_id;
-            }
-        }
-        $request->session()->put('user_tags_pref', $user_tags_pref);
-        $request->session()->put('user_tags_block', $user_tags_block);
-
         return view('/preferencie');
     }
 
@@ -81,12 +68,29 @@ class TagController extends Controller
         //$this->pouzivatelPreferencieGet($request);
     }
 
-    public function pouzivatelMapGet(Request $request){
+    public function pouzivatelRegionySet(Request $request){
+        $request->validate([
+            'user_regions' => 'nullable',
+        ]);
 
-        return view('/map');
-    }
+        $user_regions = $request->input('user_regions');
+        $regions = $request->input('regions');
 
-    public function pouzivatelMapSet(Request $request){
+        $old_user_reg = User_region::all()->where('user_id', Auth::user()->id)->first();
+        while ($old_user_reg != null){
+            $old_user_reg->delete();
+            $old_user_reg = User_region::all()->where('user_id', Auth::user()->id)->first();
+        }
+
+        if($user_regions !== null){
+            for ($x = 0; $x < sizeof($user_regions); $x++) {
+                $user_reg = new User_region([
+                    'user_id' => Auth::user()->id,
+                    'region_id' => $user_regions[$x],
+                ]);
+                $user_reg->save();
+            }
+        }
 
         return view('/preferencie');
     }

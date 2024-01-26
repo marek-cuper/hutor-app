@@ -55,21 +55,21 @@
         <img id="reg4" src="{{ asset('images/regions/org_reg4.png') }}">
 
     </div>
-    <form id="map_form" action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
+    <form id="map_form" action="{{ route('regiony.post') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="prihlasenie_formular_kolonka">
             <label><b>Regiony na vyber:</b></label>
-            <select id="pridaj_prispevok_select_oznacenia" placeholder="Vyber region(max 5)" onchange="hideSelectedOption()">
+            <select id="select_regiony" placeholder="Vyber region(max 5)" onchange="hideSelectedOption()">
                 <option value="" disabled selected>Vyber region(max 5)</option>
             </select>
         </div>
         <div class="prihlasenie_formular_kolonka">
             <label><b>Vybrate preferovane regiony:</b></label>
-            <div id="pridaj_prispevok_vybrate_oznacenia">
+            <div id="vybrate_regiony">
 
             </div>
-            <div id="pridaj_prispevok_skryte_oznacenia" style="display: none;">
+            <div id="skryte_regiony" style="display: none;">
 
             </div>
         </div>
@@ -93,6 +93,7 @@
     var user_tags_block = @json(session('user_tags_block'));
 
     var regions = @json(session('regions'));
+    var user_regions = @json(session('user_regions'));
 
     const prefSwitchsContainer = document.getElementById('prepinace_preferencie');
     const mapSwitch = document.getElementById('mapSwitch');
@@ -100,6 +101,10 @@
     const prefForm = document.getElementById('pref_form');
     const mapForm = document.getElementById('map_form');
     const mapPref = document.getElementById('mapa_preferencie');
+
+    var selectDivRegions = document.getElementById("select_regiony");
+    var selectedRegions = document.getElementById("vybrate_regiony");
+    var hiddenInputsDivRegions = document.getElementById("skryte_regiony");
 
     const reg1 = document.getElementById('reg1');
     const reg2 = document.getElementById('reg2');
@@ -128,9 +133,9 @@
             mapForm.style.display = "block";
             mapPref.style.display = "block";
 
-            //regionsDiv.forEach(function (region) {
-            //    region.style.display = "none";
-            //});
+            regionsDiv.forEach(function (region) {
+                region.style.display = "none";
+            });
         } else {
             prefForm.style.display = "block";
             mapForm.style.display = "none";
@@ -153,6 +158,9 @@
         }
         for (let i = 0; i < regions.length; i++) {
             createRegion(regions[i].id, regions[i].name);
+        }
+        for (let i = 0; i < user_regions.length; i++) {
+            selectDivRegions.selectedIndex = user_regions[i].id;
         }
     });
 
@@ -249,8 +257,7 @@
         }
     }
 
-    var outputDiv = document.getElementById("pridaj_prispevok_vybrate_oznacenia");
-    var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
+
 
 
     function setHiddenInput(fatherDiv, value){
@@ -263,18 +270,16 @@
         var newRegion = document.createElement("option");
         newRegion.value=regId;
         newRegion.textContent=regName;
-        selectElement.appendChild(newRegion);
+        selectDivRegions.appendChild(newRegion);
     }
 
-    var hiddenInputsDiv = document.getElementById("pridaj_prispevok_skryte_oznacenia");
+    function pridajRegion() {
 
-    function pridajOznacenie() {
-
-        if(outputDiv.childElementCount <5){
+        if(selectedRegions.childElementCount <5){
 
 
             // Get the selected option
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
 
             // Create a new div element
             var newTag = document.createElement("div");
@@ -284,31 +289,31 @@
             newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
             newTag.textContent = selectedOption.text;
             newHiddenInput.value = selectedOption.value;
-            newHiddenInput.name = 'regions[]';
+            newHiddenInput.name = 'user_regions[]';
             newHiddenInput.type = 'number';
 
 
             // Append the new div to the output div
-            outputDiv.appendChild(newTag);
-            hiddenInputsDiv.append(newHiddenInput);
+            selectedRegions.appendChild(newTag);
+            hiddenInputsDivRegions.append(newHiddenInput);
 
             newTag.addEventListener("click", function() {
                 // Show the corresponding option
                 selectedOption.style.display = "block";
 
-                hiddenInputsDiv.removeChild(newHiddenInput);
+                hiddenInputsDivRegions.removeChild(newHiddenInput);
                 // Remove the created div
-                outputDiv.removeChild(newTag);
+                selectedRegions.removeChild(newTag);
             });
         }
     }
 
     function hideSelectedOption() {
         // Get the select element
-        if(outputDiv.childElementCount < 5){
+        if(selectedRegions.childElementCount < 5){
 
             // Get the selected option
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
 
             // Hide the selected option
             selectedOption.style.display = "none";
@@ -316,7 +321,7 @@
     }
 
     // Attach the createDiv function to the change event of the select element
-    document.getElementById("pridaj_prispevok_select_oznacenia").addEventListener("change", pridajOznacenie);
+    document.getElementById("select_regiony").addEventListener("change", pridajRegion);
 </script>
 </body>
 </html>
