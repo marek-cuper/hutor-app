@@ -145,6 +145,7 @@
 
 
     document.addEventListener('DOMContentLoaded', function() {
+        //Add all tags as a option and adding their status from database
         for (let i = 0; i < tags.length; i++) {
             if(user_tags_pref.includes(tags[i].id)){
                 createTag(tags[i].id ,tags[i].name, 1)
@@ -156,12 +157,17 @@
                 createTag(tags[i].id ,tags[i].name, 0)
             }
         }
+
+        //Add all regions as a option and adding choosen regions from database
         for (let i = 0; i < regions.length; i++) {
             createRegion(regions[i].id, regions[i].name);
         }
         for (let i = 0; i < user_regions.length; i++) {
-            selectDivRegions.selectedIndex = user_regions[i].id;
+            selectDivRegions.selectedIndex = user_regions[i];
+            pridajRegion();
+            hideSelectedOption();
         }
+        selectDivRegions.selectedIndex = "";
     });
 
     //choosedOption -1 blokovat, 0 neutral, 1 je preferuje
@@ -282,28 +288,28 @@
             var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
 
             // Create a new div element
-            var newTag = document.createElement("div");
+            var newReg = document.createElement("div");
             var newHiddenInput = document.createElement("input");
 
             // Set the text content of the new div to the selected option's text
-            newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
-            newTag.textContent = selectedOption.text;
+            newReg.className = 'pridaj_prispevok_vybrate_oznacenie';
+            newReg.textContent = selectedOption.text;
             newHiddenInput.value = selectedOption.value;
             newHiddenInput.name = 'user_regions[]';
             newHiddenInput.type = 'number';
 
 
             // Append the new div to the output div
-            selectedRegions.appendChild(newTag);
+            selectedRegions.appendChild(newReg);
             hiddenInputsDivRegions.append(newHiddenInput);
 
-            newTag.addEventListener("click", function() {
+            newReg.addEventListener("click", function() {
                 // Show the corresponding option
                 selectedOption.style.display = "block";
 
                 hiddenInputsDivRegions.removeChild(newHiddenInput);
                 // Remove the created div
-                selectedRegions.removeChild(newTag);
+                selectedRegions.removeChild(newReg);
             });
         }
     }

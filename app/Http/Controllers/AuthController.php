@@ -52,9 +52,10 @@ class AuthController extends Controller
                 }
                 $posts_tags[sizeof($posts_tags)] = $tags_in_array;
             }
-
             $request->session()->put('posts_tags', $posts_tags);
 
+
+            //Setting tags chosen be user to session
             $user_tags_pref = [];
             $user_tags_block = [];
             $user_tags = (User_tag::all()->where('user_id', Auth::user()->id));
@@ -65,17 +66,19 @@ class AuthController extends Controller
                     $user_tags_block[] = $tag->tag_id;
                 }
             }
-
             $request->session()->put('user_tags_pref', $user_tags_pref);
             $request->session()->put('user_tags_block', $user_tags_block);
 
-            $user_regions = (User_region::all()->where('user_id', Auth::user()->id));
+            //Setting regions chosen be user to session
+            $user_regions = [];
+            $user_regions_dbs = (User_region::all()->where('user_id', Auth::user()->id));
+            foreach ($user_regions_dbs as $reg) {
+                $user_regions[] = $reg->region_id;
+            }
             $request->session()->put('user_regions', $user_regions);
 
 
             return redirect()->route('domov');
-            #app('App\Http\Controllers\PostController')->domov_prispevokGet($posts->first()->id);
-            #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
         }
 
         return redirect(route('prihlasenie'))->with('error', 'Invalid Credentials!');

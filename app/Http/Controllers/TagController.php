@@ -21,9 +21,9 @@ class TagController extends Controller
             'user_tags' => 'nullable',
         ]);
 
-        $user_tags = $request->input('user_tags');
+        $user_tags_input = $request->input('user_tags');
         $tags = Tag::all();
-        if(sizeof($tags) === sizeof($user_tags)){
+        if(sizeof($tags) === sizeof($user_tags_input)){
             //delete all old tags for specific user
 
             $old_user_tag = User_tag::all()->where('user_id', Auth::user()->id)->first();
@@ -37,7 +37,7 @@ class TagController extends Controller
             $user_tags_block = [];
 
             for ($x = 0; $x < sizeof($tags); $x++) {
-                if($user_tags[$x] === '1'){
+                if($user_tags_input[$x] === '1'){
                     $user_tag = new User_tag([
                         'user_id' => Auth::user()->id,
                         'tag_id' => $tags[$x]->id,
@@ -47,7 +47,7 @@ class TagController extends Controller
                     $user_tag->save();
                     $user_tags_pref[] = $tags[$x]->id;
                 }
-                if($user_tags[$x] === '-1'){
+                if($user_tags_input[$x] === '-1'){
                     $user_tag = new User_tag([
                         'user_id' => Auth::user()->id,
                         'tag_id' => $tags[$x]->id,
@@ -73,8 +73,7 @@ class TagController extends Controller
             'user_regions' => 'nullable',
         ]);
 
-        $user_regions = $request->input('user_regions');
-        $regions = $request->input('regions');
+        $user_regions_input = $request->input('user_regions');
 
         $old_user_reg = User_region::all()->where('user_id', Auth::user()->id)->first();
         while ($old_user_reg != null){
@@ -82,15 +81,20 @@ class TagController extends Controller
             $old_user_reg = User_region::all()->where('user_id', Auth::user()->id)->first();
         }
 
-        if($user_regions !== null){
-            for ($x = 0; $x < sizeof($user_regions); $x++) {
+        $user_regions = [];
+
+        if($user_regions_input !== null){
+            for ($x = 0; $x < sizeof($user_regions_input); $x++) {
                 $user_reg = new User_region([
                     'user_id' => Auth::user()->id,
-                    'region_id' => $user_regions[$x],
+                    'region_id' => $user_regions_input[$x],
                 ]);
                 $user_reg->save();
+                $user_regions[] = $user_regions_input[$x];
             }
         }
+
+        $request->session()->put('user_regions', $user_regions);
 
         return view('/preferencie');
     }
