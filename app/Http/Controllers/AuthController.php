@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Post_region;
 use App\Models\Post_tag;
 use App\Models\Region;
 use App\Models\Tag;
@@ -42,17 +43,26 @@ class AuthController extends Controller
             $request->session()->put('regions', $regions);
 
             $posts_tags = [];
+            $posts_regions = [];
             foreach ($posts as $post) {
                 $post_id = $post->id;
                 $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
+                $regions_on_post = (Post_region::all()->where('post_id', $post_id));
 
                 $tags_in_array = [];
                 foreach ($tags_on_post as $tag) {
                     $tags_in_array[] = $tag->tag_id;
                 }
                 $posts_tags[sizeof($posts_tags)] = $tags_in_array;
+
+                $regions_in_array = [];
+                foreach ($regions_on_post as $region) {
+                    $regions_in_array[] = $region->region_id;
+                }
+                $posts_regions[sizeof($posts_regions)] = $regions_in_array;
             }
             $request->session()->put('posts_tags', $posts_tags);
+            $request->session()->put('posts_regions', $posts_regions);
 
 
             //Setting tags chosen be user to session

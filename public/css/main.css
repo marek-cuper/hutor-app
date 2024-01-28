@@ -327,13 +327,36 @@ html, body {
     float: left;
     display: flex;
     width: 100%;
+    height: 40px;
     margin-top: auto;
     overflow-x: auto;
 
 }
 .home_prispevok_oznacenie{
     font-size: 1.8vh;
-    margin-top: 2%;
+    margin-top: auto;
+    margin-bottom: 0.5%;
+    margin-left: 0.8%;
+    margin-right: 0;
+    padding-left: 1%;
+    padding-right: 1%;
+    border-radius: 5px;
+    border: 1px solid #333;
+    white-space: nowrap;
+}
+
+.home_prispevok_regiony{
+    float: right;
+    display: flex;
+    width: 100%;
+    height: 40px;
+    margin-top: auto;
+    overflow-x: auto;
+
+}
+.home_prispevok_region{
+    font-size: 1.8vh;
+    margin-bottom: 1%;
     margin-left: 0.8%;
     margin-right: 0;
     padding-left: 1%;
@@ -610,14 +633,14 @@ input:checked + .slider:before {
 }
 
 /* Pridaj prispevok */
-#pridaj_prispevok_vybrate_oznacenia{
+#pridaj_prispevok_vybrate_oznacenia, #pridaj_prispevok_vybrate_regiony{
     width: 100%;
     display: flex;
     overflow-x: auto;
     margin-top: 1%;
 }
 
-.pridaj_prispevok_vybrate_oznacenie{
+.pridaj_prispevok_vybrate_oznacenie, .pridaj_prispevok_vybraty_region{
     margin-left: 0.5%;
     margin-right: 0.5%;
     padding: 0.5%;
@@ -626,7 +649,7 @@ input:checked + .slider:before {
     white-space: nowrap;
 }
 
-.pridaj_prispevok_vybrate_oznacenie:hover {
+.pridaj_prispevok_vybrate_oznacenie:hover, .pridaj_prispevok_vybraty_region:hover {
     background-color: #ff3d00;
     color: white;
 }

@@ -77,6 +77,11 @@ class PostController extends Controller
         $tags = $request->input('tags');
         $post->tags()->attach($tags);
 
+        if($request->input('regions') != null){
+            $regions = $request->input('regions');
+            $post->regions()->attach($regions);
+        }
+
         return redirect('/domov')->with('success', 'Post created successfully');
     }
 

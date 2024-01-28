@@ -281,7 +281,7 @@
 
     function pridajRegion() {
 
-        if(selectedRegions.childElementCount <5){
+        if(selectedRegions.childElementCount < 5){
 
 
             // Get the selected option

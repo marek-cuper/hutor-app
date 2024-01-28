@@ -29,7 +29,10 @@
     let index = 0;
     var posts = @json(session('posts'));
     var posts_tags = @json(session('posts_tags'));
+    var posts_regions = @json(session('posts_regions'));
+
     var tags = @json(session('tags'));
+    var regions = @json(session('regions'));
 
     var loadedPosts = [];
     const homeContainer = document.getElementById('home_container');
@@ -230,29 +233,44 @@
         prieskumDiv.appendChild(prieskumOtazkaDiv);
 
 
-// Create the oznacenia (tags) div
-        const oznaceniaDiv = document.createElement('div');
-        oznaceniaDiv.id = 'home_prispevok_oznacenia' + post.id;
-        oznaceniaDiv.className = 'home_prispevok_oznacenia';
-
-        while (oznaceniaDiv.firstChild) {
-            oznaceniaDiv.removeChild(divTagsWhole.firstChild);
-        }
-
-        for (let i = 0; i < posts_tags[postIndex].length; i++) {
-            var newTag = document.createElement("div");
-            newTag.className = 'home_prispevok_oznacenie';
-            newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
-            oznaceniaDiv.appendChild(newTag);
-        }
-
-
-// Append all created elements to the main container
+        // Append all created elements to the main container
         containerDiv.appendChild(nadpisDiv);
         containerDiv.appendChild(popisDiv);
         containerDiv.appendChild(obrazokDiv);
         containerDiv.appendChild(prieskumDiv);
-        containerDiv.appendChild(oznaceniaDiv);
+
+
+        // Create the oznacenia (tags) div
+        if(posts_tags[postIndex].length > 0){
+            const oznaceniaDiv = document.createElement('div');
+            oznaceniaDiv.id = 'home_prispevok_oznacenia' + post.id;
+            oznaceniaDiv.className = 'home_prispevok_oznacenia';
+
+            for (let i = 0; i < posts_tags[postIndex].length; i++) {
+                var newTag = document.createElement("div");
+                newTag.className = 'home_prispevok_oznacenie';
+                newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
+                oznaceniaDiv.appendChild(newTag);
+            }
+            containerDiv.appendChild(oznaceniaDiv);
+        }
+
+        // Create the regiony (regions) div
+        if(posts_regions[postIndex].length > 0){
+            const regionyDiv = document.createElement('div');
+            regionyDiv.id = 'home_prispevok_regiony' + post.id;
+            regionyDiv.className = 'home_prispevok_regiony';
+
+
+            for (let i = 0; i < posts_regions[postIndex].length; i++) {
+                var newReg = document.createElement("div");
+                newReg.className = 'home_prispevok_region';
+                newReg.textContent = regions.find(region => region.id === posts_regions[postIndex][i]).name;
+                regionyDiv.appendChild(newReg);
+            }
+
+            containerDiv.appendChild(regionyDiv);
+        }
 
 // Append the main container to the document body or any other desired parent element
         homeContainer.appendChild(containerDiv);

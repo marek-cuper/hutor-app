@@ -36,19 +36,11 @@
                     <label><b>Nadpis prieskum</b></label>
                     <input type="text" name="poll_text" id="poll_text" class="form-control">
                 </div>
+
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
-                    <select id="pridaj_prispevok_select_oznacenia" placeholder="Vyber oznacenie" onchange="hideSelectedOption()">
-                        <?php
-
-                        for ($i = 0;
-                             $i < $tags->count();
-                             $i++) {
-                            ?>
-                        <option value={{$tags[$i]->id}}>{{$tags[$i]->name}}</option>
-                            <?php
-                        }
-                        ?>
+                    <select id="pridaj_prispevok_select_oznacenia" onchange="hideSelectedOptionTags()">
+                        <option value="" disabled selected>Vyber oznacenia(max 10)</option>
                     </select>
                 </div>
                 <div class="prihlasenie_formular_kolonka">
@@ -57,6 +49,22 @@
 
                     </div>
                     <div id="pridaj_prispevok_skryte_oznacenia" style="display: none;">
+
+                    </div>
+                </div>
+
+                <div class="prihlasenie_formular_kolonka">
+                    <label><b>Oznacenie prispevku</b></label>
+                    <select id="pridaj_prispevok_select_regiony" onchange="hideSelectedOptionRegions()">
+                        <option value="" disabled selected>Vyber regiony(max 5)</option>
+                    </select>
+                </div>
+                <div class="prihlasenie_formular_kolonka">
+                    <label><b>Vybrate regiony</b></label>
+                    <div id="pridaj_prispevok_vybrate_regiony">
+
+                    </div>
+                    <div id="pridaj_prispevok_skryte_regiony" style="display: none;">
 
                     </div>
                 </div>
@@ -72,49 +80,129 @@
 
 <script>
 
-    var hiddenInputsDiv = document.getElementById("pridaj_prispevok_skryte_oznacenia");
+    var tags = @json(session('tags'));
+    var regions = @json(session('regions'));
 
-    function pridajOznacenie() {
-        // Get the select element
-        var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
+    var selectDivTags = document.getElementById("pridaj_prispevok_select_oznacenia");
+    var hiddenInputsDivTags = document.getElementById("pridaj_prispevok_skryte_oznacenia");
+    var selectedTags = document.getElementById("pridaj_prispevok_vybrate_oznacenia");
 
-        // Get the selected option
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var selectDivRegions = document.getElementById("pridaj_prispevok_select_regiony");
+    var hiddenInputsDivRegions = document.getElementById("pridaj_prispevok_skryte_regiony");
+    var selectedRegions = document.getElementById("pridaj_prispevok_vybrate_regiony");
 
-        // Create a new div element
-        var newTag = document.createElement("div");
-        var newHiddenInput = document.createElement("input");
+    document.addEventListener('DOMContentLoaded', function() {
+        //Add all tags options
+        for (let i = 0; i < tags.length; i++) {
+            createTag(tags[i].id, tags[i].name)
+        }
+        selectDivTags.selectedIndex = "";
 
-        // Set the text content of the new div to the selected option's text
-        newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
-        newTag.textContent = selectedOption.text;
-        newHiddenInput.value = selectedOption.value;
-        newHiddenInput.name = 'tags[]';
-        newHiddenInput.type = 'number';
+        //Add all regions option
+        for (let i = 0; i < regions.length; i++) {
+            createRegion(regions[i].id, regions[i].name);
+        }
+        selectDivRegions.selectedIndex = "";
+    });
 
-        // Get the output div by its ID
-        var outputDiv = document.getElementById("pridaj_prispevok_vybrate_oznacenia");
-
-        // Append the new div to the output div
-        outputDiv.appendChild(newTag);
-        hiddenInputsDiv.append(newHiddenInput);
-
-        newTag.addEventListener("click", function() {
-            // Show the corresponding option
-            selectedOption.style.display = "block";
-
-            hiddenInputsDiv.removeChild(newHiddenInput);
-            // Remove the created div
-            outputDiv.removeChild(newTag);
-        });
+    function createTag(tagId, tagName){
+        var newTag = document.createElement("option");
+        newTag.value=tagId;
+        newTag.textContent=tagName;
+        selectDivTags.appendChild(newTag);
     }
 
-    function hideSelectedOption() {
-        // Get the select element
-        var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
+    function createRegion(regId, regName){
+        var newRegion = document.createElement("option");
+        newRegion.value=regId;
+        newRegion.textContent=regName;
+        selectDivRegions.appendChild(newRegion);
+    }
 
+
+    function pridajOznacenie() {
+
+        if(selectedTags.childElementCount < 10){
+            // Get the select element
+            var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
+
+            // Get the selected option
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // Create a new div element
+            var newTag = document.createElement("div");
+            var newHiddenInput = document.createElement("input");
+
+            // Set the text content of the new div to the selected option's text
+            newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
+            newTag.textContent = selectedOption.text;
+            newHiddenInput.value = selectedOption.value;
+            newHiddenInput.name = 'tags[]';
+            newHiddenInput.type = 'number';
+
+
+            // Append the new div to the output div
+            selectedTags.appendChild(newTag);
+            hiddenInputsDivTags.append(newHiddenInput);
+
+            newTag.addEventListener("click", function() {
+                // Show the corresponding option
+                selectedOption.style.display = "block";
+
+                hiddenInputsDivTags.removeChild(newHiddenInput);
+                // Remove the created div
+                selectedTags.removeChild(newTag);
+            });
+        }
+
+    }
+
+    function pridajRegion() {
+
+        if(selectedRegions.childElementCount < 5){
+
+
+            // Get the selected option
+            var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
+
+            // Create a new div element
+            var newReg = document.createElement("div");
+            var newHiddenInput = document.createElement("input");
+
+            // Set the text content of the new div to the selected option's text
+            newReg.className = 'pridaj_prispevok_vybraty_region';
+            newReg.textContent = selectedOption.text;
+            newHiddenInput.value = selectedOption.value;
+            newHiddenInput.name = 'regions[]';
+            newHiddenInput.type = 'number';
+
+
+            // Append the new div to the output div
+            selectedRegions.appendChild(newReg);
+            hiddenInputsDivRegions.append(newHiddenInput);
+
+            newReg.addEventListener("click", function() {
+                // Show the corresponding option
+                selectedOption.style.display = "block";
+
+                hiddenInputsDivRegions.removeChild(newHiddenInput);
+                // Remove the created div
+                selectedRegions.removeChild(newReg);
+            });
+        }
+    }
+
+    function hideSelectedOptionTags() {
         // Get the selected option
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var selectedOption = selectDivTags.options[selectDivTags.selectedIndex];
+
+        // Hide the selected option
+        selectedOption.style.display = "none";
+    }
+
+    function hideSelectedOptionRegions() {
+        // Get the selected option
+        var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
 
         // Hide the selected option
         selectedOption.style.display = "none";
@@ -122,6 +210,7 @@
 
     // Attach the createDiv function to the change event of the select element
     document.getElementById("pridaj_prispevok_select_oznacenia").addEventListener("change", pridajOznacenie);
+    document.getElementById("pridaj_prispevok_select_regiony").addEventListener("change", pridajRegion);
 
 </script>
 

@@ -26,4 +26,9 @@ class Post extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function regions()
+    {
+        return $this->belongsToMany(Region::class);
+    }
+
 }
