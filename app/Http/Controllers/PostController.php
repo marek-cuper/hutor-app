@@ -18,6 +18,13 @@ class PostController extends Controller
         #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
     }
 
+    public function domov_zobrazeniePost(Request $request){
+        $post_id = $request->input('post_id');
+
+
+        return response()->json(['success' => true]);
+    }
+
     public function domov_prispevok_dalsiGet(Request $request){
         $posts = $request->session()->get('posts', []);
         $postNum = $request->session()->get('postNum', 1);

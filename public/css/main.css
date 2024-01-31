@@ -400,6 +400,59 @@ html, body {
     margin-top: 5%;
 }
 
+/*Home zobrazenie*/
+.home_zobrazenie_telo{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding-bottom: 1.75%;
+    border:2px solid lightgray;
+    height: 80%;
+    width: 80%;
+    background-color: white;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    overflow-y:scroll;
+
+    scroll-behavior: smooth;
+    flex:1;
+
+}
+
+.home_zobrazenie_telo .home_nadpis_prispevok {
+    height: 100%;
+}
+
+.home_zobrazenie_telo .home_popis_prispevok {
+    height: 100%;
+    padding-bottom: 3%;
+}
+
+.home_zobrazenie_telo .home_obrazok_prispevok {
+    height: 100%;
+}
+
+.home_zobrazenie_telo img{
+    max-height: 70vh;
+    max-width: 70vh;
+}
+
+.home_zobrazenie_telo .home_prispevok_prieskum2 {
+    height: 100%;
+}
+
+.home_zobrazenie_telo .home_prispevok_oznacenia {
+    height: 100%;
+    padding-top: 1%;
+}
+
+.home_zobrazenie_telo .home_prispevok_regiony {
+    height: 100%;
+    padding-bottom: 1%;
+}
+
 /* Stranka s preferenciami */
 .preferencie_stranka{
     display: inline;
