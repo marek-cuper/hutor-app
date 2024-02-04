@@ -32,8 +32,11 @@
     let canScroll = true;
     let index = 0;
     var posts = @json(session('posts'));
+    var posts_images = @json(session('posts_images'));
     var posts_tags = @json(session('posts_tags'));
     var posts_regions = @json(session('posts_regions'));
+
+    var show_posts_images = @json(session('show_posts_images'));
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -57,6 +60,7 @@
             method: 'POST',
             data: { id_post: post_id, _token: '{{ csrf_token() }}' },
             success: function () {
+                show_posts_images = @json(session('show_posts_images'));
                 showPost();
 
             },
@@ -72,9 +76,6 @@
 
         //Showing part
         loadedPosts[1].style.display = "none";
-
-
-
     }
 
     function createShowingPost(){
@@ -107,17 +108,17 @@
         const obrazokDiv = document.createElement('div');
         obrazokDiv.id = 'home_obrazok_prispevok' + post.id;
         obrazokDiv.className = 'home_obrazok_prispevok';
-        const obrazokImage = document.createElement('img');
-        obrazokImage.id = 'obrazok' + post.id;
-        if(post.image_name == null){
-            obrazokDiv.style.display = "none";
-        }else {
-            obrazokDiv.style.display = "block";
-            obrazokImage.src = '/storage/' + post.image_name;
-        }
-        obrazokImage.alt = '';
+        alert(show_posts_images.length);
+        for (let i = 0; i < show_posts_images.length; i++) {
+            const obrazokImage = document.createElement('img');
+            obrazokImage.id = 'obrazok' + post.id + ':' + i;
 
-        obrazokDiv.appendChild(obrazokImage);
+            obrazokDiv.style.display = "block";
+            obrazokImage.src = '/storage/' + show_posts_images[i];
+            obrazokImage.alt = '';
+
+            obrazokDiv.appendChild(obrazokImage);
+        }
 
 // Create the prieskum (chart) div
         const prieskumDiv = document.createElement('div');
@@ -359,11 +360,11 @@
         obrazokDiv.className = 'home_obrazok_prispevok';
         const obrazokImage = document.createElement('img');
         obrazokImage.id = 'obrazok' + post.id;
-        if(post.image_name == null){
+        if(posts_images[postIndex] == null){
             obrazokDiv.style.display = "none";
         }else {
             obrazokDiv.style.display = "block";
-            obrazokImage.src = '/storage/' + post.image_name;
+            obrazokImage.src = '/storage/' + posts_images[postIndex];
         }
         obrazokImage.alt = '';
 

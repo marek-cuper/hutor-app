@@ -12,13 +12,14 @@ class Post extends Model
     protected $table = 'posts';
 
     protected $fillable = [
+        'up_votes',
+        'down_votes',
+        'watched',
+        'openned',
+        'creator_id',
         'title',
         'text',
-        'image_name',
-        'poll_text',
-    #    'pool_id',
-    #    'pref_id',
-    #    'location_id',
+        'poll_text'
     ];
 
     public function tags()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Post_image;
 use App\Models\Post_region;
 use App\Models\Post_tag;
 use App\Models\Region;
@@ -42,10 +43,12 @@ class AuthController extends Controller
             $request->session()->put('tags', $tags);
             $request->session()->put('regions', $regions);
 
+            $posts_images = [];
             $posts_tags = [];
             $posts_regions = [];
             foreach ($posts as $post) {
                 $post_id = $post->id;
+                $posts_images[sizeof($posts_images)] = (Post_image::all()->where(['post_id', $post_id], 'order', 0))->first()->image_name;
                 $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
                 $regions_on_post = (Post_region::all()->where('post_id', $post_id));
 
@@ -61,6 +64,7 @@ class AuthController extends Controller
                 }
                 $posts_regions[sizeof($posts_regions)] = $regions_in_array;
             }
+            $request->session()->put('posts_images', $posts_images);
             $request->session()->put('posts_tags', $posts_tags);
             $request->session()->put('posts_regions', $posts_regions);
 

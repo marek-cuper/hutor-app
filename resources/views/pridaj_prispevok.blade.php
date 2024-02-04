@@ -30,7 +30,7 @@
                 </div>
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Image</b></label>
-                    <input type="file" name="image" id="image" class="form-control-file">
+                    <input type="file" name="images[]" id="images" class="form-control-file" multiple>
                 </div>
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Nadpis prieskum</b></label>

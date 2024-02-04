@@ -13,19 +13,17 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-        #    $table->unsignedBigInteger('up_votes');
-        #    $table->unsignedBigInteger('down_votes');
-        #    $table->unsignedBigInteger('watched');
-        #    $table->unsignedBigInteger('openned');
-        #    $table->unsignedBigInteger('creator');
+            $table->unsignedBigInteger('up_votes');
+            $table->unsignedBigInteger('down_votes');
+            $table->unsignedBigInteger('watched');
+            $table->unsignedBigInteger('openned');
+            $table->unsignedBigInteger('creator_id');
             $table->string('title');
             $table->text('text');
-            $table->string('image_name')->nullable();
             $table->string('poll_text')->nullable();
-        #    $table->unsignedBigInteger('pool_id')->nullable();
-        #    $table->unsignedBigInteger('location_id')->nullable();
-        #    $table->unsignedBigInteger('comment_section_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
