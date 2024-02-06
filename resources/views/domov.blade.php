@@ -36,7 +36,7 @@
     var posts_tags = @json(session('posts_tags'));
     var posts_regions = @json(session('posts_regions'));
 
-    var show_posts_images = @json(session('show_posts_images'));
+    var show_posts_images = [];
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -54,13 +54,12 @@
         scrollListener = false;
         var post_id = posts[index].id;
 
-        // Make an AJAX request to the server
         $.ajax({
-            url: '/domov/zobrazenie', // Replace with your server endpoint
+            url: '/domov/zobrazenie',
             method: 'POST',
-            data: { id_post: post_id, _token: '{{ csrf_token() }}' },
-            success: function () {
-                show_posts_images = @json(session('show_posts_images'));
+            data: { post_id: post_id, _token: '{{ csrf_token() }}' },
+            success: function (response) {
+                show_posts_images = response.show_posts_images;
                 showPost();
 
             },
@@ -108,7 +107,6 @@
         const obrazokDiv = document.createElement('div');
         obrazokDiv.id = 'home_obrazok_prispevok' + post.id;
         obrazokDiv.className = 'home_obrazok_prispevok';
-        alert(show_posts_images.length);
         for (let i = 0; i < show_posts_images.length; i++) {
             const obrazokImage = document.createElement('img');
             obrazokImage.id = 'obrazok' + post.id + ':' + i;
