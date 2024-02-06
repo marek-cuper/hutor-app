@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -22,14 +23,12 @@ class PostController extends Controller
 
     public function domov_zobrazeniePost(Request $request){
         $post_id = $request->input('post_id');
-        $posts_all_images = (Post_image::all()->where('post_id', $post_id));
-        $show_posts_images = [];
-        foreach ($posts_all_images as $image) {
-            $show_posts_images[sizeof($show_posts_images)] = $image->image_name;
-        }
-        //$request->session()->put('show_posts_images', $show_posts_images);
+        $posts_all_images = Post_image::where('post_id', $post_id)->get();
 
-        return response()->json(['success' => true, 'show_posts_images' => $show_posts_images]);
+        $show_posts_images = $posts_all_images->pluck('image_name')->toArray();
+
+        return response()->json(['show_posts_images' => $show_posts_images]);
+
     }
 
     public function domov_prispevok_dalsiGet(Request $request){
