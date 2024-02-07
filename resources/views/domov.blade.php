@@ -15,11 +15,10 @@
 <body>
 @include('include.navbar')
 
-<div id="home_container" class="home_prispevok">
+<div id="domov_kontajner_prispevky" class="domov_kontajner_prispevky">
 
-    <div id="home_zobrazeny_prispevok" class="home_zobrazeny_prispevok">
-
-    </div>
+</div>
+<div id="domov_zobrazeny_prispevok" class="domov_zobrazeny_prispevok">
 
 </div>
 
@@ -42,9 +41,9 @@
     var regions = @json(session('regions'));
 
     var loadedPosts = [];
-    const homeContainer = document.getElementById('home_container');
+    const homeContainer = document.getElementById('domov_kontajner_prispevky');
 
-    const showContainer = document.getElementById('home_zobrazeny_prispevok');
+    const showContainer = document.getElementById('domov_zobrazeny_prispevok');
 
     let scrollListener = true;
 
@@ -74,7 +73,7 @@
         createShowingPost();
 
         //Showing part
-        loadedPosts[1].style.display = "none";
+        homeContainer.style.display = "none";
     }
 
     function createShowingPost(){
@@ -83,13 +82,13 @@
 
         // Create the main container div
         const containerDiv = document.createElement('div');
-        containerDiv.id = 'home_zobrazenie_telo' + post.id;
-        containerDiv.className = 'home_zobrazenie_telo';
+        containerDiv.id = 'domov_zobrazenie_telo' + post.id;
+        containerDiv.className = 'domov_zobrazenie_telo';
 
 
 // Create the nadpis (title) div
         const nadpisDiv = document.createElement('div');
-        nadpisDiv.className = 'home_nadpis_prispevok';
+        nadpisDiv.className = 'domov_nadpis_prispevok';
         const nadpisParagraph = document.createElement('p');
         nadpisParagraph.id = 'nadpis' + post.id;
         nadpisParagraph.textContent = post.title;
@@ -97,16 +96,16 @@
 
 // Create the popis (description) div
         const popisDiv = document.createElement('div');
-        popisDiv.className = 'home_popis_prispevok';
+        popisDiv.className = 'domov_popis_prispevok';
         const textParagraph = document.createElement('p');
         textParagraph.id = 'text' + post.id;
-        textParagraph.textContent = post.text.substring(0, 350);
+        textParagraph.textContent = post.text;
         popisDiv.appendChild(textParagraph);
 
 // Create the obrazok (image) div
         const obrazokDiv = document.createElement('div');
-        obrazokDiv.id = 'home_obrazok_prispevok' + post.id;
-        obrazokDiv.className = 'home_obrazok_prispevok';
+        obrazokDiv.id = 'domov_obrazok_prispevok' + post.id;
+        obrazokDiv.className = 'domov_obrazok_prispevok';
         for (let i = 0; i < show_posts_images.length; i++) {
             const obrazokImage = document.createElement('img');
             obrazokImage.id = 'obrazok' + post.id + ':' + i;
@@ -120,15 +119,15 @@
 
 // Create the prieskum (chart) div
         const prieskumDiv = document.createElement('div');
-        prieskumDiv.id = 'home_prispevok_prieskum' + post.id;
-        prieskumDiv.className = 'home_prispevok_prieskum2';
+        prieskumDiv.id = 'domov_prispevok_prieskum' + post.id;
+        prieskumDiv.className = 'domov_prispevok_prieskum';
         const prieskumIkonaDiv = document.createElement('div');
-        prieskumIkonaDiv.className = 'home_prispevok_prieskum_ikona';
+        prieskumIkonaDiv.className = 'domov_prispevok_prieskum_ikona';
         const ikonaElement = document.createElement('i');
         ikonaElement.className = 'fa fa-pie-chart fa-2x';
         prieskumIkonaDiv.appendChild(ikonaElement);
         const prieskumOtazkaDiv = document.createElement('div');
-        prieskumOtazkaDiv.className = 'home_prispevok_prieskum_otazka';
+        prieskumOtazkaDiv.className = 'domov_prispevok_prieskum_otazka';
         const prieskumTextParagraph = document.createElement('p');
         prieskumTextParagraph.id = 'prieskum_text' + post.id;
         if(post.poll_text == null){
@@ -148,38 +147,42 @@
         containerDiv.appendChild(obrazokDiv);
         containerDiv.appendChild(prieskumDiv);
 
+        const oznaceniaRegionyDiv = document.createElement('div');
+        oznaceniaRegionyDiv.id = 'domov_oznacenia_a_regiony' + post.id;
+        oznaceniaRegionyDiv.className = 'domov_oznacenia_a_regiony';
 
         // Create the oznacenia (tags) div
         if(posts_tags[postIndex].length > 0){
             const oznaceniaDiv = document.createElement('div');
-            oznaceniaDiv.id = 'home_prispevok_oznacenia' + post.id;
-            oznaceniaDiv.className = 'home_prispevok_oznacenia';
+            oznaceniaDiv.id = 'domov_oznacenia' + post.id;
+            oznaceniaDiv.className = 'domov_oznacenia';
 
             for (let i = 0; i < posts_tags[postIndex].length; i++) {
                 var newTag = document.createElement("div");
-                newTag.className = 'home_prispevok_oznacenie';
+                newTag.className = 'domov_oznacenie';
                 newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
                 oznaceniaDiv.appendChild(newTag);
             }
-            containerDiv.appendChild(oznaceniaDiv);
+            oznaceniaRegionyDiv.appendChild(oznaceniaDiv);
         }
 
         // Create the regiony (regions) div
         if(posts_regions[postIndex].length > 0){
             const regionyDiv = document.createElement('div');
-            regionyDiv.id = 'home_prispevok_regiony' + post.id;
-            regionyDiv.className = 'home_prispevok_regiony';
+            regionyDiv.id = 'domov_regiony' + post.id;
+            regionyDiv.className = 'domov_regiony';
 
 
             for (let i = 0; i < posts_regions[postIndex].length; i++) {
                 var newReg = document.createElement("div");
-                newReg.className = 'home_prispevok_region';
+                newReg.className = 'domov_region';
                 newReg.textContent = regions.find(region => region.id === posts_regions[postIndex][i]).name;
                 regionyDiv.appendChild(newReg);
             }
 
-            containerDiv.appendChild(regionyDiv);
+            oznaceniaRegionyDiv.appendChild(regionyDiv);
         }
+        containerDiv.appendChild(oznaceniaRegionyDiv);
 
 // Append the main container to the document body or any other desired parent element
         showContainer.appendChild(containerDiv);
@@ -326,8 +329,8 @@
 
         // Create the main container div
         const containerDiv = document.createElement('div');
-        containerDiv.id = 'home_prispevok_telo' + post.id;
-        containerDiv.className = 'home_prispevok_telo';
+        containerDiv.id = 'domov_prispevok_telo' + post.id;
+        containerDiv.className = 'domov_prispevok_telo';
         //Listener to show whole post
         containerDiv.addEventListener("click", function() {
             setDataShowPost();
@@ -335,7 +338,7 @@
 
 // Create the nadpis (title) div
         const nadpisDiv = document.createElement('div');
-        nadpisDiv.className = 'home_nadpis_prispevok';
+        nadpisDiv.className = 'domov_nadpis_prispevok';
         const nadpisParagraph = document.createElement('p');
         nadpisParagraph.id = 'nadpis' + post.id;
         nadpisParagraph.textContent = post.title;
@@ -343,7 +346,7 @@
 
 // Create the popis (description) div
         const popisDiv = document.createElement('div');
-        popisDiv.className = 'home_popis_prispevok';
+        popisDiv.className = 'domov_popis_prispevok';
         const textParagraph = document.createElement('p');
         textParagraph.id = 'text' + post.id;
         textParagraph.textContent = post.text.substring(0, 350);
@@ -354,8 +357,8 @@
 
 // Create the obrazok (image) div
         const obrazokDiv = document.createElement('div');
-        obrazokDiv.id = 'home_obrazok_prispevok' + post.id;
-        obrazokDiv.className = 'home_obrazok_prispevok';
+        obrazokDiv.id = 'domov_obrazok_prispevok' + post.id;
+        obrazokDiv.className = 'domov_obrazok_prispevok';
         const obrazokImage = document.createElement('img');
         obrazokImage.id = 'obrazok' + post.id;
         if(posts_images[postIndex] == null){
@@ -370,15 +373,15 @@
 
 // Create the prieskum (chart) div
         const prieskumDiv = document.createElement('div');
-        prieskumDiv.id = 'home_prispevok_prieskum' + post.id;
-        prieskumDiv.className = 'home_prispevok_prieskum2';
+        prieskumDiv.id = 'domov_prispevok_prieskum' + post.id;
+        prieskumDiv.className = 'domov_prispevok_prieskum';
         const prieskumIkonaDiv = document.createElement('div');
-        prieskumIkonaDiv.className = 'home_prispevok_prieskum_ikona';
+        prieskumIkonaDiv.className = 'domov_prispevok_prieskum_ikona';
         const ikonaElement = document.createElement('i');
         ikonaElement.className = 'fa fa-pie-chart fa-2x';
         prieskumIkonaDiv.appendChild(ikonaElement);
         const prieskumOtazkaDiv = document.createElement('div');
-        prieskumOtazkaDiv.className = 'home_prispevok_prieskum_otazka';
+        prieskumOtazkaDiv.className = 'domov_prispevok_prieskum_otazka';
         const prieskumTextParagraph = document.createElement('p');
         prieskumTextParagraph.id = 'prieskum_text' + post.id;
         if(post.poll_text == null){
@@ -399,37 +402,42 @@
         containerDiv.appendChild(prieskumDiv);
 
 
+        const oznaceniaRegionyDiv = document.createElement('div');
+        oznaceniaRegionyDiv.id = 'domov_oznacenia_a_regiony' + post.id;
+        oznaceniaRegionyDiv.className = 'domov_oznacenia_a_regiony';
+
         // Create the oznacenia (tags) div
         if(posts_tags[postIndex].length > 0){
             const oznaceniaDiv = document.createElement('div');
-            oznaceniaDiv.id = 'home_prispevok_oznacenia' + post.id;
-            oznaceniaDiv.className = 'home_prispevok_oznacenia';
+            oznaceniaDiv.id = 'domov_oznacenia' + post.id;
+            oznaceniaDiv.className = 'domov_oznacenia';
 
             for (let i = 0; i < posts_tags[postIndex].length; i++) {
                 var newTag = document.createElement("div");
-                newTag.className = 'home_prispevok_oznacenie';
+                newTag.className = 'domov_oznacenie';
                 newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
                 oznaceniaDiv.appendChild(newTag);
             }
-            containerDiv.appendChild(oznaceniaDiv);
+            oznaceniaRegionyDiv.appendChild(oznaceniaDiv);
         }
 
         // Create the regiony (regions) div
         if(posts_regions[postIndex].length > 0){
             const regionyDiv = document.createElement('div');
-            regionyDiv.id = 'home_prispevok_regiony' + post.id;
-            regionyDiv.className = 'home_prispevok_regiony';
+            regionyDiv.id = 'domov_regiony' + post.id;
+            regionyDiv.className = 'domov_regiony';
 
 
             for (let i = 0; i < posts_regions[postIndex].length; i++) {
                 var newReg = document.createElement("div");
-                newReg.className = 'home_prispevok_region';
+                newReg.className = 'domov_region';
                 newReg.textContent = regions.find(region => region.id === posts_regions[postIndex][i]).name;
                 regionyDiv.appendChild(newReg);
             }
 
-            containerDiv.appendChild(regionyDiv);
+            oznaceniaRegionyDiv.appendChild(regionyDiv);
         }
+        containerDiv.appendChild(oznaceniaRegionyDiv);
 
 // Append the main container to the document body or any other desired parent element
         homeContainer.appendChild(containerDiv);

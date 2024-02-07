@@ -12,13 +12,7 @@ use Illuminate\Support\Facades\Log;
 class PostController extends Controller
 {
     public function domovGet(Request $request){
-        //$request->session()->get('posts', []);
         return view('/domov');
-
-        #$posts = $request->session()->get('posts', []);
-        #$postNum = $request->session()->get('postNum', 1);
-
-        #return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
     }
 
     public function domov_zobrazeniePost(Request $request){
@@ -29,28 +23,6 @@ class PostController extends Controller
 
         return response()->json(['show_posts_images' => $show_posts_images]);
 
-    }
-
-    public function domov_prispevok_dalsiGet(Request $request){
-        $posts = $request->session()->get('posts', []);
-        $postNum = $request->session()->get('postNum', 1);
-         if($posts->count() > ($postNum + 1)){
-             $postNum++;
-             $request->session()->put('postNum', $postNum);
-         }
-
-        return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
-    }
-
-    public function domov_prispevok_predosliGet(Request $request){
-        $posts = $request->session()->get('posts', []);
-        $postNum = $request->session()->get('postNum', 1);
-        if(0 < $postNum){
-            $postNum--;
-            $request->session()->put('postNum', $postNum);
-        }
-
-        return view('/domov_prispevky')->with('posts', $posts)->with('postNum', $postNum);
     }
 
     public function domov_prispevokGet($id_post){

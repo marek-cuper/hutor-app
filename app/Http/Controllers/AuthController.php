@@ -48,7 +48,7 @@ class AuthController extends Controller
             $posts_regions = [];
             foreach ($posts as $post) {
                 $post_id = $post->id;
-                $posts_images[sizeof($posts_images)] = (Post_image::all()->where(['post_id', $post_id], 'order', 0))->first()->image_name;
+                $posts_images[] = (Post_image::all()->where('post_id', $post_id))->where('order', 0)->first()->image_name;
                 $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
                 $regions_on_post = (Post_region::all()->where('post_id', $post_id));
 

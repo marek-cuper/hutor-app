@@ -17,7 +17,7 @@
 
 <div class="prihlasenie_stranka">
 
-    <div class="prihlasenie_stranka_idea">
+    <div class="prihlasenie_stranka_logo">
         <img src="images/hutor_cierne_cierne.png" alt="">
     </div>
 

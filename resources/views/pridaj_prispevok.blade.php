@@ -40,7 +40,7 @@
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
                     <select id="pridaj_prispevok_select_oznacenia" onchange="hideSelectedOptionTags()">
-                        <option value="" disabled selected>Vyber oznacenia(max 10)</option>
+                        <option value="" disabled selected>Vyber oznacenia(max 8)</option>
                     </select>
                 </div>
                 <div class="prihlasenie_formular_kolonka">
@@ -56,7 +56,7 @@
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
                     <select id="pridaj_prispevok_select_regiony" onchange="hideSelectedOptionRegions()">
-                        <option value="" disabled selected>Vyber regiony(max 5)</option>
+                        <option value="" disabled selected>Vyber regiony(max 4)</option>
                     </select>
                 </div>
                 <div class="prihlasenie_formular_kolonka">
@@ -122,7 +122,7 @@
 
     function pridajOznacenie() {
 
-        if(selectedTags.childElementCount < 10){
+        if(selectedTags.childElementCount < 8){
             // Get the select element
             var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
 
@@ -159,7 +159,7 @@
 
     function pridajRegion() {
 
-        if(selectedRegions.childElementCount < 5){
+        if(selectedRegions.childElementCount < 4){
 
 
             // Get the selected option
@@ -193,19 +193,23 @@
     }
 
     function hideSelectedOptionTags() {
-        // Get the selected option
-        var selectedOption = selectDivTags.options[selectDivTags.selectedIndex];
+        if(selectedTags.childElementCount < 8){
+            // Get the selected option
+            var selectedOption = selectDivTags.options[selectDivTags.selectedIndex];
 
-        // Hide the selected option
-        selectedOption.style.display = "none";
+            // Hide the selected option
+            selectedOption.style.display = "none";
+        }
     }
 
     function hideSelectedOptionRegions() {
-        // Get the selected option
-        var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
+        if(selectedRegions.childElementCount < 4){
+            // Get the selected option
+            var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
 
-        // Hide the selected option
-        selectedOption.style.display = "none";
+            // Hide the selected option
+            selectedOption.style.display = "none";
+        }
     }
 
     // Attach the createDiv function to the change event of the select element

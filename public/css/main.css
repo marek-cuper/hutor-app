@@ -1,5 +1,4 @@
 /* Vseobecna stranka */
-
 html, body {
     margin: 0;
     padding: 0;
@@ -10,6 +9,7 @@ html, body {
     justify-content: center;
     align-items: center;
 }
+/* Prihlasenie */
 .prihlasenie_stranka{
     display: flex;
     margin: auto;
@@ -17,19 +17,15 @@ html, body {
     width: 80%;
 }
 
-.prihlasenie_stranka_idea{
+.prihlasenie_stranka_logo{
     width: 50%;
     display: flex;
     justify-content: center;
 }
 
-.prihlasenie_stranka_idea img{
-    transform: scale(0.6);
-}
-
-.prihlasenie_stranka_idea p{
-    font-size: 2vh;
-    font-weight: bold;
+.prihlasenie_stranka_logo img{
+    height: 200px;
+    width: 380px;
     margin: auto;
 }
 
@@ -37,10 +33,10 @@ html, body {
     display: flex;
     flex-direction: column;
     border-radius: 5px;
-    padding-bottom: 1.75%;
     border:2px solid lightgray;
     margin: auto;
-    height: 60%;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
     width: 30%;
     background-color: white;
 }
@@ -68,11 +64,8 @@ html, body {
     margin-bottom: 4%;
 }
 
-.prihlasenie_stranka_formular_tlacitko_reg{
 
-
-}
-
+/* Navbad a footbar */
 
 #navbar{
     position:fixed;
@@ -121,6 +114,14 @@ html, body {
     scale: 0.8;
 }
 
+.home_prispevok_icon_pozadie{
+    background-color: #FF9908;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: auto;
+}
+
 #navbar-menu{
     display: flex;
     margin-right: 3%;
@@ -158,7 +159,7 @@ html, body {
 }
 
 /* Stranka s prispevkami */
-.home_prispevok{
+.domov_kontajner_prispevky{
     margin: auto;
     text-align: center;
     height: 85%;
@@ -166,29 +167,7 @@ html, body {
     display: inline;
 }
 
-.home_prispevok_lavy_bok{
-    margin-top: 0.5%;
-    margin-right: 0.5%;
-    display: block;
-    height: auto;
-}
-
-.home_prispevok_icon_pozadie{
-    background-color: #FF9908;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    margin: auto;
-}
-.home_prispevok_lavy_bok p{
-    margin: auto;
-}
-
-.home_prispevok_lavy_bok image{
-
-}
-
-.home_prispevok_telo{
+.domov_prispevok_telo{
     display: flex;
     flex-direction: column;
     border-radius: 5px;
@@ -206,16 +185,16 @@ html, body {
 
 }
 
-.home_nadpis_prispevok{
+.domov_nadpis_prispevok{
     font-size: 3vh;
+    height: 8.5%;
 }
 
-.home_popis_prispevok{
+.domov_popis_prispevok{
     padding-left: 2%;
     padding-right: 2%;
     font-size: 2vh;
     width: 100%;
-    overflow: hidden;
     box-sizing: border-box;
 
 }
@@ -246,17 +225,17 @@ html, body {
     );
 }
 
-.home_prispevok_telo img{
+.domov_prispevok_telo img{
     padding-bottom: 5%;
     max-height: 35vh;
     max-width: 35vh;
 }
-.home_obrazok_prispevok img{
+.domov_obrazok_prispevok img{
     max-height: 350px;
     max-width: 350px;
 }
 
-.home_prispevok_prieskum{
+.domov_prispevok_prieskum{
     margin-left: auto;
     margin-right: auto;
     width: 60%;
@@ -264,122 +243,72 @@ html, body {
     border:2px solid lightgray;
 
 }
-
-
-.home_prispevok_prieskum2{
-    display: flex;
-    width: 60%;
-    margin-right: auto;
-    margin-left: auto;
-    border-radius: 5px;
-    border:2px solid lightgray;
-}
-
-.home_prispevok_prieskum_ikona{
+.domov_prispevok_prieskum_ikona{
     text-align: center;
     width: 10%;
-    margin: auto 1%;
+    margin: 1%;
 }
 
-.home_prispevok_prieskum_otazka{
-    width: 90%;
+.domov_prispevok_prieskum_otazka{
+    width: 80%;
     text-align: center;
+    font-size: 1.5vh;
+    margin: 1%;
 }
 
-.home_prispevok_prieskum_otazka p{
-    float: left;
-    margin-left: 2%;
-    font-size: 2vh;
-
-}
-
-.home_prispevok_prieskum_moznost{
-    width: 95%;
+.domov_oznacenia_a_regiony{
     display: flex;
-    text-align: center;
-    margin: 3%;
-    padding-left: 2%;
-    border-radius: 5px;
-    border:2px solid lightgray;
+    flex-direction: column;
+    height: 50px;
+    margin-top: auto;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
 }
 
-.home_prispevok_prieskum_moznost p{
-    margin-left: 2%;
+.domov_oznacenia{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 50%;
+    margin-top: auto;
+    overflow-x: auto;
+
+}
+.domov_oznacenie{
+    font-size: 1.8vh;
     margin-top: auto;
     margin-bottom: auto;
-    font-size: 2vh;
-}
-.home_prispevok_prieskum_moznost:last-child p{
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.prieskum_tlacitka{
-    margin-top: 10%;
-    display: flex;
-
-}
-.prieskum_tlacitka button{
-    scale: 0.8;
-}
-
-.home_prispevok_oznacenia{
-    float: left;
-    display: flex;
-    width: 100%;
-    height: 40px;
-    margin-top: auto;
-    overflow-x: auto;
-
-}
-.home_prispevok_oznacenie{
-    font-size: 1.8vh;
-    margin-top: auto;
-    margin-bottom: 0.5%;
-    margin-left: 0.8%;
-    margin-right: 0;
+    margin-right: 1%;
     padding-left: 1%;
-    padding-right: 1%;
+    padding-right: 0.5%;
+
     border-radius: 5px;
     border: 1px solid #333;
     white-space: nowrap;
 }
 
-.home_prispevok_regiony{
-    float: right;
+.domov_regiony{
     display: flex;
+    justify-content: flex-end;
     width: 100%;
-    height: 40px;
+    height: 50%;
     margin-top: auto;
     overflow-x: auto;
 
 }
-.home_prispevok_region{
+.domov_region{
     font-size: 1.8vh;
-    margin-bottom: 1%;
-    margin-left: 0.8%;
-    margin-right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 1%;
     padding-left: 1%;
-    padding-right: 1%;
+    padding-right: 0.5%;
+
     border-radius: 5px;
     border: 1px solid #333;
     white-space: nowrap;
 }
 
-.home_prispevok_pravy_bok{
-    margin-top: 0.5%;
-    margin-left: 0.5%;
-    display: block;
-    height: auto;
-
-}
-.home_prispevok_pravy_bok p{
-    margin: auto;
-}
-
-.home_prispevok_pravy_bok i{
-    scale: 0.8;
-}
 
 .animate {
     animation: moveUpDown 2s infinite alternate;
@@ -400,8 +329,16 @@ html, body {
     margin-top: 5%;
 }
 
-/*Home zobrazenie*/
-.home_zobrazenie_telo{
+/*Domov zobrazenie*/
+.domov_zobrazeny_prispevok{
+    margin: auto;
+    text-align: center;
+    height: 85%;
+    width: 80%;
+    display: inline;
+}
+
+.domov_zobrazenie_telo{
     display: flex;
     flex-direction: column;
     border-radius: 5px;
@@ -416,41 +353,53 @@ html, body {
     top: 50%;
     overflow-y:scroll;
 
-    scroll-behavior: smooth;
-    flex:1;
+
 
 }
 
-.home_zobrazenie_telo .home_nadpis_prispevok {
-    height: 100%;
+
+.domov_zobrazenie_telo .domov_nadpis_prispevok {
+
 }
 
-.home_zobrazenie_telo .home_popis_prispevok {
-    height: 100%;
+.domov_zobrazenie_telo .domov_popis_prispevok {
+
     padding-bottom: 3%;
+    margin: auto;
 }
 
-.home_zobrazenie_telo .home_obrazok_prispevok {
-    height: 100%;
+.domov_zobrazenie_telo .domov_obrazok_prispevok {
+    display: inline;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+
 }
 
-.home_zobrazenie_telo img{
+.domov_zobrazenie_telo img{
     max-height: 70vh;
     max-width: 70vh;
 }
 
-.home_zobrazenie_telo .home_prispevok_prieskum2 {
-    height: 100%;
+.domov_zobrazenie_telo .domov_prispevok_prieskum {
+
 }
 
-.home_zobrazenie_telo .home_prispevok_oznacenia {
-    height: 100%;
-    padding-top: 1%;
+.domov_zobrazenie_telo .domov_oznacenia_a_regiony {
+
 }
 
-.home_zobrazenie_telo .home_prispevok_regiony {
-    height: 100%;
-    padding-bottom: 1%;
+.domov_zobrazenie_telo .domov_oznacenia {
+
+}
+.domov_zobrazenie_telo .domov_oznacenie {
+
+}
+.domov_zobrazenie_telo .domov_regiony {
+    justify-content: left;
+
+}
+.domov_zobrazenie_telo .domov_region {
 }
 
 /* Stranka s preferenciami */
@@ -726,26 +675,24 @@ input:checked + .slider:before {
 @media (max-width: 1200px){
     .prihlasenie_stranka{
         display: grid;
-        height: 90%
-    }
-    .prihlasenie_stranka_idea{
-        margin: auto;
-    }
-    .prihlasenie_stranka_formular{
-        margin: auto;
         height: 100%;
-    }
-    .prihlasenie_stranka_formular{
-        transform: scale(1.3);
-        width: 40%;
+        width: 100%;
     }
 
-    .home_prispevok_telo{
-        width: 60%;
+    .prihlasenie_stranka_logo{
+        width: 100%;
+        height: 100%;
     }
-    .home_obrazok_prispevok img{
-        max-height: 300px;
-        max-width: 300px;
+
+    .prihlasenie_stranka_logo img{
+        height: 120px;
+        width: 226px;
+        margin: auto;
+    }
+    .prihlasenie_stranka_formular{
+        margin: auto;
+        width: 60%;
+        height: 50%;
     }
     #footbar i {
         transform: scale(0.8);
@@ -759,6 +706,14 @@ input:checked + .slider:before {
     }
     .navbar-icon{
         margin-right: 20%;
+    }
+
+    .domov_prispevok_telo{
+        width: 60%;
+    }
+    .domov_obrazok_prispevok img{
+        max-height: 300px;
+        max-width: 300px;
     }
     .preferencie_stranka{
         width: 50%;
@@ -776,24 +731,6 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 900px){
-    #mapa_preferencie{
-        width: 265px;
-        height: 160px;
-    }
-    #map_form .prihlasenie_formular_kolonka{
-        width: 265px;
-    }
-
-    .prihlasenie_stranka_formular{
-        transform: scale(1.5);
-    }
-    .home_prispevok_telo{
-        width: 75%;
-    }
-    .home_obrazok_prispevok img{
-        max-height: 250px;
-        max-width: 250px;
-    }
     #footbar i {
         transform: scale(0.7);
     }
@@ -807,10 +744,27 @@ input:checked + .slider:before {
     .navbar-icon{
         margin-right: 15%;
     }
-    .home_prispevok_prieskum{
-        width: 70%;
+
+    #mapa_preferencie{
+        width: 265px;
+        height: 160px;
     }
-    .home_prispevok_icon_pozadie{
+    #map_form .prihlasenie_formular_kolonka{
+        width: 265px;
+    }
+
+    .prihlasenie_stranka_formular{
+        transform: scale(1.5);
+    }
+    .domov_prispevok_telo{
+        width: 75%;
+    }
+    .domov_obrazok_prispevok img{
+        max-height: 250px;
+        max-width: 250px;
+    }
+
+    .domov_prispevok_icon_pozadie{
         transform: scale(0.9);
     }
     .preferencie_stranka{
@@ -836,14 +790,6 @@ input:checked + .slider:before {
     .prihlasenie_stranka_idea img{
         transform: scale(0.5);
     }
-    .home_prispevok_telo{
-        width: 85%;
-        height: 80%;
-    }
-    .home_obrazok_prispevok img{
-        max-height: 200px;
-        max-width: 200px;
-    }
     #footbar i {
         transform: scale(0.6);
     }
@@ -861,17 +807,26 @@ input:checked + .slider:before {
     .navbar-icon{
         margin-right: 10%;
     }
-    .home_prispevok_prieskum{
-        width: 80%;
-    }
-    .home_prispevok_prieskum_otazka p{
-        font-size: 1.5vh;
-        margin-left: 15px;
-
-    }
-    .home_prispevok_icon_pozadie{
+    .domov_prispevok_icon_pozadie{
         transform: scale(0.8);
     }
+    .domov_prispevok_telo{
+        width: 85%;
+        height: 80%;
+    }
+    .domov_obrazok_prispevok img{
+        max-height: 200px;
+        max-width: 200px;
+    }
+    .domov_obrazok_prispevok img{
+        max-height: 200px;
+        max-width: 200px;
+    }
+
+    .domov_zobrazenie_telo .domov_oznacenia_a_regiony {
+        height: 100px;
+    }
+
     .preferencie_stranka{
         width: 70%;
     }
