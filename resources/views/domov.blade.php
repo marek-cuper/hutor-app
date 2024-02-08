@@ -47,6 +47,8 @@
 
     let scrollListener = true;
 
+    let showPostImages = [];
+    let showPostImagesIndex = 0;
 
     function setDataShowPost(){
         //After click to post disable scrolling
@@ -102,20 +104,56 @@
         textParagraph.textContent = post.text;
         popisDiv.appendChild(textParagraph);
 
+
+        const obrazkyKontajnerDiv = document.createElement('div');
+        obrazkyKontajnerDiv.id = 'domov_zobrazenie_kontajner_obrazky';
+        obrazkyKontajnerDiv.className = 'domov_zobrazenie_kontajner_obrazky';
+
+        const obrazkyTlacitkoLaveDiv = document.createElement('div');
+        obrazkyTlacitkoLaveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_lave';
+        obrazkyTlacitkoLaveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
+        const lavaSipka = document.createElement('i');
+        lavaSipka.className = 'fa fa-arrow-left fa-3x';
+        obrazkyTlacitkoLaveDiv.appendChild(lavaSipka);
+        obrazkyTlacitkoLaveDiv.addEventListener("click", function() {
+            posunObrazokKontajner('-');
+        });
+
+
+        const obrazkyTlacitkoPraveDiv = document.createElement('div');
+        obrazkyTlacitkoPraveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_prave';
+        obrazkyTlacitkoPraveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
+        const pravaSipka = document.createElement('i');
+        pravaSipka.className = 'fa fa-arrow-right fa-3x';
+        obrazkyTlacitkoPraveDiv.appendChild(pravaSipka);
+        obrazkyTlacitkoPraveDiv.addEventListener("click", function() {
+            posunObrazokKontajner('+');
+        });
+
+
 // Create the obrazok (image) div
-        const obrazokDiv = document.createElement('div');
-        obrazokDiv.id = 'domov_obrazok_prispevok' + post.id;
-        obrazokDiv.className = 'domov_obrazok_prispevok';
+        const obrazkyDiv = document.createElement('div');
+        obrazkyDiv.id = 'domov_obrazok_prispevok' + post.id;
+        obrazkyDiv.className = 'domov_obrazok_prispevok';
         for (let i = 0; i < show_posts_images.length; i++) {
             const obrazokImage = document.createElement('img');
             obrazokImage.id = 'obrazok' + post.id + ':' + i;
 
-            obrazokDiv.style.display = "block";
+            obrazokImage.style.display = "none";
+            if(i === 0){
+                obrazokImage.style.display = "block";
+            }
             obrazokImage.src = '/storage/' + show_posts_images[i];
             obrazokImage.alt = '';
 
-            obrazokDiv.appendChild(obrazokImage);
+
+            obrazkyDiv.appendChild(obrazokImage);
+            showPostImages[showPostImages.length] = obrazokImage;
         }
+
+        obrazkyKontajnerDiv.appendChild(obrazkyTlacitkoLaveDiv);
+        obrazkyKontajnerDiv.appendChild(obrazkyDiv);
+        obrazkyKontajnerDiv.appendChild(obrazkyTlacitkoPraveDiv);
 
 // Create the prieskum (chart) div
         const prieskumDiv = document.createElement('div');
@@ -144,7 +182,7 @@
         // Append all created elements to the main container
         containerDiv.appendChild(nadpisDiv);
         containerDiv.appendChild(popisDiv);
-        containerDiv.appendChild(obrazokDiv);
+        containerDiv.appendChild(obrazkyKontajnerDiv);
         containerDiv.appendChild(prieskumDiv);
 
         const oznaceniaRegionyDiv = document.createElement('div');
@@ -186,6 +224,27 @@
 
 // Append the main container to the document body or any other desired parent element
         showContainer.appendChild(containerDiv);
+    }
+
+    function posunObrazokKontajner(smer){
+        var change = false;
+        oldShowPostImagesIndex = showPostImagesIndex
+        if(smer === '+'){
+            if(showPostImagesIndex + 1 < showPostImages.length){
+                change = true;
+                showPostImagesIndex++;
+            }
+        }
+        if(smer === '-'){
+            if((showPostImagesIndex - 1) > -1){
+                change = true;
+                showPostImagesIndex--;
+            }
+        }
+        if(change === true){
+            showPostImages[oldShowPostImagesIndex].style.display = 'none';
+            showPostImages[showPostImagesIndex].style.display = 'block';
+        }
     }
 
 

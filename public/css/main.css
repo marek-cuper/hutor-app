@@ -114,7 +114,7 @@ html, body {
     scale: 0.8;
 }
 
-.home_prispevok_icon_pozadie{
+.domov_prispevok_icon_pozadie{
     background-color: #FF9908;
     border-radius: 50%;
     width: 50px;
@@ -182,12 +182,10 @@ html, body {
     top: 50%;
     transition: top 0.25s;
     z-index: 1;
-
 }
 
 .domov_nadpis_prispevok{
     font-size: 3vh;
-    height: 8.5%;
 }
 
 .domov_popis_prispevok{
@@ -226,7 +224,7 @@ html, body {
 }
 
 .domov_prispevok_telo img{
-    padding-bottom: 5%;
+    padding-bottom: 2%;
     max-height: 35vh;
     max-width: 35vh;
 }
@@ -323,12 +321,6 @@ html, body {
     }
 }
 
-/* Vobec netusim preco icona share hneva */
-#share_icon{
-    margin-right: 10%;
-    margin-top: 5%;
-}
-
 /*Domov zobrazenie*/
 .domov_zobrazeny_prispevok{
     margin: auto;
@@ -353,10 +345,7 @@ html, body {
     top: 50%;
     overflow-y:scroll;
 
-
-
 }
-
 
 .domov_zobrazenie_telo .domov_nadpis_prispevok {
 
@@ -368,17 +357,25 @@ html, body {
     margin: auto;
 }
 
-.domov_zobrazenie_telo .domov_obrazok_prispevok {
-    display: inline;
-    align-items: center;
-    width: 80%;
+.domov_zobrazenie_kontajner_obrazky{
+    display: flex;
     margin: auto;
-
+    margin-top: 2%;
+    margin-bottom: 3%;
 }
 
-.domov_zobrazenie_telo img{
+.domov_zobrazenie_kontajner_obrazky domov_obrazok_prispevok{
+    margin: auto 0;
+}
+.domov_zobrazenie_kontajner_obrazky domov_obrazok_prispevok img{
     max-height: 70vh;
     max-width: 70vh;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.domov_zobrazenie_obrazky_tlacitka{
+
 }
 
 .domov_zobrazenie_telo .domov_prispevok_prieskum {
@@ -519,13 +516,20 @@ input:checked + .slider:before {
     color: white;
 }
 
+#pref_form{
+    /*Ak odstranim zmiznu tlacitka*/
+    overflow-y: auto;
+}
+
 .prepinace_preferencie{
     background-color: white;
     border-radius: 5px;
     border:2px solid lightgray;
-    width: 100%;
+    width: 90%;
     /*height: 80%;*/
-    overflow: auto;
+    overflow-y: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .prepinace_preferencie p{
@@ -635,6 +639,39 @@ input:checked + .slider:before {
 }
 
 /* Pridaj prispevok */
+.pridaj_prispevok_telo{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    border:2px solid lightgray;
+    height: 80%;
+    width: 50%;
+    background-color: white;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    overflow-y: auto;
+}
+
+.pridaj_prispevok_formular{
+    margin: auto;
+    width: 80%;
+}
+
+.pridaj_prispevok_formular_kolonka{
+    display: grid;
+    width: 100%;
+    margin-bottom: 3%;
+}
+.pridaj_prispevok_formular_kolonka label{
+    margin-right: auto;
+}
+
+.pridaj_prispevok_formular form{
+    display: grid;
+}
+
 #pridaj_prispevok_vybrate_oznacenia, #pridaj_prispevok_vybrate_regiony{
     width: 100%;
     display: flex;

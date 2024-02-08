@@ -17,7 +17,7 @@ class PostController extends Controller
 
     public function domov_zobrazeniePost(Request $request){
         $post_id = $request->input('post_id');
-        $posts_all_images = Post_image::where('post_id', $post_id)->get();
+        $posts_all_images = Post_image::where('post_id', $post_id)->orderBy('order')->get();
 
         $show_posts_images = $posts_all_images->pluck('image_name')->toArray();
 

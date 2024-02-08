@@ -14,36 +14,36 @@
 
 @include('include.navbar')
 
-<div class="home_prispevok">
-    <div class="home_prispevok_telo" onclick="">
-        <div class="prihlasenie_formular">
+<div class="domov_prispevok">
+    <div class="pridaj_prispevok_telo" onclick="">
+        <div class="pridaj_prispevok_formular">
 
             <form action="{{ route('pridaj_prispevok.post') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Title</b></label>
                     <input type="text" name="title" id="title" class="form-control" required>
                 </div>
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Text</b></label>
                     <textarea name="text" id="text" class="form-control" rows="4" required></textarea>
                 </div>
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Image</b></label>
                     <input type="file" name="images[]" id="images" class="form-control-file" multiple>
                 </div>
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Nadpis prieskum</b></label>
                     <input type="text" name="poll_text" id="poll_text" class="form-control">
                 </div>
 
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
                     <select id="pridaj_prispevok_select_oznacenia" onchange="hideSelectedOptionTags()">
                         <option value="" disabled selected>Vyber oznacenia(max 8)</option>
                     </select>
                 </div>
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Vybrate oznacenia</b></label>
                     <div id="pridaj_prispevok_vybrate_oznacenia">
 
@@ -53,13 +53,13 @@
                     </div>
                 </div>
 
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
                     <select id="pridaj_prispevok_select_regiony" onchange="hideSelectedOptionRegions()">
                         <option value="" disabled selected>Vyber regiony(max 4)</option>
                     </select>
                 </div>
-                <div class="prihlasenie_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Vybrate regiony</b></label>
                     <div id="pridaj_prispevok_vybrate_regiony">
 

@@ -6,7 +6,7 @@
 
     <div id="navbar-search-duo" >
         <input id="navbar-search-bar" type="text" class="round" />
-        <div class="home_prispevok_icon_pozadie" id="navbar-sipka-icon">
+        <div class="domov_prispevok_icon_pozadie" id="navbar-sipka-icon">
             <i class="fa fa-arrow-right fa-3x"></i>
         </div>
     </div>

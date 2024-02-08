@@ -17,7 +17,7 @@
 <div class="preferencie_stranka">
 
     <div class="prepinac_medzi_preferenciami_mapou">
-        <div class="home_prispevok_icon_pozadie">
+        <div class="domov_prispevok_icon_pozadie">
             <i class="fa fa-tasks fa-3x"></i>
         </div>
 
@@ -27,60 +27,65 @@
             <span class="slider"></span>
         </label>
 
-        <div class="home_prispevok_icon_pozadie">
+        <div class="domov_prispevok_icon_pozadie">
             <i class="fa fa-map fa-3x"></i>
         </div>
     </div>
-    <form id="pref_form" action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
-        @csrf
+    <div class="preferencie_stranka_oznacenia" id="preferencie_stranka_oznacenia">
+        <form id="pref_form" action="{{ route('preferencie.post') }}" method="post" enctype="multipart/form-data">
+            @csrf
 
-        <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
+            <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
 
-        <div class="preferencie_tlacitka_okno">
-            <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
+            <div class="preferencie_tlacitka_okno">
+                <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
 
-            <button class="preferencie_tlacitko_reset">RESET</button>
+                <button class="preferencie_tlacitko_reset">RESET</button>
 
-        </div>
-    </form>
-
-
-    <div id="mapa_preferencie" class="mapa_preferencie">
-
-        <img id="sk_regs" src="{{ asset('images/regions/Slovak_reg_map_trans.png') }}">
-
-        <img id="reg1" src="{{ asset('images/regions/org_reg1.png') }}">
-        <img id="reg2" src="{{ asset('images/regions/org_reg2.png') }}">
-        <img id="reg3" src="{{ asset('images/regions/org_reg3.png') }}">
-        <img id="reg4" src="{{ asset('images/regions/org_reg4.png') }}">
+            </div>
+        </form>
 
     </div>
-    <form id="map_form" action="{{ route('regiony.post') }}" method="post" enctype="multipart/form-data">
-        @csrf
 
-        <div class="prihlasenie_formular_kolonka">
-            <label><b>Regiony na vyber:</b></label>
-            <select id="select_regiony" placeholder="Vyber region(max 5)" onchange="hideSelectedOption()">
-                <option value="" disabled selected>Vyber region(max 5)</option>
-            </select>
+
+    <div class="preferencie_stranka_regiony" id="preferencie_stranka_regiony">
+        <div id="mapa_preferencie" class="mapa_preferencie">
+
+            <img id="sk_regs" src="{{ asset('images/regions/Slovak_reg_map_trans.png') }}">
+
+            <img id="reg1" src="{{ asset('images/regions/org_reg1.png') }}">
+            <img id="reg2" src="{{ asset('images/regions/org_reg2.png') }}">
+            <img id="reg3" src="{{ asset('images/regions/org_reg3.png') }}">
+            <img id="reg4" src="{{ asset('images/regions/org_reg4.png') }}">
+
         </div>
-        <div class="prihlasenie_formular_kolonka">
-            <label><b>Vybrate preferovane regiony:</b></label>
-            <div id="vybrate_regiony">
+        <form id="map_form" action="{{ route('regiony.post') }}" method="post" enctype="multipart/form-data">
+            @csrf
+
+            <div class="prihlasenie_formular_kolonka">
+                <label><b>Regiony na vyber:</b></label>
+                <select id="select_regiony" placeholder="Vyber region(max 5)" onchange="hideSelectedOption()">
+                    <option value="" disabled selected>Vyber region(max 5)</option>
+                </select>
+            </div>
+            <div class="prihlasenie_formular_kolonka">
+                <label><b>Vybrate preferovane regiony:</b></label>
+                <div id="vybrate_regiony">
+
+                </div>
+                <div id="skryte_regiony" style="display: none;">
+
+                </div>
+            </div>
+
+            <div class="preferencie_tlacitka_okno">
+                <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
+
+                <button class="preferencie_tlacitko_reset">RESET</button>
 
             </div>
-            <div id="skryte_regiony" style="display: none;">
-
-            </div>
-        </div>
-
-        <div class="preferencie_tlacitka_okno">
-            <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
-
-            <button class="preferencie_tlacitko_reset">RESET</button>
-
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 
@@ -98,9 +103,8 @@
     const prefSwitchsContainer = document.getElementById('prepinace_preferencie');
     const mapSwitch = document.getElementById('mapSwitch');
 
-    const prefForm = document.getElementById('pref_form');
-    const mapForm = document.getElementById('map_form');
-    const mapPref = document.getElementById('mapa_preferencie');
+    const tagPage = document.getElementById('preferencie_stranka_oznacenia');
+    const regionPage = document.getElementById('preferencie_stranka_regiony');
 
     var selectDivRegions = document.getElementById("select_regiony");
     var selectedRegions = document.getElementById("vybrate_regiony");
@@ -113,9 +117,7 @@
 
     const regionsDiv = [reg1, reg2, reg3, reg4];
 
-    mapForm.style.display = "none";
-    mapPref.style.display = "none";
-
+    regionPage.style.display = "none";
 
     let blockBackColour = '#ff3d00';
     let neutralBackColour = '#00b0ff';
@@ -129,17 +131,15 @@
     mapSwitch.addEventListener('change', function () {
         // Check the current state of the switch
         if (mapSwitch.checked) {
-            prefForm.style.display = "none";
-            mapForm.style.display = "block";
-            mapPref.style.display = "block";
+            tagPage.style.display = "none";
+            regionPage.style.display = "block";
 
             regionsDiv.forEach(function (region) {
                 region.style.display = "none";
             });
         } else {
-            prefForm.style.display = "block";
-            mapForm.style.display = "none";
-            mapPref.style.display = "none";
+            tagPage.style.display = "block";
+            regionPage.style.display = "none";
         }
     });
 
