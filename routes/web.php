@@ -35,6 +35,7 @@ Route::post('/domov/zobrazenie', [\App\Http\Controllers\PostController::class, '
 
 Route::get('/pridaj_prispevok', [\App\Http\Controllers\PostController::class, 'pridaj_prispevokGet'])->name('pridaj_prispevok');
 Route::post('/pridaj_prispevok', [\App\Http\Controllers\PostController::class, 'pridaj_prispevokPost'])->name('pridaj_prispevok.post');
+Route::post('/pridaj_prispevok/pridaj_moznost_anketa', [\App\Http\Controllers\PostController::class, 'pridaj_moznost_anketaPost'])->name('pridaj_moznost_anketa.post');
 
 #AUTH
 Route::get('/prihlasenie', [AuthController::class, 'prihlasenie'])->name('prihlasenie');

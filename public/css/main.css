@@ -659,6 +659,10 @@ input:checked + .slider:before {
     width: 80%;
 }
 
+.pridaj_prispevok_formular form{
+    display: grid;
+}
+
 .pridaj_prispevok_formular_kolonka{
     display: grid;
     width: 100%;
@@ -668,9 +672,42 @@ input:checked + .slider:before {
     margin-right: auto;
 }
 
-.pridaj_prispevok_formular form{
-    display: grid;
+.pridaj_prispevok_anketa_prepinac{
+    display: flex;
+    margin-bottom: 1%;
 }
+.pridaj_prispevok_anketa_prepinac label{
+    margin-right: 0;
+    width: 40%;
+}
+.pridaj_prispevok_anketa_pridaj_moznost{
+
+}
+
+.pridaj_prispevok_anketa_moznosti{
+    width: 100%;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+
+.pridaj_prispevok_anketa_moznost{
+    display: flex;
+}
+.pridaj_prispevok_anketa_moznost img{
+    max-height: 50px;
+    max-width: 50px;
+    margin-right: 3%;
+}
+.pridaj_prispevok_anketa_moznost p{
+
+}
+.pridaj_prispevok_anketa_moznost i{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 1.5%;
+}
+
 
 #pridaj_prispevok_vybrate_oznacenia, #pridaj_prispevok_vybrate_regiony{
     width: 100%;
@@ -709,6 +746,19 @@ input:checked + .slider:before {
 
 
 /* Prisposobenie k displayu */
+@media (max-width: 1600px){
+    .domov_prispevok_telo{
+        width: 60%;
+    }
+    .domov_obrazok_prispevok img{
+        max-height: 300px;
+        max-width: 300px;
+    }
+    .pridaj_prispevok_telo{
+        width: 60%;
+    }
+}
+
 @media (max-width: 1200px){
     .prihlasenie_stranka{
         display: grid;
@@ -746,11 +796,11 @@ input:checked + .slider:before {
     }
 
     .domov_prispevok_telo{
-        width: 60%;
+        width: 65%;
     }
     .domov_obrazok_prispevok img{
-        max-height: 300px;
-        max-width: 300px;
+        max-height: 275px;
+        max-width: 275px;
     }
     .preferencie_stranka{
         width: 50%;
@@ -764,6 +814,9 @@ input:checked + .slider:before {
     .preferencie_tlacitka_okno{
         margin-top: 2.5%;
         margin-bottom: 13%;
+    }
+    .pridaj_prispevok_telo{
+        width: 70%;
     }
 }
 
@@ -816,6 +869,12 @@ input:checked + .slider:before {
     .preferencie_tlacitka_okno{
         margin-top: 3%;
         margin-bottom: 17%;
+    }
+    .pridaj_prispevok_telo{
+        width: 80%;
+    }
+    .pridaj_prispevok_formular{
+        width: 85%;
     }
 }
 
@@ -876,6 +935,12 @@ input:checked + .slider:before {
     .preferencie_tlacitka_okno{
         margin-top: 4%;
         margin-bottom: 20%;
+    }
+    .pridaj_prispevok_telo{
+        width: 90%;
+    }
+    .pridaj_prispevok_formular{
+        width: 90%;
     }
 }
 

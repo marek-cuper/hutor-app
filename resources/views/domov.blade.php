@@ -266,8 +266,6 @@
                 loadedPosts[2] = null;
             }
             direction = 1;
-            //loadedPosts[1].style.transform = "translateY(-100%)";
-            //loadedPosts[0].style.transform = "translateY(-100%)";
         }else {
             if (loadedPosts[2] !== null) {
                 while (loadedPosts[2].firstChild) {
@@ -284,11 +282,8 @@
                 loadedPosts[0] = null;
             }
             direction = -1;
-            //loadedPosts[1].style.transform = "top(100%)";
-            //loadedPosts[2].style.transform = "top(100%)";
         }
         localStorage.setItem('oldIndex', index);
-        //updateLocation();
         animate()
     }
 

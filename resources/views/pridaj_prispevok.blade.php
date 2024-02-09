@@ -6,6 +6,8 @@
     <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
     <title>Title</title>
 
 </head>
@@ -22,20 +24,54 @@
                 @csrf
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Title</b></label>
-                    <input type="text" name="title" id="title" class="form-control" required>
+                    <input type="text" name="title" id="title" class="form-control" >
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Text</b></label>
-                    <textarea name="text" id="text" class="form-control" rows="4" required></textarea>
+                    <textarea name="text" id="text" class="form-control" rows="4" ></textarea>
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Image</b></label>
                     <input type="file" name="images[]" id="images" class="form-control-file" multiple>
                 </div>
+
+
+
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Nadpis prieskum</b></label>
-                    <input type="text" name="poll_text" id="poll_text" class="form-control">
+                    <div class="pridaj_prispevok_anketa_prepinac">
+                        <label><b>Anketa</b></label>
+                        <input type="checkbox" id="myCheckbox1" name="myCheckbox">
+                    </div>
+                    <div class="pridaj_prispevok_anketa_prepinac">
+                        <label>Obrazoky v ankete</label>
+                        <input type="checkbox" id="myCheckbox2" name="myCheckbox">
+                    </div>
+                    <label><b>Moznost v ankete</b></label>
+                    <div class="pridaj_prispevok_anketa_pridaj_moznost">
+                        <div class="pridaj_prispevok_anketa_prepinac">
+                            <label>Text</label>
+                            <textarea name="text" id="option_text" class="form-control" rows="1" required></textarea>
+                        </div>
+                        <div class="pridaj_prispevok_anketa_prepinac">
+                            <label>Obrazok</label>
+                            <input type="file" name="option_image" id="option_image" accept="image/*" class="form-control-file">
+                        </div>
+                        <button class="btn btn-primary" onclick="addOptionToPoll()">Pridaj moznost</button>
+                    </div>
+
+
                 </div>
+                <div class="pridaj_prispevok_formular_kolonka">
+                    <label><b>Moznosti ankety</b></label>
+                    <div id="pridaj_prispevok_anketa_moznosti" class="pridaj_prispevok_anketa_moznosti">
+                        <div class="pridaj_prispevok_anketa_moznost">
+                            <img src="{{ asset('images/posts/amethyst-stone.jpg') }}">
+                            <p>Amethyst</p>
+                            <i class="fa fa-times fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
@@ -54,7 +90,7 @@
                 </div>
 
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Oznacenie prispevku</b></label>
+                    <label><b>Regiony prispevku</b></label>
                     <select id="pridaj_prispevok_select_regiony" onchange="hideSelectedOptionRegions()">
                         <option value="" disabled selected>Vyber regiony(max 4)</option>
                     </select>
@@ -91,6 +127,9 @@
     var hiddenInputsDivRegions = document.getElementById("pridaj_prispevok_skryte_regiony");
     var selectedRegions = document.getElementById("pridaj_prispevok_vybrate_regiony");
 
+    var pollOptionTextInput = document.getElementById("option_text");
+    var pollOptionImageInput = document.getElementById("option_image");
+
     document.addEventListener('DOMContentLoaded', function() {
         //Add all tags options
         for (let i = 0; i < tags.length; i++) {
@@ -104,6 +143,28 @@
         }
         selectDivRegions.selectedIndex = "";
     });
+
+    function addOptionToPoll(){
+        $.ajax({
+            url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
+            method: 'POST',
+            data: {image: pollOptionImageInput[0].files[0]},
+
+            success: function(response) {
+                // Handle success response
+                alert(response.imageName);
+                createPollOption();
+            },
+            error: function(error) {
+                // Handle error
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function createPollOption(){
+
+    }
 
     function createTag(tagId, tagName){
         var newTag = document.createElement("option");

@@ -86,6 +86,12 @@ class PostController extends Controller
         return redirect('/domov')->with('success', 'Post created successfully');
     }
 
+    public function pridaj_moznost_anketaPost(Request $request){
+        $image = $request->input('image');
+        $imageName = $image?->store('images/polls', 'public');
+        return response()->json(['imageName' => $imageName]);
+    }
+
     public function vrat_prispevky() {
         $posts = Post::all();
 
