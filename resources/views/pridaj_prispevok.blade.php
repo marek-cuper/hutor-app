@@ -50,13 +50,14 @@
                     <div class="pridaj_prispevok_anketa_pridaj_moznost">
                         <div class="pridaj_prispevok_anketa_prepinac">
                             <label>Text</label>
-                            <textarea name="text" id="option_text" class="form-control" rows="1" required></textarea>
+                            <textarea name="option_text" id="option_text" class="form-control" rows="1" required></textarea>
                         </div>
                         <div class="pridaj_prispevok_anketa_prepinac">
                             <label>Obrazok</label>
-                            <input type="file" name="option_image" id="option_image" accept="image/*" class="form-control-file">
+                            <input type="file" name="option_image" id="option_image" class="form-control-file">
+                            <meta name="csrf-token" content="{{ csrf_token() }}">
                         </div>
-                        <button class="btn btn-primary" onclick="addOptionToPoll()">Pridaj moznost</button>
+                        <button class="btn btn-primary" id="poll_option_button">Pridaj moznost</button>
                     </div>
 
 
@@ -64,11 +65,6 @@
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Moznosti ankety</b></label>
                     <div id="pridaj_prispevok_anketa_moznosti" class="pridaj_prispevok_anketa_moznosti">
-                        <div class="pridaj_prispevok_anketa_moznost">
-                            <img src="{{ asset('images/posts/amethyst-stone.jpg') }}">
-                            <p>Amethyst</p>
-                            <i class="fa fa-times fa-2x"></i>
-                        </div>
                     </div>
                 </div>
 
@@ -129,6 +125,7 @@
 
     var pollOptionTextInput = document.getElementById("option_text");
     var pollOptionImageInput = document.getElementById("option_image");
+    var pollOptionsDiv = document.getElementById("pridaj_prispevok_anketa_moznosti");
 
     document.addEventListener('DOMContentLoaded', function() {
         //Add all tags options
@@ -144,11 +141,13 @@
         selectDivRegions.selectedIndex = "";
     });
 
+    /*
     function addOptionToPoll(){
+        event.preventDefault();
         $.ajax({
             url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
             method: 'POST',
-            data: {image: pollOptionImageInput[0].files[0]},
+            data: {image: pollOptionImageInput[0].prop('files')[0]},
 
             success: function(response) {
                 // Handle success response
@@ -160,10 +159,71 @@
                 console.error('Error:', error);
             }
         });
-    }
+    }*/
+    $('#poll_option_button').click(function(event) {
+        event.preventDefault(); // Prevent the default button click behavior
 
-    function createPollOption(){
+        var imageData = $('#option_image')[0].files[0]; // Get the selected image file
 
+        var formData = new FormData(); // Create FormData object
+        formData.append('image', imageData); // Append the image file to FormData
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        // Set the CSRF token in the request headers
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+
+        // Make AJAX request
+        $.ajax({
+            url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
+            method: 'POST',
+            data: formData,
+            contentType: false, // Important: set contentType to false
+            processData: false, // Important: set processData to false
+            success: function(response) {
+                // Handle success response
+                createPollOption(pollOptionTextInput.value, response.imageName)
+                pollOptionTextInput.value = '';
+                pollOptionImageInput.value = '';
+            },
+            error: function(error) {
+                // Handle error
+                alert('Error');
+            }
+        });
+    });
+
+
+    function createPollOption(text, imageName){
+        var index = pollOptionsDiv.childElementCount;
+
+        const polloptionDiv = document.createElement('div');
+        polloptionDiv.id = 'pridaj_prispevok_anketa_moznost' + index;
+        polloptionDiv.className = 'pridaj_prispevok_anketa_moznost';
+
+        const polloptionImg = document.createElement('img');
+        polloptionImg.src = '/storage/' + imageName;
+
+        const polloptionP = document.createElement('p');
+        polloptionP.textContent = text;
+
+        const polloptionI = document.createElement('i');
+        polloptionI.className = 'fa fa-times fa-2x';
+
+        polloptionI.addEventListener('click', function() {
+            // Remove the polloptionDiv when the delete icon is clicked
+            pollOptionsDiv.removeChild(polloptionDiv);
+        });
+
+        polloptionDiv.appendChild(polloptionImg);
+        polloptionDiv.appendChild(polloptionP);
+        polloptionDiv.appendChild(polloptionI);
+
+        pollOptionsDiv.appendChild(polloptionDiv);
     }
 
     function createTag(tagId, tagName){
