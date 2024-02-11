@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Poll_option;
 use App\Models\Post_image;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -40,7 +41,7 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'text' => 'required',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
-            'poll_text' => 'nullable',
+            'poll_question' => 'nullable',
             'tags' => 'nullable',
         ]);
 
@@ -53,7 +54,7 @@ class PostController extends Controller
             'creator_id' => Auth::user()->id,
             'title' => $request->input('title'),
             'text' => $request->input('text'),
-            'poll_text' => $request->input('poll_text'),
+            'poll_text' => $request->input('poll_question'),
         ]);
 
         $post->save();
@@ -74,6 +75,30 @@ class PostController extends Controller
                 $order++;
             }
         }
+
+        $checkboxPoll = $request->input('poll_question');
+        if(isset($checkboxPoll)){
+            $checkboxPollImg = $request->input('checkBoxPollImage');
+            $pollText = $request->input('poll_text');
+            $pollImages = $request->input('poll_images');
+            if (!isset($checkboxPollImg)){
+                for ($i = 0; $i < sizeof($pollImages); $i++) {
+                    $pollImages[$i] = null;
+                }
+            }
+
+            for ($i = 0; $i < sizeof($pollText); $i++) {
+                $polll_option_to_save = new Poll_option([
+                    'post_id' => $post->id,
+                    'order' => $i,
+                    'text' => $pollText[$i],
+                    'image_name' => $pollImages[$i],
+                    'votes' => 0,
+                ]);
+                $polll_option_to_save->save();
+            }
+        }
+
 
         $tags = $request->input('tags');
         $post->tags()->attach($tags);

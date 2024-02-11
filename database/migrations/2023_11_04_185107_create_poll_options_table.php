@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('order');
             $table->string('text');
-            $table->string('image_name');
+            $table->string('image_name')->nullable();
             $table->unsignedBigInteger('votes');
             $table->timestamps();
         });

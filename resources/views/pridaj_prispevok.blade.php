@@ -23,15 +23,15 @@
             <form action="{{ route('pridaj_prispevok.post') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Title</b></label>
-                    <input type="text" name="title" id="title" class="form-control" >
+                    <label><b>Nadpis</b></label>
+                    <input type="text" name="title" id="title" class="form-control" required>
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Text</b></label>
-                    <textarea name="text" id="text" class="form-control" rows="4" ></textarea>
+                    <textarea name="text" id="text" class="form-control" rows="4" required></textarea>
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Image</b></label>
+                    <label><b>Obrazok</b></label>
                     <input type="file" name="images[]" id="images" class="form-control-file" multiple>
                 </div>
 
@@ -40,19 +40,23 @@
                 <div class="pridaj_prispevok_formular_kolonka">
                     <div class="pridaj_prispevok_anketa_prepinac">
                         <label><b>Anketa</b></label>
-                        <input type="checkbox" id="myCheckbox1" name="myCheckbox">
+                        <input type="checkbox" id="checkBoxPoll">
                     </div>
-                    <div class="pridaj_prispevok_anketa_prepinac">
+                    <div class="pridaj_prispevok_anketa_prepinac" id="pridaj_prispevok_anketa_otazka">
+                        <label>Otazka do ankety</label>
+                        <input name="poll_question" id="poll_question" class="form-control" rows="1">
+                    </div>
+                    <div class="pridaj_prispevok_anketa_prepinac" id="pridaj_prispevok_anketa_prepinac_obrazok">
                         <label>Obrazoky v ankete</label>
-                        <input type="checkbox" id="myCheckbox2" name="myCheckbox">
+                        <input type="checkbox" name="checkBoxPollImage" id="checkBoxPollImage">
                     </div>
-                    <label><b>Moznost v ankete</b></label>
-                    <div class="pridaj_prispevok_anketa_pridaj_moznost">
+                    <div class="pridaj_prispevok_anketa_pridaj_moznost" id="pridaj_prispevok_anketa_pridaj_moznost">
+                        <label><b>Moznost v ankete</b></label>
                         <div class="pridaj_prispevok_anketa_prepinac">
                             <label>Text</label>
-                            <textarea name="option_text" id="option_text" class="form-control" rows="1" required></textarea>
+                            <textarea name="option_text" id="option_text" class="form-control" rows="1"></textarea>
                         </div>
-                        <div class="pridaj_prispevok_anketa_prepinac">
+                        <div class="pridaj_prispevok_anketa_prepinac" id="pridaj_prispevok_anketa_pridaj_obrazok">
                             <label>Obrazok</label>
                             <input type="file" name="option_image" id="option_image" class="form-control-file">
                             <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -62,9 +66,13 @@
 
 
                 </div>
-                <div class="pridaj_prispevok_formular_kolonka">
+                <div class="pridaj_prispevok_formular_kolonka" id="pridaj_prispevok_anketa_pridane_moznosti">
                     <label><b>Moznosti ankety</b></label>
                     <div id="pridaj_prispevok_anketa_moznosti" class="pridaj_prispevok_anketa_moznosti">
+
+                    </div>
+                    <div id="pridaj_prispevok_anketa_skryte_moznosti" style="display: none;">
+
                     </div>
                 </div>
 
@@ -123,9 +131,20 @@
     var hiddenInputsDivRegions = document.getElementById("pridaj_prispevok_skryte_regiony");
     var selectedRegions = document.getElementById("pridaj_prispevok_vybrate_regiony");
 
+    //for checkboxs
+    var checkboxPoll = document.getElementById('checkBoxPoll');
+    var checkboxPollImg = document.getElementById('checkBoxPollImage');
+
+    var pollOptionQuestion = document.getElementById("pridaj_prispevok_anketa_otazka");
+    var pollOptionImageCheckBox = document.getElementById("pridaj_prispevok_anketa_prepinac_obrazok");
+    var pollAddOption = document.getElementById("pridaj_prispevok_anketa_pridaj_moznost");
+    var pollAddedOptionsForm = document.getElementById("pridaj_prispevok_anketa_pridane_moznosti");
+    var pollAddedOptionWithImage = document.getElementById("pridaj_prispevok_anketa_pridaj_obrazok");
+
     var pollOptionTextInput = document.getElementById("option_text");
     var pollOptionImageInput = document.getElementById("option_image");
     var pollOptionsDiv = document.getElementById("pridaj_prispevok_anketa_moznosti");
+    var hiddenInputPollOptions = document.getElementById("pridaj_prispevok_anketa_skryte_moznosti");
 
     document.addEventListener('DOMContentLoaded', function() {
         //Add all tags options
@@ -139,62 +158,88 @@
             createRegion(regions[i].id, regions[i].name);
         }
         selectDivRegions.selectedIndex = "";
-    });
 
-    /*
-    function addOptionToPoll(){
-        event.preventDefault();
-        $.ajax({
-            url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
-            method: 'POST',
-            data: {image: pollOptionImageInput[0].prop('files')[0]},
-
-            success: function(response) {
-                // Handle success response
-                alert(response.imageName);
-                createPollOption();
-            },
-            error: function(error) {
-                // Handle error
-                console.error('Error:', error);
+        checkboxPoll.addEventListener('change', function() {
+            if (this.checked) {
+                pollOptionQuestion.style.display = 'flex';
+                pollOptionImageCheckBox.style.display = 'flex';
+                pollAddOption.style.display = 'block';
+                pollAddedOptionsForm.style.display = 'grid';
+                changePollOptionImage();
+            }else{
+                pollOptionQuestion.style.display = 'none';
+                pollOptionImageCheckBox.style.display = 'none';
+                pollAddOption.style.display = 'none';
+                pollAddedOptionsForm.style.display = 'none';
             }
         });
-    }*/
+        checkboxPollImg.addEventListener('change', function() {
+            changePollOptionImage();
+        });
+    });
+
+    //If your layer is update to visible lower layer will automaticly go visible too, so we need there update automaticly lower layer to change his visibility depends on checkbox
+
+    function changePollOptionImage(){
+        var images = pollOptionsDiv.querySelectorAll("img");
+        if (checkboxPollImg.checked) {
+            pollAddedOptionWithImage.style.display = 'flex';
+            images.forEach(function(image) {
+                image.style.display = 'flex'; // Set the new src attribute here
+            });
+        }else{
+            pollAddedOptionWithImage.style.display = 'none';
+            images.forEach(function(image) {
+                image.style.display = 'none'; // Set the new src attribute here
+            });
+        }
+        hiddenInputPollOptions.style.display = 'none';
+    }
+
+
     $('#poll_option_button').click(function(event) {
         event.preventDefault(); // Prevent the default button click behavior
 
-        var imageData = $('#option_image')[0].files[0]; // Get the selected image file
+        if(checkboxPollImg.checked){
+            var imageData = $('#option_image')[0].files[0]; // Get the selected image file
 
-        var formData = new FormData(); // Create FormData object
-        formData.append('image', imageData); // Append the image file to FormData
+            var formData = new FormData(); // Create FormData object
+            formData.append('image', imageData); // Append the image file to FormData
 
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        // Set the CSRF token in the request headers
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
+            // Set the CSRF token in the request headers
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
 
-        // Make AJAX request
-        $.ajax({
-            url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
-            method: 'POST',
-            data: formData,
-            contentType: false, // Important: set contentType to false
-            processData: false, // Important: set processData to false
-            success: function(response) {
-                // Handle success response
-                createPollOption(pollOptionTextInput.value, response.imageName)
-                pollOptionTextInput.value = '';
-                pollOptionImageInput.value = '';
-            },
-            error: function(error) {
-                // Handle error
-                alert('Error');
-            }
-        });
+            // Make AJAX request
+            $.ajax({
+                url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
+                method: 'POST',
+                data: formData,
+                contentType: false, // Important: set contentType to false
+                processData: false, // Important: set processData to false
+                success: function(response) {
+                    // Handle success response
+                    createPollOption(pollOptionTextInput.value, response.imageName)
+                    pollOptionTextInput.value = '';
+                    pollOptionImageInput.value = '';
+                },
+                error: function(error) {
+                    // Handle error
+                    alert('Error');
+                }
+            });
+        }else {
+            createPollOption(pollOptionTextInput.value, null)
+            pollOptionTextInput.value = '';
+            pollOptionImageInput.value = '';
+        }
+
+
     });
 
 
@@ -204,9 +249,21 @@
         const polloptionDiv = document.createElement('div');
         polloptionDiv.id = 'pridaj_prispevok_anketa_moznost' + index;
         polloptionDiv.className = 'pridaj_prispevok_anketa_moznost';
+        var hiddenpollOptionText = document.createElement("input");
+        hiddenpollOptionText.value = text;
+        hiddenpollOptionText.name = 'poll_text[]';
+        hiddenpollOptionText.type = 'text';
+        hiddenInputPollOptions.appendChild(hiddenpollOptionText);
 
         const polloptionImg = document.createElement('img');
-        polloptionImg.src = '/storage/' + imageName;
+        if(imageName !== null){
+            polloptionImg.src = '/storage/' + imageName;
+        }
+        var hiddenpollOptionImg = document.createElement("input");
+        hiddenpollOptionImg.value = imageName;
+        hiddenpollOptionImg.name = 'poll_images[]';
+        hiddenpollOptionImg.type = 'text';
+        hiddenInputPollOptions.appendChild(hiddenpollOptionImg);
 
         const polloptionP = document.createElement('p');
         polloptionP.textContent = text;
@@ -217,6 +274,8 @@
         polloptionI.addEventListener('click', function() {
             // Remove the polloptionDiv when the delete icon is clicked
             pollOptionsDiv.removeChild(polloptionDiv);
+            hiddenInputPollOptions.removeChild(hiddenpollOptionText);
+            hiddenInputPollOptions.removeChild(hiddenpollOptionImg);
         });
 
         polloptionDiv.appendChild(polloptionImg);

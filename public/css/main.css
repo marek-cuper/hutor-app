@@ -676,12 +676,23 @@ input:checked + .slider:before {
     display: flex;
     margin-bottom: 1%;
 }
+
 .pridaj_prispevok_anketa_prepinac label{
     margin-right: 0;
     width: 40%;
 }
-.pridaj_prispevok_anketa_pridaj_moznost{
+#pridaj_prispevok_anketa_otazka{
+    display: none;
+}
 
+#pridaj_prispevok_anketa_prepinac_obrazok{
+    display: none;
+}
+.pridaj_prispevok_anketa_pridaj_moznost{
+    display: none;
+}
+#pridaj_prispevok_anketa_pridane_moznosti{
+    display: none;
 }
 
 .pridaj_prispevok_anketa_moznosti{
@@ -697,10 +708,10 @@ input:checked + .slider:before {
 .pridaj_prispevok_anketa_moznost img{
     max-height: 50px;
     max-width: 50px;
-    margin: 0.5% 3% 0.5% 0.5%;
+    margin: 0.5% 0 0.5% 0.5%;
 }
 .pridaj_prispevok_anketa_moznost p{
-
+    margin-left: 3%;
 }
 .pridaj_prispevok_anketa_moznost i{
     margin: auto 1.5% auto auto;
