@@ -19,10 +19,22 @@ class PostController extends Controller
     public function domov_zobrazeniePost(Request $request){
         $post_id = $request->input('post_id');
         $posts_all_images = Post_image::where('post_id', $post_id)->orderBy('order')->get();
-
         $show_posts_images = $posts_all_images->pluck('image_name')->toArray();
 
-        return response()->json(['show_posts_images' => $show_posts_images]);
+        $post_question = Post::where('id', $post_id)->first()->poll_text;
+        $post_poll_options_images = null;
+        $post_poll_options_text = null;
+        if($post_question !== null){
+            $post_poll_options = Poll_option::where('post_id', $post_id)->orderBy('order')->get();
+            $post_poll_options_images = $post_poll_options->pluck('image_name')->toArray();
+            $post_poll_options_text = $post_poll_options->pluck('text')->toArray();
+        }
+
+        return response()->json([
+            'show_posts_images' => $show_posts_images,
+            'post_poll_options_images' => $post_poll_options_images,
+            'post_poll_options_text' => $post_poll_options_text,
+        ]);
 
     }
 

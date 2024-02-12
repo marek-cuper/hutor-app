@@ -36,6 +36,8 @@
     var posts_regions = @json(session('posts_regions'));
 
     var show_posts_images = [];
+    var show_post_poll_options_image = [];
+    var show_post_poll_options_text = [];
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -49,6 +51,8 @@
 
     let showPostImages = [];
     let showPostImagesIndex = 0;
+    let showPostImagesLeftButton;
+    let showPostImagesRightButton;
 
     function setDataShowPost(){
         //After click to post disable scrolling
@@ -61,6 +65,8 @@
             data: { post_id: post_id, _token: '{{ csrf_token() }}' },
             success: function (response) {
                 show_posts_images = response.show_posts_images;
+                show_post_poll_options_image = response.post_poll_options_images
+                show_post_poll_options_text = response.post_poll_options_text
                 showPost();
 
             },
@@ -96,6 +102,8 @@
         nadpisParagraph.textContent = post.title;
         nadpisDiv.appendChild(nadpisParagraph);
 
+        containerDiv.appendChild(nadpisDiv);
+
 // Create the popis (description) div
         const popisDiv = document.createElement('div');
         popisDiv.className = 'domov_popis_prispevok';
@@ -104,6 +112,8 @@
         textParagraph.textContent = post.text;
         popisDiv.appendChild(textParagraph);
 
+        containerDiv.appendChild(popisDiv);
+
 
         const obrazkyKontajnerDiv = document.createElement('div');
         obrazkyKontajnerDiv.id = 'domov_zobrazenie_kontajner_obrazky';
@@ -111,25 +121,25 @@
 
         const obrazkyTlacitkoLaveDiv = document.createElement('div');
         obrazkyTlacitkoLaveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_lave';
-        obrazkyTlacitkoLaveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
+        obrazkyTlacitkoLaveDiv.className = 'domov_prispevok_icon_pozadie';
         const lavaSipka = document.createElement('i');
         lavaSipka.className = 'fa fa-arrow-left fa-3x';
         obrazkyTlacitkoLaveDiv.appendChild(lavaSipka);
+        showPostImagesLeftButton = obrazkyTlacitkoLaveDiv;
         obrazkyTlacitkoLaveDiv.addEventListener("click", function() {
-            posunObrazokKontajner('-');
+            moveImageContainer('-');
         });
-
 
         const obrazkyTlacitkoPraveDiv = document.createElement('div');
         obrazkyTlacitkoPraveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_prave';
-        obrazkyTlacitkoPraveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
+        obrazkyTlacitkoPraveDiv.className = 'domov_prispevok_icon_pozadie';
         const pravaSipka = document.createElement('i');
         pravaSipka.className = 'fa fa-arrow-right fa-3x';
         obrazkyTlacitkoPraveDiv.appendChild(pravaSipka);
+        showPostImagesRightButton = obrazkyTlacitkoPraveDiv;
         obrazkyTlacitkoPraveDiv.addEventListener("click", function() {
-            posunObrazokKontajner('+');
+            moveImageContainer('+');
         });
-
 
 // Create the obrazok (image) div
         const obrazkyDiv = document.createElement('div');
@@ -154,36 +164,39 @@
         obrazkyKontajnerDiv.appendChild(obrazkyTlacitkoLaveDiv);
         obrazkyKontajnerDiv.appendChild(obrazkyDiv);
         obrazkyKontajnerDiv.appendChild(obrazkyTlacitkoPraveDiv);
-
-// Create the prieskum (chart) div
-        const prieskumDiv = document.createElement('div');
-        prieskumDiv.id = 'domov_prispevok_prieskum' + post.id;
-        prieskumDiv.className = 'domov_prispevok_prieskum';
-        const prieskumIkonaDiv = document.createElement('div');
-        prieskumIkonaDiv.className = 'domov_prispevok_prieskum_ikona';
-        const ikonaElement = document.createElement('i');
-        ikonaElement.className = 'fa fa-pie-chart fa-2x';
-        prieskumIkonaDiv.appendChild(ikonaElement);
-        const prieskumOtazkaDiv = document.createElement('div');
-        prieskumOtazkaDiv.className = 'domov_prispevok_prieskum_otazka';
-        const prieskumTextParagraph = document.createElement('p');
-        prieskumTextParagraph.id = 'prieskum_text' + post.id;
-        if(post.poll_text == null){
-            prieskumDiv.style.display = "none";
-        }else {
-            prieskumDiv.style.display = "flex";
-            prieskumTextParagraph.textContent = post.poll_text;
-        }
-        prieskumOtazkaDiv.appendChild(prieskumTextParagraph);
-        prieskumDiv.appendChild(prieskumIkonaDiv);
-        prieskumDiv.appendChild(prieskumOtazkaDiv);
-
-
-        // Append all created elements to the main container
-        containerDiv.appendChild(nadpisDiv);
-        containerDiv.appendChild(popisDiv);
         containerDiv.appendChild(obrazkyKontajnerDiv);
-        containerDiv.appendChild(prieskumDiv);
+
+
+        if(post.poll_text !== null){
+            const anketaKontajner = document.createElement('div');
+            anketaKontajner.id = 'domov_zobrazenie_anketa_telo' + post.id;
+            anketaKontajner.className = 'domov_zobrazenie_anketa_telo';
+
+            const anketaOtazkaDiv = document.createElement('label');
+            anketaOtazkaDiv.textContent = post.poll_text;
+
+            anketaKontajner.appendChild(anketaOtazkaDiv);
+
+            for (let i = 0; i < show_post_poll_options_image.length; i++) {
+                const anketaMoznost = document.createElement('div');
+                anketaMoznost.id = 'domov_zobrazenie_anketa_moznost' + post.id;
+                anketaMoznost.className = 'domov_zobrazenie_anketa_moznost';
+
+                const anketaMoznostObrazok = document.createElement('img');
+                anketaMoznostObrazok.src = '/storage/' + show_post_poll_options_image[i];
+
+
+                const anketaMoznostText = document.createElement('p');
+                anketaMoznostText.textContent = show_post_poll_options_text[i];
+
+                anketaMoznost.appendChild(anketaMoznostObrazok);
+                anketaMoznost.appendChild(anketaMoznostText);
+                anketaKontajner.appendChild(anketaMoznost);
+
+                containerDiv.appendChild(anketaKontajner);
+            }
+        }
+
 
         const oznaceniaRegionyDiv = document.createElement('div');
         oznaceniaRegionyDiv.id = 'domov_oznacenia_a_regiony' + post.id;
@@ -224,18 +237,19 @@
 
 // Append the main container to the document body or any other desired parent element
         showContainer.appendChild(containerDiv);
+        updateShowImageButtons();
     }
 
-    function posunObrazokKontajner(smer){
+    function moveImageContainer(way){
         var change = false;
         oldShowPostImagesIndex = showPostImagesIndex
-        if(smer === '+'){
+        if(way === '+'){
             if(showPostImagesIndex + 1 < showPostImages.length){
                 change = true;
                 showPostImagesIndex++;
             }
         }
-        if(smer === '-'){
+        if(way === '-'){
             if((showPostImagesIndex - 1) > -1){
                 change = true;
                 showPostImagesIndex--;
@@ -244,6 +258,20 @@
         if(change === true){
             showPostImages[oldShowPostImagesIndex].style.display = 'none';
             showPostImages[showPostImagesIndex].style.display = 'block';
+        }
+        updateShowImageButtons();
+    }
+
+    function updateShowImageButtons(){
+        if(showPostImagesIndex >= showPostImages.length - 1){
+            showPostImagesRightButton.style.visibility = 'hidden';
+        } else {
+            showPostImagesRightButton.style.visibility = 'visible';
+        }
+        if(showPostImagesIndex === 0){
+            showPostImagesLeftButton.style.visibility = 'hidden';
+        }else {
+            showPostImagesLeftButton.style.visibility = 'visible';
         }
     }
 

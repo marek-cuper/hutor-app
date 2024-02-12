@@ -378,8 +378,40 @@ html, body {
 
 }
 
-.domov_zobrazenie_telo .domov_prispevok_prieskum {
+.domov_zobrazenie_anketa_telo {
+    display: inline;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    width: 50%;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
 
+.domov_zobrazenie_anketa_telo label{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.domov_zobrazenie_anketa_moznost {
+    display: flex;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+
+.domov_zobrazenie_anketa_moznost img{
+    max-height: 50px;
+    max-width: 50px;
+    margin: 0.5% 0 0.5% 0.5%;
+}
+.domov_zobrazenie_anketa_moznost p{
+    margin-left: 3%;
 }
 
 .domov_zobrazenie_telo .domov_oznacenia_a_regiony {
