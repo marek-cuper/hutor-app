@@ -44,7 +44,6 @@
 
     var loadedPosts = [];
     const homeContainer = document.getElementById('domov_kontajner_prispevky');
-
     const showContainer = document.getElementById('domov_zobrazeny_prispevok');
 
     let scrollListener = true;
@@ -53,6 +52,9 @@
     let showPostImagesIndex = 0;
     let showPostImagesLeftButton;
     let showPostImagesRightButton;
+
+    let showPostChosoenPollOption;
+    let showPostPollOptions = [];
 
     function setDataShowPost(){
         //After click to post disable scrolling
@@ -121,7 +123,7 @@
 
         const obrazkyTlacitkoLaveDiv = document.createElement('div');
         obrazkyTlacitkoLaveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_lave';
-        obrazkyTlacitkoLaveDiv.className = 'domov_prispevok_icon_pozadie';
+        obrazkyTlacitkoLaveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
         const lavaSipka = document.createElement('i');
         lavaSipka.className = 'fa fa-arrow-left fa-3x';
         obrazkyTlacitkoLaveDiv.appendChild(lavaSipka);
@@ -132,7 +134,7 @@
 
         const obrazkyTlacitkoPraveDiv = document.createElement('div');
         obrazkyTlacitkoPraveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_prave';
-        obrazkyTlacitkoPraveDiv.className = 'domov_prispevok_icon_pozadie';
+        obrazkyTlacitkoPraveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
         const pravaSipka = document.createElement('i');
         pravaSipka.className = 'fa fa-arrow-right fa-3x';
         obrazkyTlacitkoPraveDiv.appendChild(pravaSipka);
@@ -184,6 +186,9 @@
 
                 const anketaMoznostObrazok = document.createElement('img');
                 anketaMoznostObrazok.src = '/storage/' + show_post_poll_options_image[i];
+                if(show_post_poll_options_image[i] === null){
+                    anketaMoznostObrazok.style.visibility = 'hidden';
+                }
 
 
                 const anketaMoznostText = document.createElement('p');
@@ -191,10 +196,28 @@
 
                 anketaMoznost.appendChild(anketaMoznostObrazok);
                 anketaMoznost.appendChild(anketaMoznostText);
-                anketaKontajner.appendChild(anketaMoznost);
 
-                containerDiv.appendChild(anketaKontajner);
+                showPostPollOptions[i] = anketaMoznost;
+                anketaMoznost.addEventListener("click", function() {
+                    choosePollOption(i);
+                });
+
+                anketaKontajner.appendChild(anketaMoznost);
             }
+
+            const anketaTlacitkoDiv = document.createElement('div');
+            anketaTlacitkoDiv.className = 'preferencie_tlacitka_okno';
+
+            const anketaTlacitko = document.createElement('button');
+            anketaTlacitko.className = 'preferencie_tlacitko_uloz';
+            anketaTlacitko.textContent = 'Hlasuj';
+            anketaTlacitko.addEventListener("click", function() {
+                votePollOption();
+            });
+            anketaTlacitkoDiv.appendChild(anketaTlacitko);
+            anketaKontajner.appendChild(anketaTlacitkoDiv);
+
+            containerDiv.appendChild(anketaKontajner);
         }
 
 
@@ -273,6 +296,33 @@
         }else {
             showPostImagesLeftButton.style.visibility = 'visible';
         }
+    }
+
+    function choosePollOption(number){
+        showPostChosoenPollOption = number;
+        for (let i = 0; i < showPostPollOptions.length; i++) {
+            showPostPollOptions[i].style.backgroundColor = 'white';
+        }
+        showPostPollOptions[showPostChosoenPollOption].style.backgroundColor = 'lightgray';
+    }
+
+    function votePollOption(){
+        var post_id = posts[index].id;
+        $.ajax({
+            url: '/domov/zobrazenie/anketa_hlasuj',
+            method: 'POST',
+            data: { post_id: post_id, poll_option_number: showPostChosoenPollOption, _token: '{{ csrf_token() }}' },
+            success: function (response) {
+                userVoted();
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function userVoted(){
+        alert('vyslo');
     }
 
 

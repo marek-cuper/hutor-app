@@ -123,27 +123,6 @@ class PostController extends Controller
         return redirect('/domov')->with('success', 'Post created successfully');
     }
 
-    public function pridaj_moznost_anketaPost(Request $request){
-        //$image = $request->input('image');
-        //$imageName = $image?->store('images/polls', 'public');
-        //return response()->json(['imageName' => $imageName]);
-
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed
-        ]);
-
-        // Store the uploaded image
-        if ($request->hasFile('image')) {
-            $imageName = $request->file('image')->store('images/polls', 'public');
-
-            // Return the image name or any other response
-            return response()->json(['imageName' => $imageName], 200);
-        }
-
-        // Handle the case if no image is uploaded
-        return response()->json(['error' => 'No image uploaded'], 400);
-
-    }
 
     public function vrat_prispevky() {
         $posts = Post::all();

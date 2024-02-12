@@ -359,9 +359,8 @@ html, body {
 
 .domov_zobrazenie_kontajner_obrazky{
     display: flex;
-    margin: auto;
-    margin-top: 2%;
-    margin-bottom: 3%;
+    width: 50%;
+    margin: 2% auto 3%;
 }
 
 .domov_zobrazenie_kontajner_obrazky domov_obrazok_prispevok{
@@ -375,7 +374,8 @@ html, body {
 }
 
 .domov_zobrazenie_obrazky_tlacitka{
-
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .domov_zobrazenie_anketa_telo {
@@ -412,6 +412,15 @@ html, body {
 }
 .domov_zobrazenie_anketa_moznost p{
     margin-left: 3%;
+}
+.domov_zobrazenie_anketa_telo .preferencie_tlacitka_okno{
+    width: 90%;
+    margin: 2% auto 1%;
+}
+
+.domov_zobrazenie_anketa_telo .preferencie_tlacitko_uloz{
+    font-size: 1.5vh;
+    margin-left: auto;
 }
 
 .domov_zobrazenie_telo .domov_oznacenia_a_regiony {
@@ -843,6 +852,12 @@ input:checked + .slider:before {
         max-height: 275px;
         max-width: 275px;
     }
+    .domov_zobrazenie_kontajner_obrazky{
+        width: 70%;
+    }
+    .domov_zobrazenie_anketa_telo {
+        width: 60%;
+    }
     .preferencie_stranka{
         width: 50%;
     }
@@ -894,7 +909,12 @@ input:checked + .slider:before {
         max-height: 250px;
         max-width: 250px;
     }
-
+    .domov_zobrazenie_kontajner_obrazky{
+        width: 85%;
+    }
+    .domov_zobrazenie_anketa_telo {
+        width: 70%;
+    }
     .domov_prispevok_icon_pozadie{
         transform: scale(0.9);
     }
@@ -959,9 +979,14 @@ input:checked + .slider:before {
         max-height: 200px;
         max-width: 200px;
     }
-
     .domov_zobrazenie_telo .domov_oznacenia_a_regiony {
         height: 100px;
+    }
+    .domov_zobrazenie_kontajner_obrazky{
+        width: 95%;
+    }
+    .domov_zobrazenie_anketa_telo {
+        width: 80%;
     }
 
     .preferencie_stranka{

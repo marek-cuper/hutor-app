@@ -32,10 +32,12 @@ Route::get('/domov/prispevok/dalsi', [\App\Http\Controllers\PostController::clas
 Route::get('/domov/prispevok/predosli', [\App\Http\Controllers\PostController::class, 'domov_prispevok_predosliGet'])->name('domov_predosli');
 Route::get('/domov/prispevok/{id_post}', [\App\Http\Controllers\PostController::class, 'domov_prispevokGet'])->name('domov_prispevok');
 Route::post('/domov/zobrazenie', [\App\Http\Controllers\PostController::class, 'domov_zobrazeniePost'])->name('domov_zobrazenie');
+Route::post('/domov/zobrazenie/anketa_hlasuj', [\App\Http\Controllers\PollController::class, 'anketa_hlasujPost'])->name('anketa_hlasuj.post');
+
 
 Route::get('/pridaj_prispevok', [\App\Http\Controllers\PostController::class, 'pridaj_prispevokGet'])->name('pridaj_prispevok');
 Route::post('/pridaj_prispevok', [\App\Http\Controllers\PostController::class, 'pridaj_prispevokPost'])->name('pridaj_prispevok.post');
-Route::post('/pridaj_prispevok/pridaj_moznost_anketa', [\App\Http\Controllers\PostController::class, 'pridaj_moznost_anketaPost'])->name('pridaj_moznost_anketa.post');
+Route::post('/pridaj_prispevok/pridaj_moznost_anketa', [\App\Http\Controllers\PollController::class, 'pridaj_moznost_anketaPost'])->name('pridaj_moznost_anketa.post');
 
 #AUTH
 Route::get('/prihlasenie', [AuthController::class, 'prihlasenie'])->name('prihlasenie');
