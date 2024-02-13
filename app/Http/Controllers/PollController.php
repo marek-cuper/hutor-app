@@ -30,7 +30,7 @@ class PollController extends Controller
         $user_polll_option_vote_to_save = new User_poll_vote([
             'user_id' => Auth::user()->id,
             'post_id' => $request->input('post_id'),
-            'option_order' => $request->input('poll_option_number'),
+            'poll_option_number' => $request->input('poll_option_number'),
         ]);
         $user_polll_option_vote_to_save->save();
 

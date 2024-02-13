@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Poll_option;
 use App\Models\Post_image;
+use App\Models\User_poll_vote;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Tag;
@@ -30,10 +31,17 @@ class PostController extends Controller
             $post_poll_options_text = $post_poll_options->pluck('text')->toArray();
         }
 
+        $user_poll_option = User_poll_vote::where('user_id', Auth::user()->id)->where('post_id', $post_id)->first();
+        $user_poll_option_number = -1;
+        if ($user_poll_option !== null){
+            $user_poll_option_number =  $user_poll_option->poll_option_number;
+        }
+
         return response()->json([
             'show_posts_images' => $show_posts_images,
             'post_poll_options_images' => $post_poll_options_images,
             'post_poll_options_text' => $post_poll_options_text,
+            'user_poll_option_number' => $user_poll_option_number,
         ]);
 
     }

@@ -38,6 +38,7 @@
     var show_posts_images = [];
     var show_post_poll_options_image = [];
     var show_post_poll_options_text = [];
+    var show_user_poll_option_number;
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -67,8 +68,9 @@
             data: { post_id: post_id, _token: '{{ csrf_token() }}' },
             success: function (response) {
                 show_posts_images = response.show_posts_images;
-                show_post_poll_options_image = response.post_poll_options_images
-                show_post_poll_options_text = response.post_poll_options_text
+                show_post_poll_options_image = response.post_poll_options_images;
+                show_post_poll_options_text = response.post_poll_options_text;
+                show_user_poll_option_number = response.user_poll_option_number;
                 showPost();
 
             },
@@ -171,7 +173,7 @@
 
         if(post.poll_text !== null){
             const anketaKontajner = document.createElement('div');
-            anketaKontajner.id = 'domov_zobrazenie_anketa_telo' + post.id;
+            anketaKontajner.id = 'domov_zobrazenie_anketa_telo';
             anketaKontajner.className = 'domov_zobrazenie_anketa_telo';
 
             const anketaOtazkaDiv = document.createElement('label');
@@ -211,15 +213,12 @@
             const anketaTlacitko = document.createElement('button');
             anketaTlacitko.className = 'preferencie_tlacitko_uloz';
             anketaTlacitko.textContent = 'Hlasuj';
-            anketaTlacitko.addEventListener("click", function() {
-                votePollOption();
-            });
+            anketaTlacitko.addEventListener("click", votePollOption);
             anketaTlacitkoDiv.appendChild(anketaTlacitko);
             anketaKontajner.appendChild(anketaTlacitkoDiv);
 
             containerDiv.appendChild(anketaKontajner);
         }
-
 
         const oznaceniaRegionyDiv = document.createElement('div');
         oznaceniaRegionyDiv.id = 'domov_oznacenia_a_regiony' + post.id;
@@ -261,6 +260,12 @@
 // Append the main container to the document body or any other desired parent element
         showContainer.appendChild(containerDiv);
         updateShowImageButtons();
+
+        //update if user already voted in poll
+        if(show_user_poll_option_number > -1){
+            choosePollOption(show_user_poll_option_number);
+            userVoted();
+        }
     }
 
     function moveImageContainer(way){
@@ -322,7 +327,26 @@
     }
 
     function userVoted(){
-        alert('vyslo');
+        let pollContainer = document.getElementById('domov_zobrazenie_anketa_telo');
+        pollContainer.removeChild(pollContainer.lastChild);
+        //Delete all event listeners from div
+        pollContainer.outerHTML = pollContainer.outerHTML;
+        pollContainer = document.getElementById('domov_zobrazenie_anketa_telo');
+
+        const statisticPollButtonDiv = document.createElement('div');
+        statisticPollButtonDiv.className = 'domov_zobrazenie_anketa_statistika_tlacitko';
+        const statisticPoll = document.createElement('i');
+        statisticPoll.className = 'fa fa-pie-chart fa-2x';
+        statisticPollButtonDiv.appendChild(statisticPoll);
+        pollContainer.appendChild(statisticPollButtonDiv);
+        statisticPollButtonDiv.addEventListener("click", function() {
+            moveImageContainer('+');
+        });
+
+    }
+
+    function showPollStatistic(){
+
     }
 
 

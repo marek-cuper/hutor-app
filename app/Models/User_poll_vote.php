@@ -14,6 +14,6 @@ class User_poll_vote extends Model
     protected $fillable = [
         'user_id',
         'post_id',
-        'option_number',
+        'poll_option_number',
     ];
 }
