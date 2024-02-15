@@ -31,17 +31,25 @@ class PostController extends Controller
             $post_poll_options_text = $post_poll_options->pluck('text')->toArray();
         }
 
-        $user_poll_option = User_poll_vote::where('user_id', Auth::user()->id)->where('post_id', $post_id)->first();
+        $post_poll_options_id = Poll_option::where('post_id', $post_id)->get()->pluck('id')->toArray();
+        $user_poll_votes_id = User_poll_vote::where('user_id', Auth::user()->id)->get()->pluck('poll_option_id')->toArray();
+
         $user_poll_option_number = -1;
-        if ($user_poll_option !== null){
-            $user_poll_option_number =  $user_poll_option->poll_option_number;
+        foreach ($post_poll_options_id as $option_id) {
+            if(in_array($option_id, $user_poll_votes_id)){
+                $user_poll_option_number = Poll_option::where('id', $option_id)->first()->order;
+                break;
+            }
         }
+
+        $poll_option_votes = Poll_option::where('post_id', $post_id)->orderBy('order')->get()->pluck('votes')->toArray();
 
         return response()->json([
             'show_posts_images' => $show_posts_images,
             'post_poll_options_images' => $post_poll_options_images,
             'post_poll_options_text' => $post_poll_options_text,
             'user_poll_option_number' => $user_poll_option_number,
+            'poll_option_votes' => $poll_option_votes,
         ]);
 
     }

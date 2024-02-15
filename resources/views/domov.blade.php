@@ -39,6 +39,7 @@
     var show_post_poll_options_image = [];
     var show_post_poll_options_text = [];
     var show_user_poll_option_number;
+    var show_poll_option_votes = [];
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -71,6 +72,7 @@
                 show_post_poll_options_image = response.post_poll_options_images;
                 show_post_poll_options_text = response.post_poll_options_text;
                 show_user_poll_option_number = response.user_poll_option_number;
+                show_poll_option_votes = response.poll_option_votes
                 showPost();
 
             },
@@ -182,29 +184,51 @@
             anketaKontajner.appendChild(anketaOtazkaDiv);
 
             for (let i = 0; i < show_post_poll_options_image.length; i++) {
-                const anketaMoznost = document.createElement('div');
-                anketaMoznost.id = 'domov_zobrazenie_anketa_moznost' + post.id;
-                anketaMoznost.className = 'domov_zobrazenie_anketa_moznost';
+                const anketaMoznostKontajnerDiv = document.createElement('div');
+                anketaMoznostKontajnerDiv.id = 'domov_zobrazenie_anketa_moznost_kontajner' + post.id;
+                anketaMoznostKontajnerDiv.className = 'domov_zobrazenie_anketa_moznost_kontajner';
+
+
+                const anketaMoznostObrazokDiv = document.createElement('div');
+                anketaMoznostObrazokDiv.id = 'domov_zobrazenie_anketa_moznost_obrazok' + post.id;
+                anketaMoznostObrazokDiv.className = 'domov_zobrazenie_anketa_moznost_obrazok';
 
                 const anketaMoznostObrazok = document.createElement('img');
-                anketaMoznostObrazok.src = '/storage/' + show_post_poll_options_image[i];
                 if(show_post_poll_options_image[i] === null){
                     anketaMoznostObrazok.style.visibility = 'hidden';
+                }else {
+                    anketaMoznostObrazok.src = '/storage/' + show_post_poll_options_image[i];
                 }
+                anketaMoznostObrazokDiv.appendChild(anketaMoznostObrazok);
+                anketaMoznostKontajnerDiv.appendChild(anketaMoznostObrazokDiv);
 
 
-                const anketaMoznostText = document.createElement('p');
-                anketaMoznostText.textContent = show_post_poll_options_text[i];
+                const anketaMoznostTextDiv = document.createElement('div');
+                anketaMoznostTextDiv.id = 'domov_zobrazenie_anketa_moznost_text' + post.id;
+                anketaMoznostTextDiv.className = 'domov_zobrazenie_anketa_moznost_text';
 
-                anketaMoznost.appendChild(anketaMoznostObrazok);
-                anketaMoznost.appendChild(anketaMoznostText);
+                const anketaMoznostTextNazov = document.createElement('p');
+                anketaMoznostTextNazov.className = 'domov_zobrazenie_anketa_moznost_text_nazov'
+                anketaMoznostTextNazov.textContent = show_post_poll_options_text[i];
 
-                showPostPollOptions[i] = anketaMoznost;
-                anketaMoznost.addEventListener("click", function() {
+                const anketaMoznostTextCislo = document.createElement('p');
+                anketaMoznostTextCislo.className = 'domov_zobrazenie_anketa_moznost_text_cislo'
+                //anketaMoznostTextCislo.textContent = '70' + '%';
+
+                const anketaMoznostTextPozadie = document.createElement('div');
+                anketaMoznostTextPozadie.className = 'domov_zobrazenie_anketa_moznost_text_pozadie'
+
+                anketaMoznostTextDiv.appendChild(anketaMoznostTextNazov);
+                anketaMoznostTextDiv.appendChild(anketaMoznostTextCislo);
+                anketaMoznostTextDiv.appendChild(anketaMoznostTextPozadie);
+                anketaMoznostKontajnerDiv.appendChild(anketaMoznostTextDiv);
+
+                showPostPollOptions[i] = anketaMoznostKontajnerDiv;
+                anketaMoznostKontajnerDiv.addEventListener("click", function() {
                     choosePollOption(i);
                 });
 
-                anketaKontajner.appendChild(anketaMoznost);
+                anketaKontajner.appendChild(anketaMoznostKontajnerDiv);
             }
 
             const anketaTlacitkoDiv = document.createElement('div');
@@ -306,9 +330,14 @@
     function choosePollOption(number){
         showPostChosoenPollOption = number;
         for (let i = 0; i < showPostPollOptions.length; i++) {
-            showPostPollOptions[i].style.backgroundColor = 'white';
+            showPostPollOptions[i].style.border = '2px solid lightgray';
+            var pollOptionText = showPostPollOptions[i].querySelector('.domov_zobrazenie_anketa_moznost_text');
+            pollOptionText.style.color = 'black'
+
         }
-        showPostPollOptions[showPostChosoenPollOption].style.backgroundColor = 'lightgray';
+        showPostPollOptions[showPostChosoenPollOption].style.border = '2px solid lightblue';
+        var pollOptionTextChange = showPostPollOptions[showPostChosoenPollOption].querySelector('.domov_zobrazenie_anketa_moznost_text');
+        pollOptionTextChange.style.color = 'dodgerblue'
     }
 
     function votePollOption(){
@@ -327,21 +356,57 @@
     }
 
     function userVoted(){
+        let sumVotes = 0;
+        for (let i = 0; i < show_poll_option_votes.length; i++) {
+            sumVotes += show_poll_option_votes[i];
+        }
+
+        for (let i = 0; i < showPostPollOptions.length; i++) {
+            //Adding filled background depends on % votes
+            const optionBackgroundDiv = showPostPollOptions[i].querySelector('.domov_zobrazenie_anketa_moznost_text_pozadie');
+            let number = (show_poll_option_votes[i] / sumVotes * 100);
+            let roundedNumber = Math.round(number * 10) / 10;
+            optionBackgroundDiv.style.width = roundedNumber + '%';
+
+            //Adding percentage to every poll option
+            var textPerc = document.createElement("div");
+            textPerc.className = 'domov_zobrazenie_anketa_moznost_text_cislo';
+            textPerc.textContent = roundedNumber + '%';
+            let optionDivNumber = showPostPollOptions[i].querySelector('.domov_zobrazenie_anketa_moznost_text');
+            optionDivNumber.appendChild(textPerc);
+
+            //Changing color depends if user vote for it
+            if(i === showPostChosoenPollOption){
+                textPerc.style.color = 'dodgerblue'
+                optionBackgroundDiv.style.backgroundColor = 'lightblue';
+            }
+        }
+
         let pollContainer = document.getElementById('domov_zobrazenie_anketa_telo');
+        //Removing button for voting
         pollContainer.removeChild(pollContainer.lastChild);
+
+        //Adding sum of votes to Poll
+        var textPerc = document.createElement("p");
+        textPerc.className = 'domov_zobrazenie_anketa_moznost_pocet_hlasov';
+        textPerc.textContent = 'Votes: ' + sumVotes;
+        pollContainer.appendChild(textPerc);
+
         //Delete all event listeners from div
         pollContainer.outerHTML = pollContainer.outerHTML;
         pollContainer = document.getElementById('domov_zobrazenie_anketa_telo');
 
-        const statisticPollButtonDiv = document.createElement('div');
-        statisticPollButtonDiv.className = 'domov_zobrazenie_anketa_statistika_tlacitko';
-        const statisticPoll = document.createElement('i');
-        statisticPoll.className = 'fa fa-pie-chart fa-2x';
-        statisticPollButtonDiv.appendChild(statisticPoll);
-        pollContainer.appendChild(statisticPollButtonDiv);
-        statisticPollButtonDiv.addEventListener("click", function() {
-            moveImageContainer('+');
-        });
+
+
+        //const statisticPollButtonDiv = document.createElement('div');
+        //statisticPollButtonDiv.className = 'domov_zobrazenie_anketa_statistika_tlacitko';
+        //const statisticPoll = document.createElement('i');
+        //statisticPoll.className = 'fa fa-pie-chart fa-2x';
+        //statisticPollButtonDiv.appendChild(statisticPoll);
+        //pollContainer.appendChild(statisticPollButtonDiv);
+        //statisticPollButtonDiv.addEventListener("click", function() {
+        //    moveImageContainer('+');
+       // });
 
     }
 

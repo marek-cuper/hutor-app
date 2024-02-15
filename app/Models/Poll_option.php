@@ -11,6 +11,9 @@ class Poll_option extends Model
 
     protected $table = 'poll_options';
 
+
+    public $incrementing = false;
+
     protected $fillable = [
         'post_id',
         'order',

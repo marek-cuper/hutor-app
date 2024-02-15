@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('poll_options', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('order');
             $table->string('text');
@@ -20,7 +21,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->primary(['post_id', 'order']);
         });
     }
 
@@ -31,4 +31,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('poll_options');
     }
+
 };

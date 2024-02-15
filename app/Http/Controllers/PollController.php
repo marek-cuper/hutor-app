@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Poll_option;
 use App\Models\User_poll_vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,14 +28,20 @@ class PollController extends Controller
     }
 
     public function anketa_hlasujPost(Request $request){
+        $input_post_id = $request->input('post_id');
+        $input_poll_option_number = $request->input('poll_option_number');
+
+        $poll_option = Poll_option::where('post_id', $input_post_id)->where('order', $input_poll_option_number)->first();
+
         $user_polll_option_vote_to_save = new User_poll_vote([
             'user_id' => Auth::user()->id,
-            'post_id' => $request->input('post_id'),
-            'poll_option_number' => $request->input('poll_option_number'),
+            'poll_option_id' => $poll_option->id,
+
         ]);
         $user_polll_option_vote_to_save->save();
 
-
+        $poll_option->votes += 1;
+        $poll_option->save();
     }
 
 

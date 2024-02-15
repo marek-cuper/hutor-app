@@ -394,7 +394,7 @@ html, body {
     margin-bottom: 1%;
 }
 
-.domov_zobrazenie_anketa_moznost {
+.domov_zobrazenie_anketa_moznost_kontajner {
     display: flex;
     width: 90%;
     margin-left: auto;
@@ -405,14 +405,54 @@ html, body {
     border:2px solid lightgray;
 }
 
-.domov_zobrazenie_anketa_moznost img{
+.domov_zobrazenie_anketa_moznost_obrazok{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.domov_zobrazenie_anketa_moznost_obrazok img{
     max-height: 50px;
     max-width: 50px;
     margin: 0.5% 0 0.5% 0.5%;
 }
-.domov_zobrazenie_anketa_moznost p{
-    margin-left: 3%;
+
+
+.domov_zobrazenie_anketa_moznost_text{
+    position: relative;
+    display: flex;
+    flex: 1;
 }
+
+.domov_zobrazenie_anketa_moznost_text_nazov{
+    margin-left: 3%;
+    margin-right: auto;
+    text-align: left;
+    z-index: 1;
+}
+.domov_zobrazenie_anketa_moznost_text_cislo{
+    margin-right: 2%;
+    color: #4b5563;
+    z-index: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.domov_zobrazenie_anketa_moznost_text_pozadie{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: lightgray;
+    opacity: 0.5;
+}
+
+.domov_zobrazenie_anketa_moznost_pocet_hlasov{
+    text-align: right;
+    margin-right: 5%;
+}
+
+
 .domov_zobrazenie_anketa_telo .preferencie_tlacitka_okno{
     width: 90%;
     margin: 2% auto 1%;
@@ -421,20 +461,6 @@ html, body {
 .domov_zobrazenie_anketa_telo .preferencie_tlacitko_uloz{
     font-size: 1.5vh;
     margin-left: auto;
-}
-.domov_zobrazenie_anketa_statistika_tlacitko{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FF9908;
-    border-radius: 5px;
-    border:3px solid lightgray;
-    margin-left: auto;
-    margin-right: 5%;
-    height: 40px;
-    width: 40px;
-
-
 }
 .domov_zobrazenie_anketa_statistika_tlacitko i{
     margin: auto;
