@@ -40,6 +40,11 @@
     var show_post_poll_options_text = [];
     var show_user_poll_option_number;
     var show_poll_option_votes = [];
+    // "","+","-"
+    var show_post_vote_status = "";
+    var show_post_up_voted;
+    var show_post_down_voted;
+    var show_post_openned;
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -58,6 +63,8 @@
     let showPostChosoenPollOption;
     let showPostPollOptions = [];
 
+    let showPostStats = [];
+
     function setDataShowPost(){
         //After click to post disable scrolling
         scrollListener = false;
@@ -72,7 +79,11 @@
                 show_post_poll_options_image = response.post_poll_options_images;
                 show_post_poll_options_text = response.post_poll_options_text;
                 show_user_poll_option_number = response.user_poll_option_number;
-                show_poll_option_votes = response.poll_option_votes
+                show_poll_option_votes = response.poll_option_votes;
+                show_post_vote_status = response.post_vote_status;
+                show_post_up_voted = response.poll_up_votes;
+                show_post_down_voted = response.poll_down_votes;
+                show_post_openned = response.poll_oppened;
                 showPost();
 
             },
@@ -98,6 +109,8 @@
         const containerDiv = document.createElement('div');
         containerDiv.id = 'domov_zobrazenie_telo' + post.id;
         containerDiv.className = 'domov_zobrazenie_telo';
+
+        showContainer.appendChild(containerDiv);
 
 
 // Create the nadpis (title) div
@@ -172,6 +185,9 @@
         obrazkyKontajnerDiv.appendChild(obrazkyTlacitkoPraveDiv);
         containerDiv.appendChild(obrazkyKontajnerDiv);
 
+        //It shows buttons ifthere are more images
+        updateShowImageButtons();
+
 
         if(post.poll_text !== null){
             const anketaKontajner = document.createElement('div');
@@ -181,6 +197,7 @@
             const anketaOtazkaDiv = document.createElement('label');
             anketaOtazkaDiv.textContent = post.poll_text;
 
+            // Append the main container to the document body or any other desired parent element
             anketaKontajner.appendChild(anketaOtazkaDiv);
 
             for (let i = 0; i < show_post_poll_options_image.length; i++) {
@@ -242,6 +259,13 @@
             anketaKontajner.appendChild(anketaTlacitkoDiv);
 
             containerDiv.appendChild(anketaKontajner);
+
+            //update if user already voted in poll
+            if(show_user_poll_option_number > -1){
+                choosePollOption(show_user_poll_option_number);
+                userVotedPoll();
+            }
+
         }
 
         const oznaceniaRegionyDiv = document.createElement('div');
@@ -281,15 +305,67 @@
         }
         containerDiv.appendChild(oznaceniaRegionyDiv);
 
-// Append the main container to the document body or any other desired parent element
-        showContainer.appendChild(containerDiv);
-        updateShowImageButtons();
+        //Voting
+        const hlasovanieTelo = document.createElement('div');
+        hlasovanieTelo.className = 'domov_zobrazenie_telo_hlasovanie';
 
-        //update if user already voted in poll
-        if(show_user_poll_option_number > -1){
-            choosePollOption(show_user_poll_option_number);
-            userVoted();
-        }
+        const hlasovanieTeloHlasy = document.createElement('div');
+        hlasovanieTeloHlasy.className = 'domov_zobrazenie_telo_hlasovanie_hlasy';
+        hlasovanieTelo.appendChild(hlasovanieTeloHlasy);
+        const hlasovanieLabel = document.createElement('label');
+        hlasovanieLabel.textContent = 'Hlasovanie: ';
+        hlasovanieTeloHlasy.appendChild(hlasovanieLabel);
+
+        const hlasovanieTeloHlasyZaKontajner  = document.createElement('div');
+        showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
+        hlasovanieTeloHlasyZaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
+        hlasovanieTeloHlasy.appendChild(hlasovanieTeloHlasyZaKontajner);
+        const hlasZaSipkaHore = document.createElement('i');
+        hlasZaSipkaHore.className = 'fa fa-arrow-up fa-1x';
+        hlasovanieTeloHlasyZaKontajner.appendChild(hlasZaSipkaHore);
+        const hlasZaCislo = document.createElement('p');
+        //hlasZaCislo.textContent = show_post_up_voted;
+        hlasovanieTeloHlasyZaKontajner.appendChild(hlasZaCislo);
+        hlasovanieTeloHlasyZaKontajner.addEventListener("click", function() {
+            votePost(1);
+        });
+
+        const hlasovanieTeloHlasyProtiKontajner  = document.createElement('div');
+        showPostStats[showPostStats.length] = hlasovanieTeloHlasyProtiKontajner;
+        hlasovanieTeloHlasyProtiKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
+        hlasovanieTeloHlasy.appendChild(hlasovanieTeloHlasyProtiKontajner);
+        const hlasProtiSipkaHore = document.createElement('i');
+        hlasProtiSipkaHore.className = 'fa fa-arrow-down fa-1x';
+        hlasovanieTeloHlasyProtiKontajner.appendChild(hlasProtiSipkaHore);
+        const hlasProtiCislo = document.createElement('p');
+        //hlasProtiCislo.textContent = show_post_down_voted;
+        hlasovanieTeloHlasyProtiKontajner.appendChild(hlasProtiCislo);
+        hlasovanieTeloHlasyProtiKontajner.addEventListener("click", function() {
+            votePost(0);
+        });
+
+        const hlasovanieTeloZobrazenia = document.createElement('div');
+        hlasovanieTeloZobrazenia.className = 'domov_zobrazenie_telo_hlasovanie_zobrazenia';
+        hlasovanieTelo.appendChild(hlasovanieTeloZobrazenia);
+        const hlasovanieTeloZobrazeniaKontajner = document.createElement('div');
+        hlasovanieTeloZobrazeniaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
+        const zobrazenieLabel = document.createElement('label');
+        zobrazenieLabel.textContent = 'Zobrazenia: ';
+        hlasovanieTeloZobrazenia.appendChild(zobrazenieLabel);
+        const hlasovanieTeloZobrazeniaCislaKontajner  = document.createElement('div');
+        showPostStats[showPostStats.length] = hlasovanieTeloZobrazeniaCislaKontajner;
+        hlasovanieTeloZobrazeniaCislaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
+        hlasovanieTeloZobrazenia.appendChild(hlasovanieTeloZobrazeniaCislaKontajner);
+        const zobrazenieUzivatelia = document.createElement('i');
+        zobrazenieUzivatelia.className = 'fa fa-users  fa-1x';
+        hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieUzivatelia);
+        const zobrazenieCislo = document.createElement('p');
+        //zobrazenieCislo.textContent = show_post_openned;
+        hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieCislo);
+
+        containerDiv.appendChild(hlasovanieTelo);
+
+        userVotedPost();
     }
 
     function moveImageContainer(way){
@@ -347,7 +423,8 @@
             method: 'POST',
             data: { post_id: post_id, poll_option_number: showPostChosoenPollOption, _token: '{{ csrf_token() }}' },
             success: function (response) {
-                userVoted();
+                show_poll_option_votes = response.poll_option_votes
+                userVotedPoll();
             },
             error: function (error) {
                 console.error('Error:', error);
@@ -355,7 +432,7 @@
         });
     }
 
-    function userVoted(){
+    function userVotedPoll(){
         let sumVotes = 0;
         for (let i = 0; i < show_poll_option_votes.length; i++) {
             sumVotes += show_poll_option_votes[i];
@@ -380,6 +457,7 @@
                 textPerc.style.color = 'dodgerblue'
                 optionBackgroundDiv.style.backgroundColor = 'lightblue';
             }
+
         }
 
         let pollContainer = document.getElementById('domov_zobrazenie_anketa_telo');
@@ -395,22 +473,44 @@
         //Delete all event listeners from div
         pollContainer.outerHTML = pollContainer.outerHTML;
         pollContainer = document.getElementById('domov_zobrazenie_anketa_telo');
-
-
-
-        //const statisticPollButtonDiv = document.createElement('div');
-        //statisticPollButtonDiv.className = 'domov_zobrazenie_anketa_statistika_tlacitko';
-        //const statisticPoll = document.createElement('i');
-        //statisticPoll.className = 'fa fa-pie-chart fa-2x';
-        //statisticPollButtonDiv.appendChild(statisticPoll);
-        //pollContainer.appendChild(statisticPollButtonDiv);
-        //statisticPollButtonDiv.addEventListener("click", function() {
-        //    moveImageContainer('+');
-       // });
-
     }
 
-    function showPollStatistic(){
+    function votePost(up_vote){
+        var post_id = posts[index].id;
+        $.ajax({
+            url: '/domov/zobrazenie/post_hlasuj',
+            method: 'POST',
+            data: { post_id: post_id, up_vote: up_vote, _token: '{{ csrf_token() }}' },
+            success: function (response) {
+                show_post_vote_status = response.post_vote_status;
+                show_post_up_voted = response.poll_up_votes;
+                show_post_down_voted = response.poll_down_votes;
+                show_post_openned = response.poll_oppened;
+                userVotedPost();
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function userVotedPost(){
+        let up_votes_div = showPostStats[0].querySelector('p');
+        up_votes_div.textContent = show_post_up_voted;
+
+        let down_votes_div = showPostStats[1].querySelector('p');
+        down_votes_div.textContent = show_post_down_voted;
+
+        let openned_div = showPostStats[2].querySelector('p');
+        openned_div.textContent = show_post_openned;
+
+        showPostStats[0].style.backgroundColor = 'white';
+        showPostStats[1].style.backgroundColor = 'white';
+        if(show_post_vote_status === '+'){
+            showPostStats[0].style.backgroundColor = 'lightgreen';
+        }else if(show_post_vote_status === '-'){
+            showPostStats[1].style.backgroundColor = 'lightcoral';
+        }
 
     }
 

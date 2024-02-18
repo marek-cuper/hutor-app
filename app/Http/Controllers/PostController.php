@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Poll_option;
 use App\Models\Post_image;
 use App\Models\User_poll_vote;
+use App\Models\User_post_vote;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Tag;
@@ -22,7 +23,11 @@ class PostController extends Controller
         $posts_all_images = Post_image::where('post_id', $post_id)->orderBy('order')->get();
         $show_posts_images = $posts_all_images->pluck('image_name')->toArray();
 
-        $post_question = Post::where('id', $post_id)->first()->poll_text;
+        $post = Post::where('id', $post_id)->first();
+        $post->openned += 1;
+        $post->save();
+
+        $post_question = $post->poll_text;
         $post_poll_options_images = null;
         $post_poll_options_text = null;
         if($post_question !== null){
@@ -44,14 +49,92 @@ class PostController extends Controller
 
         $poll_option_votes = Poll_option::where('post_id', $post_id)->orderBy('order')->get()->pluck('votes')->toArray();
 
+        $post_vote_status = "";
+        $post_vote = User_post_vote::where('user_id', Auth::user()->id)->where('post_id', $post_id)->first();
+        if($post_vote){
+            if($post_vote->up_vote){
+                $post_vote_status = '+';
+            }else{
+                $post_vote_status = '-';
+            }
+        }
+
+        $post_up_votes = $post->up_votes;
+        $post_down_votes = $post->down_votes;
+        $post_openned = $post->openned;
+
+
         return response()->json([
             'show_posts_images' => $show_posts_images,
             'post_poll_options_images' => $post_poll_options_images,
             'post_poll_options_text' => $post_poll_options_text,
             'user_poll_option_number' => $user_poll_option_number,
             'poll_option_votes' => $poll_option_votes,
+            'post_vote_status' => $post_vote_status,
+            'poll_up_votes' => $post_up_votes,
+            'poll_down_votes' => $post_down_votes,
+            'poll_oppened' => $post_openned,
         ]);
 
+    }
+
+    public function post_hlasujPost(Request $request){
+        $input_post_id = $request->input('post_id');
+        $input_up_vote = $request->input('up_vote');
+
+        $post = Post::where('id', $input_post_id)->first();
+
+        $post_vote = User_post_vote::where('user_id', Auth::user()->id)->where('post_id', $input_post_id)->first();
+        if($post_vote){
+            if($post_vote->up_vote != $input_up_vote){
+                if ($input_up_vote == 1){
+                    $post->up_votes += 1;
+                    $post->down_votes -= 1;
+                }else{
+                    $post->down_votes += 1;
+                    $post->up_votes -= 1;
+                }
+                $post_vote->up_vote = $input_up_vote;
+                $post_vote->save();
+            }
+        }else{
+            $user_post_vote_to_save = new User_post_vote([
+                'user_id' => Auth::user()->id,
+                'post_id' => $input_post_id,
+                'up_vote' => $input_up_vote,
+            ]);
+            $user_post_vote_to_save->save();
+
+            if ($input_up_vote){
+                $post->up_votes += 1;
+            }else{
+                $post->down_votes += 1;
+            }
+        }
+
+
+        $post_up_votes = $post->up_votes;
+        $post_down_votes = $post->down_votes;
+        $post_openned = $post->openned;
+        $post_vote_status = '';
+
+        $post_vote = User_post_vote::where('user_id', Auth::user()->id)->where('post_id', $input_post_id)->first();
+        if($post_vote){
+            if($post_vote->up_vote == 1){
+                $post_vote_status = '+';
+            }else{
+                $post_vote_status = '-';
+            }
+        }
+        $post->save();
+
+        return response()->json([
+            'post_vote_status' => $post_vote_status,
+            'poll_up_votes' => $post_up_votes,
+            'poll_down_votes' => $post_down_votes,
+            'poll_oppened' => $post_openned,
+
+        ]);
     }
 
     public function domov_prispevokGet($id_post){

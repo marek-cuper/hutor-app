@@ -33,15 +33,22 @@ class PollController extends Controller
 
         $poll_option = Poll_option::where('post_id', $input_post_id)->where('order', $input_poll_option_number)->first();
 
-        $user_polll_option_vote_to_save = new User_poll_vote([
+        $user_poll_option_vote_to_save = new User_poll_vote([
             'user_id' => Auth::user()->id,
             'poll_option_id' => $poll_option->id,
 
         ]);
-        $user_polll_option_vote_to_save->save();
+        $user_poll_option_vote_to_save->save();
 
         $poll_option->votes += 1;
         $poll_option->save();
+
+
+        $poll_option_votes = Poll_option::where('post_id', $input_post_id)->orderBy('order')->get()->pluck('votes')->toArray();
+
+        return response()->json([
+            'poll_option_votes' => $poll_option_votes,
+        ]);
     }
 
 
