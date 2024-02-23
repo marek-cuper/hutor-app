@@ -364,8 +364,29 @@
         hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieCislo);
 
         containerDiv.appendChild(hlasovanieTelo);
-
         userVotedPost();
+
+
+        //KOMENTARE
+        //const komentareTelo = document.createElement('div');
+        //komentareTelo.className = 'domov_zobrazenie_telo_komentare';
+
+        //const komentarePridaj = document.createElement('div');
+        //komentarePridaj.className = 'domov_zobrazenie_telo_komentare_pridaj';
+
+        //const komentarePridajText = document.createElement('input');
+        //komentarePridaj.appendChild(komentarePridajText);
+        //const komentarePridajTlacitko = document.createElement('i');
+        //komentarePridaj.appendChild(komentarePridajTlacitko);
+
+        //for (let i = 0; i < 2; i++) {
+        //    onst komentareTelo = document.createElement('div');
+        //    komentareTelo.className = 'domov_zobrazenie_telo_komentare';
+
+        //    const komentarePridaj = document.createElement('div');
+        //    komentarePridaj.className = 'domov_zobrazenie_telo_komentare_pridaj';
+        //}
+
     }
 
     function moveImageContainer(way){

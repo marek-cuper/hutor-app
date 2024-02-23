@@ -884,6 +884,48 @@ input:checked + .slider:before {
     margin-right: auto;
 }
 
+/* Profil uprava */
+
+.profil_uprava_kontajner{
+    display: grid;
+    grid-template-rows: auto;
+    height: 100%;
+    width: 100%;
+
+}
+
+.profil_uprava_kontajner_cast{
+    display: flex;
+    height: 250px;
+    width: 100%;
+    margin-top: 5%;
+}
+
+.profil_uprava_profil_obrazok{
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background-color: white;
+    border-radius: 5px;
+    border:2px solid lightgray;
+    height: 210px;
+    width: 210px;
+    margin: auto;
+}
+.profil_uprava_profil_obrazok img{
+    max-height: 200px;
+    max-width: 200px;
+
+}
+.profil_uprava_profil_obrazok_vstup{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+.profil_uprava_profil_obrazok_vstup > * {
+    margin-bottom: 10px; /* Adjust spacing as needed */
+}
+
 
 /* Prisposobenie k displayu */
 @media (max-width: 1600px){

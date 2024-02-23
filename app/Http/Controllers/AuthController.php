@@ -76,6 +76,8 @@ class AuthController extends Controller
             $request->session()->put('posts_regions', $posts_regions);
 
 
+            $request->session()->put('user_profile_image', Auth::user()->image_name);
+
             //Setting tags chosen be user to session
             $user_tags_pref = [];
             $user_tags_block = [];
@@ -133,6 +135,42 @@ class AuthController extends Controller
         $request->session()->flush();
         Auth::logout();
         return redirect(route(('prihlasenie')));
+    }
+
+    function profil_uprava(Request $request){
+        return view('profil_uprava');
+    }
+
+    function pridaj_obrazokPost(Request $request){
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed
+        ]);
+
+        // Store the uploaded image
+        if ($request->hasFile('image')) {
+            $imageName = $request->file('image')->store('images/profiles', 'public');
+
+            // Return the image name or any other response
+            return response()->json(['imageName' => $imageName], 200);
+        }
+
+        // Handle the case if no image is uploaded
+        return response()->json(['error' => 'No image uploaded'], 400);
+
+    }
+
+    function uloz_obrazokPost(Request $request){
+        $request->validate([
+            'profile_image_name' => 'required|string' // Adjust the validation rules as needed
+        ]);
+
+        $user = Auth::user();
+        $user->image_name = $request->input('profile_image_name');
+        $user->save();
+
+        $request->session()->put('user_profile_image', $user->image_name);
+
+        return redirect(route(('profil_uprava')));
     }
 
 }

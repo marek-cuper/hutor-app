@@ -15,9 +15,9 @@
         <div class="navbar-icon">
             <i class="fa fa-cog fa-2x"></i>
         </div>
-        <div class="navbar-icon">
+        <a href="{{URL::route('profil_uprava') }}" class="navbar-icon">
             <i class="fa fa-user fa-2x"></i>
-        </div>
+        </a>
         <a id="button-logout" href="{{URL::route('odhlasenie') }}" class="navbar-icon">
             <i class="fa fa-sign-out fa-2x"></i>
         </a>
