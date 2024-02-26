@@ -528,6 +528,97 @@ html, body {
     margin: 5% 10% 5% 10%;
 }
 
+.domov_zobrazenie_komentare_telo{
+    display: inline;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1%;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    width: 50%;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+
+.domov_zobrazenie_komentare_pridaj_kontajner{
+    width: 100%;
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+.domov_zobrazenie_komentare_pridaj_kontajner input{
+    width: 80%;
+    margin-right: 3%;
+
+}
+.domov_zobrazenie_komentare_pridaj_kontajner i{
+
+}
+
+.domov_zobrazenie_komentare_telo_komentare_kontajner{
+
+}
+
+.domov_zobrazenie_komentare_komentar{
+    margin-bottom: 1%;
+    border:2px solid lightgray;
+    display: flex;
+}
+
+.domov_zobrazenie_komentare_komentar_obrazok{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50px;
+}
+.domov_zobrazenie_komentare_komentar_obrazok img{
+    max-height: 40px;
+    max-width: 40px;
+}
+
+.domov_zobrazenie_komentare_komentar_meno{
+    font-weight: bold;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 2%;
+    margin-right: auto;
+    text-align: left;
+}
+
+.domov_zobrazenie_komentare_komentar_text{
+    text-align: left;
+    margin: 0;
+    margin-bottom: auto;
+}
+
+.domov_zobrazenie_komentare_hlasovanie_za_kontajner{
+    border-radius: 5px;
+    border:2px solid lightgray;
+    display: flex;
+    margin-left: auto;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.domov_zobrazenie_komentare_hlasovanie_proti_kontajner{
+    border-radius: 5px;
+    border:2px solid lightgray;
+    display: flex;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.domov_zobrazenie_komentare_hlasovanie_za_kontajner i, .domov_zobrazenie_komentare_hlasovanie_proti_kontajner i{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.domov_zobrazenie_komentare_hlasovanie_za_kontajner p, .domov_zobrazenie_komentare_hlasovanie_proti_kontajner p{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
 
 
 /* Stranka s preferenciami */
@@ -987,7 +1078,7 @@ input:checked + .slider:before {
     .domov_zobrazenie_kontajner_obrazky{
         width: 70%;
     }
-    .domov_zobrazenie_anketa_telo {
+    .domov_zobrazenie_anketa_telo, .domov_zobrazenie_komentare_telo{
         width: 60%;
     }
     .domov_zobrazenie_telo_hlasovanie{
@@ -1047,7 +1138,7 @@ input:checked + .slider:before {
     .domov_zobrazenie_kontajner_obrazky{
         width: 85%;
     }
-    .domov_zobrazenie_anketa_telo {
+    .domov_zobrazenie_anketa_telo, .domov_zobrazenie_komentare_telo {
         width: 70%;
     }
     .domov_zobrazenie_telo_hlasovanie{
@@ -1123,11 +1214,18 @@ input:checked + .slider:before {
     .domov_zobrazenie_kontajner_obrazky{
         width: 95%;
     }
-    .domov_zobrazenie_anketa_telo {
+    .domov_zobrazenie_anketa_telo, .domov_zobrazenie_komentare_telo {
         width: 80%;
     }
     .domov_zobrazenie_telo_hlasovanie{
         width: 80%;
+    }
+    .domov_zobrazenie_telo_hlasovanie label{
+        display: none;
+    }
+    .domov_zobrazenie_telo_hlasovanie_kontajner{
+        margin-left: auto;
+        margin-right: auto;
     }
     .preferencie_stranka{
         width: 70%;

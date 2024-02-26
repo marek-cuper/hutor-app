@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Poll_option;
+use App\Models\Post_comment;
 use App\Models\Post_image;
+use App\Models\User;
+use App\Models\User_comment_vote;
 use App\Models\User_poll_vote;
 use App\Models\User_post_vote;
 use Illuminate\Http\Request;
@@ -63,6 +66,37 @@ class PostController extends Controller
         $post_down_votes = $post->down_votes;
         $post_openned = $post->openned;
 
+        //Adding comments to showed post
+        $comments = Post_comment::where('post_id', $post_id)->orderBy('down_votes')->orderByDesc('up_votes')->get();
+        $post_comments_id = [];
+        $post_comments_user_profile_image = [];
+        $post_comments_user_profile_name = [];
+        $post_comments_text = [];
+        $post_comments_up_votes = [];
+        $post_comments_down_votes = [];
+        $post_comments_user_voted = [];
+        foreach ($comments as $comment) {
+            $post_comments_id[] = $comment->id;
+            $comment_user_id = $comment->user_id;
+            $comment_user = User::where('id', $comment_user_id)->first();
+            $post_comments_user_profile_image[] = $comment_user->image_name;
+            $post_comments_user_profile_name[] = $comment_user->name;
+            $post_comments_text[] = $comment->text;
+            $post_comments_up_votes[] = $comment->up_votes;
+            $post_comments_down_votes[] = $comment->down_votes;
+            $comment_user_vote = User_comment_vote::where('comment_id', $comment->id)->first();
+            if($comment_user_vote){
+                if($comment_user_vote->up_vote){
+                    $post_comments_user_voted[] = '+';
+                }else{
+                    $post_comments_user_voted[] = '-';
+                }
+            }else{
+                $post_comments_user_voted[] = '';
+            }
+
+        }
+
 
         return response()->json([
             'show_posts_images' => $show_posts_images,
@@ -74,6 +108,13 @@ class PostController extends Controller
             'poll_up_votes' => $post_up_votes,
             'poll_down_votes' => $post_down_votes,
             'poll_oppened' => $post_openned,
+            'comment_id' => $post_comments_id,
+            'comment_image' => $post_comments_user_profile_image,
+            'comment_user_name' => $post_comments_user_profile_name,
+            'comment_text' => $post_comments_text,
+            'comment_up_votes' => $post_comments_up_votes,
+            'comment_down_votes' => $post_comments_down_votes,
+            'comment_user_voted' => $post_comments_user_voted,
         ]);
 
     }
@@ -145,6 +186,77 @@ class PostController extends Controller
     public function pridaj_prispevokGet(){
         $tags = Tag::all();
         return view('pridaj_prispevok')->with('tags', $tags);
+    }
+
+    public function post_pridaj_komentPost(Request $request){
+        $post_comment = new Post_comment([
+            'post_id' => $request->input('post_id'),
+            'user_id' => Auth::user()->id,
+            'text' => $request->input('comment_text'),
+            'up_votes' => 0,
+            'down_votes' => 0,
+        ]);
+        $post_comment->save();
+    }
+
+    public function post_hlasuj_komentPost(Request $request){
+
+        $input_comment_id = $request->input('comment_id');
+        $input_comment_vote = $request->input('up_vote');
+        $user_comment = Post_comment::where('id', $input_comment_id)->first();
+        $user_comment_vote = User_comment_vote::where('comment_id', $input_comment_id)->first();
+
+
+        if($user_comment_vote){
+            if($input_comment_vote != $user_comment_vote->up_vote){
+                if ($input_comment_vote == 1){
+                    $user_comment->up_votes += 1;
+                    $user_comment->down_votes -= 1;
+                }else{
+                    $user_comment->down_votes += 1;
+                    $user_comment->up_votes -= 1;
+                }
+                $user_comment->save();
+                $user_comment_vote->up_vote = $input_comment_vote;
+                $user_comment_vote->save();
+            }
+        }else{
+            $vote = new User_comment_vote([
+                'comment_id' => $input_comment_id,
+                'up_vote' => $input_comment_vote,
+            ]);
+            $vote->save();
+
+            if ($input_comment_vote){
+                $user_comment->up_votes += 1;
+            }else{
+                $user_comment->down_votes += 1;
+            }
+            $user_comment->save();
+
+        }
+        if ($input_comment_vote){
+            $comment_vote_result = '+';
+        }else{
+            $comment_vote_result = '-';
+        }
+
+        $post_comments_up_votes = [];
+        $post_comments_down_votes = [];
+
+        $comment_id_array = $request->input('comments_id');
+        for ($i = 0; $i < sizeof($comment_id_array); $i++) {
+            $comment = Post_comment::where('id', $comment_id_array[$i])->first();
+            $post_comments_up_votes[] = $comment->up_votes;
+            $post_comments_down_votes[] = $comment->down_votes;
+        }
+
+
+        return response()->json([
+            'comment_vote_result' => $comment_vote_result,
+            'comment_up_votes' => $post_comments_up_votes,
+            'comment_down_votes' => $post_comments_down_votes,
+        ]);
     }
 
     public function pridaj_prispevokPost(Request $request){

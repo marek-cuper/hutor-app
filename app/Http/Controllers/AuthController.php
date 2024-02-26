@@ -75,7 +75,7 @@ class AuthController extends Controller
             $request->session()->put('posts_tags', $posts_tags);
             $request->session()->put('posts_regions', $posts_regions);
 
-
+            $request->session()->put('user_name', Auth::user()->name);
             $request->session()->put('user_profile_image', Auth::user()->image_name);
 
             //Setting tags chosen be user to session

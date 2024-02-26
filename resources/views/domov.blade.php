@@ -30,6 +30,9 @@
     // Listen for the scroll event
     let canScroll = true;
     let index = 0;
+    var user_name = @json(session('user_name'));
+    var user_profile_image = @json(session('user_profile_image'));
+
     var posts = @json(session('posts'));
     var posts_images = @json(session('posts_images'));
     var posts_tags = @json(session('posts_tags'));
@@ -45,6 +48,14 @@
     var show_post_up_voted;
     var show_post_down_voted;
     var show_post_openned;
+    var show_comment_id;
+    var show_comment_image;
+    var show_comment_user_name;
+    var show_comment_text;
+    var show_comment_up_vote;
+    var show_comment_down_vote;
+    var show_comment_user_voted;
+
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -65,6 +76,10 @@
 
     let showPostStats = [];
 
+    let showPostCommentsDiv;
+    let showPostComments = [];
+    let showPostCommentInput;
+
     function setDataShowPost(){
         //After click to post disable scrolling
         scrollListener = false;
@@ -84,6 +99,13 @@
                 show_post_up_voted = response.poll_up_votes;
                 show_post_down_voted = response.poll_down_votes;
                 show_post_openned = response.poll_oppened;
+                show_comment_id = response.comment_id;
+                show_comment_image = response.comment_image;
+                show_comment_user_name = response.comment_user_name;
+                show_comment_text = response.comment_text;
+                show_comment_up_vote = response.comment_up_votes;
+                show_comment_down_vote = response.comment_down_votes;
+                show_comment_user_voted = response.comment_user_voted;
                 showPost();
 
             },
@@ -368,24 +390,31 @@
 
 
         //KOMENTARE
-        //const komentareTelo = document.createElement('div');
-        //komentareTelo.className = 'domov_zobrazenie_telo_komentare';
+        const komentareTelo = document.createElement('div');
+        komentareTelo.className = 'domov_zobrazenie_komentare_telo';
 
-        //const komentarePridaj = document.createElement('div');
-        //komentarePridaj.className = 'domov_zobrazenie_telo_komentare_pridaj';
+        const komentarePridajKontjaner = document.createElement('div');
+        komentarePridajKontjaner.className = 'domov_zobrazenie_komentare_pridaj_kontajner';
+        komentareTelo.appendChild(komentarePridajKontjaner);
 
-        //const komentarePridajText = document.createElement('input');
-        //komentarePridaj.appendChild(komentarePridajText);
-        //const komentarePridajTlacitko = document.createElement('i');
-        //komentarePridaj.appendChild(komentarePridajTlacitko);
+        showPostCommentInput = document.createElement('input');
+        komentarePridajKontjaner.appendChild(showPostCommentInput);
+        const komentarePridajTlacitko = document.createElement('i');
+        komentarePridajTlacitko.className = 'fa fa-paper-plane fa-1x';
+        komentarePridajKontjaner.appendChild(komentarePridajTlacitko);
+        komentarePridajKontjaner.addEventListener("click", function() {
+            sendComment();
+        });
 
-        //for (let i = 0; i < 2; i++) {
-        //    onst komentareTelo = document.createElement('div');
-        //    komentareTelo.className = 'domov_zobrazenie_telo_komentare';
+        showPostCommentsDiv = document.createElement('div');
+        showPostCommentsDiv.className = 'domov_zobrazenie_komentare_telo_komentare_kontajner';
+        komentareTelo.appendChild(showPostCommentsDiv);
 
-        //    const komentarePridaj = document.createElement('div');
-        //    komentarePridaj.className = 'domov_zobrazenie_telo_komentare_pridaj';
-        //}
+        for (let i = 0; i < show_comment_image.length; i++) {
+            createComment(show_comment_image[i], show_comment_user_name[i], show_comment_text[i], show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+        }
+
+        containerDiv.appendChild(komentareTelo);
 
     }
 
@@ -533,6 +562,146 @@
             showPostStats[1].style.backgroundColor = 'lightcoral';
         }
 
+    }
+
+    function createComment(profil_image, profil_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
+        const komentar = document.createElement('div');
+        komentar.className = 'domov_zobrazenie_komentare_komentar';
+        showPostCommentsDiv.appendChild(komentar);
+        let position = showPostComments.length;
+        showPostComments[showPostComments.length] = komentar;
+
+        const komentarObrazokDiv = document.createElement('div');
+        komentarObrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
+        komentar.appendChild(komentarObrazokDiv);
+        const komentarObrazokImg = document.createElement('img');
+        komentarObrazokImg.src = '/storage/' + profil_image;
+        //'images/profiles/1OqCPZidVBRtc6Ngz9XouhnBT5Ux0nrtQMDhSB58.jpg'
+        komentarObrazokDiv.appendChild(komentarObrazokImg);
+
+        const komentarTelo = document.createElement('div');
+        komentarTelo.className = 'domov_zobrazenie_komentare_komentar_telo';
+        komentar.appendChild(komentarTelo);
+
+        const komentarTeloMeno = document.createElement('p');
+        komentarTeloMeno.textContent = profil_name;
+        komentarTeloMeno.className = 'domov_zobrazenie_komentare_komentar_meno';
+        komentarTelo.appendChild(komentarTeloMeno);
+
+        const komentarTeloText = document.createElement('p');
+        komentarTeloText.textContent = comment_text;
+        komentarTeloText.className = 'domov_zobrazenie_komentare_komentar_text';
+        komentarTelo.appendChild(komentarTeloText);
+
+        const komentarTeloHlasyZaKontajner  = document.createElement('div');
+        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
+        komentarTeloHlasyZaKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_za_kontajner';
+        komentar.appendChild(komentarTeloHlasyZaKontajner);
+
+        const hlasZaSipkaHore = document.createElement('i');
+        hlasZaSipkaHore.className = 'fa fa-arrow-up fa-1x';
+        komentarTeloHlasyZaKontajner.appendChild(hlasZaSipkaHore);
+        const hlasZaCislo = document.createElement('p');
+        hlasZaCislo.textContent = comment_up_votes;
+        komentarTeloHlasyZaKontajner.appendChild(hlasZaCislo);
+        komentarTeloHlasyZaKontajner.addEventListener("click", function() {
+            voteComment(position, 1);
+        });
+
+        const komentarTeloHlasyProtiKontajner  = document.createElement('div');
+        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
+        komentarTeloHlasyProtiKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+        komentar.appendChild(komentarTeloHlasyProtiKontajner);
+
+        const hlasProtiSipkaHore = document.createElement('i');
+        hlasProtiSipkaHore.className = 'fa fa-arrow-down fa-1x';
+        komentarTeloHlasyProtiKontajner.appendChild(hlasProtiSipkaHore);
+        const hlasProtiCislo = document.createElement('p');
+        hlasProtiCislo.textContent = comment_down_votes;
+        komentarTeloHlasyProtiKontajner.appendChild(hlasProtiCislo);
+        komentarTeloHlasyProtiKontajner.addEventListener("click", function() {
+            voteComment(position, 0);
+        });
+        setVoteComment(position, vote_status);
+
+    }
+
+    function sendComment(){
+        if(showPostCommentInput.value !== ''){
+            var post_id = posts[index].id;
+
+            $.ajax({
+                url: '/domov/zobrazenie/pridaj_koment',
+                method: 'POST',
+                data: { post_id: post_id, comment_text: showPostCommentInput.value, _token: '{{ csrf_token() }}' },
+                success: function (response) {
+                    createComment(user_profile_image, user_name, showPostCommentInput.value, 0, 0, '');
+                    showPostCommentInput.value = '';
+                    show_comment_image[show_comment_image.length] = user_profile_image;
+                    show_comment_user_name[show_comment_user_name.length] = user_name;
+                    show_comment_text[show_comment_text.length] = showPostCommentInput.value;
+                    show_comment_up_vote[show_comment_up_vote.length] = 0;
+                    show_comment_down_vote[show_comment_down_vote.length] = 0;
+                    show_comment_user_voted[show_comment_user_voted.length] = '';
+
+                    //show_post_vote_status = response.post_vote_status;
+
+
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+
+    function voteComment(position, up_vote){
+        let comment_id = show_comment_id[position];
+
+        $.ajax({
+            url: '/domov/zobrazenie/hlasuj_koment',
+            method: 'POST',
+            data: { comments_id: show_comment_id, comment_id: comment_id, up_vote: up_vote, _token: '{{ csrf_token() }}' },
+            success: function (response) {
+                setVoteComment(position,response.comment_vote_result);
+                show_comment_up_vote = response.comment_up_votes;
+                show_comment_down_vote =response.comment_down_votes;
+                //show_post_vote_status = response.post_vote_status;
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function setVoteComment(position, vote_status){
+        let upVoteDiv = showPostComments[position].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_za_kontajner");
+        let downVoteDiv = showPostComments[position].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_proti_kontajner");
+
+        upVoteDiv[0].style.backgroundColor = 'white';
+        downVoteDiv[0].style.backgroundColor = 'white';
+
+        if(vote_status === '+'){
+            upVoteDiv[0].style.backgroundColor = 'lightgreen';
+
+        }else if(vote_status === '-'){
+            downVoteDiv[0].style.backgroundColor = 'lightcoral';
+        }
+
+        //let upVoteNumP = upVoteDiv[0].querySelector("p");
+        //upVoteNumP.textContent = show_comment_up_vote[position];
+        //let downVoteNumP = downVoteDiv[0].querySelector("p");
+        //downVoteNumP.textContent = show_comment_down_vote[position];
+
+        for (let i = 0; i < showPostComments.length; i++) {
+            let upVoteDiv = showPostComments[i].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_za_kontajner");
+            let downVoteDiv = showPostComments[i].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_proti_kontajner");
+            let upVoteNumP = upVoteDiv[0].querySelector("p");
+            upVoteNumP.textContent = show_comment_up_vote[i];
+            let downVoteNumP = downVoteDiv[0].querySelector("p");
+            downVoteNumP.textContent = show_comment_down_vote[i];
+        }
     }
 
 
