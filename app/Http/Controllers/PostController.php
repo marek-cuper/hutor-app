@@ -84,7 +84,7 @@ class PostController extends Controller
             $post_comments_text[] = $comment->text;
             $post_comments_up_votes[] = $comment->up_votes;
             $post_comments_down_votes[] = $comment->down_votes;
-            $comment_user_vote = User_comment_vote::where('comment_id', $comment->id)->first();
+            $comment_user_vote = User_comment_vote::where('comment_id', $comment->id)->where('user_id', Auth::user()->id)->first();
             if($comment_user_vote){
                 if($comment_user_vote->up_vote){
                     $post_comments_user_voted[] = '+';
@@ -204,7 +204,7 @@ class PostController extends Controller
         $input_comment_id = $request->input('comment_id');
         $input_comment_vote = $request->input('up_vote');
         $user_comment = Post_comment::where('id', $input_comment_id)->first();
-        $user_comment_vote = User_comment_vote::where('comment_id', $input_comment_id)->first();
+        $user_comment_vote = User_comment_vote::where('comment_id', $input_comment_id)->where('user_id', Auth::user()->id)->first();
 
 
         if($user_comment_vote){
@@ -223,6 +223,7 @@ class PostController extends Controller
         }else{
             $vote = new User_comment_vote([
                 'comment_id' => $input_comment_id,
+                'user_id' => Auth::user()->id,
                 'up_vote' => $input_comment_vote,
             ]);
             $vote->save();

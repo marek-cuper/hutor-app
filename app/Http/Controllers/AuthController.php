@@ -101,6 +101,8 @@ class AuthController extends Controller
             $request->session()->put('user_regions', $user_regions);
 
 
+
+
             return redirect()->route('domov');
         }
 

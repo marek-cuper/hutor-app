@@ -635,15 +635,14 @@
                 method: 'POST',
                 data: { post_id: post_id, comment_text: showPostCommentInput.value, _token: '{{ csrf_token() }}' },
                 success: function (response) {
-                    createComment(user_profile_image, user_name, showPostCommentInput.value, 0, 0, '');
-                    showPostCommentInput.value = '';
                     show_comment_image[show_comment_image.length] = user_profile_image;
                     show_comment_user_name[show_comment_user_name.length] = user_name;
                     show_comment_text[show_comment_text.length] = showPostCommentInput.value;
                     show_comment_up_vote[show_comment_up_vote.length] = 0;
                     show_comment_down_vote[show_comment_down_vote.length] = 0;
                     show_comment_user_voted[show_comment_user_voted.length] = '';
-
+                    createComment(user_profile_image, user_name, showPostCommentInput.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
+                    showPostCommentInput.value = '';
                     //show_post_vote_status = response.post_vote_status;
 
 
@@ -663,9 +662,10 @@
             method: 'POST',
             data: { comments_id: show_comment_id, comment_id: comment_id, up_vote: up_vote, _token: '{{ csrf_token() }}' },
             success: function (response) {
-                setVoteComment(position,response.comment_vote_result);
+
                 show_comment_up_vote = response.comment_up_votes;
                 show_comment_down_vote =response.comment_down_votes;
+                setVoteComment(position,response.comment_vote_result);
                 //show_post_vote_status = response.post_vote_status;
 
             },
