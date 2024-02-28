@@ -15,6 +15,10 @@
 <body>
 @include('include.navbar')
 
+<div id="domov_tlacitko_nazad" onclick="returnHome()">
+    <i class="fa fa-angle-double-left  fa-3x"></i>
+</div>
+
 <div id="domov_kontajner_prispevky" class="domov_kontajner_prispevky">
 
 </div>
@@ -31,6 +35,7 @@
     let canScroll = true;
     let index = 0;
     var user_name = @json(session('user_name'));
+    var user_profile_id = @json(session('user_profile_id'));
     var user_profile_image = @json(session('user_profile_image'));
 
     var posts = @json(session('posts'));
@@ -48,6 +53,7 @@
     var show_post_up_voted;
     var show_post_down_voted;
     var show_post_openned;
+    var show_comment_profile_id;
     var show_comment_id;
     var show_comment_image;
     var show_comment_user_name;
@@ -61,8 +67,9 @@
     var regions = @json(session('regions'));
 
     var loadedPosts = [];
+    const buttonBack = document.getElementById('domov_tlacitko_nazad');
     const homeContainer = document.getElementById('domov_kontajner_prispevky');
-    const showContainer = document.getElementById('domov_zobrazeny_prispevok');
+    let showContainer = document.getElementById('domov_zobrazeny_prispevok');
 
     let scrollListener = true;
 
@@ -79,6 +86,19 @@
     let showPostCommentsDiv;
     let showPostComments = [];
     let showPostCommentInput;
+
+    function returnHome(){
+        buttonBack.style.display = "none";
+        showContainer.innerHTML = "";
+        showPostImagesIndex = 0;
+        showPostImages = [];
+        showPostPollOptions = [];
+        showPostStats = [];
+        showPostComments = [];
+
+        homeContainer.style.display = "inline";
+        scrollListener = true;
+    }
 
     function setDataShowPost(){
         //After click to post disable scrolling
@@ -99,6 +119,7 @@
                 show_post_up_voted = response.poll_up_votes;
                 show_post_down_voted = response.poll_down_votes;
                 show_post_openned = response.poll_oppened;
+                show_comment_profile_id = response.comment_profile_id;
                 show_comment_id = response.comment_id;
                 show_comment_image = response.comment_image;
                 show_comment_user_name = response.comment_user_name;
@@ -107,6 +128,7 @@
                 show_comment_down_vote = response.comment_down_votes;
                 show_comment_user_voted = response.comment_user_voted;
                 showPost();
+                buttonBack.style.display = "flex";
 
             },
             error: function (error) {
@@ -411,7 +433,7 @@
         komentareTelo.appendChild(showPostCommentsDiv);
 
         for (let i = 0; i < show_comment_image.length; i++) {
-            createComment(show_comment_image[i], show_comment_user_name[i], show_comment_text[i], show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+            createComment(show_comment_profile_id[i], show_comment_image[i], show_comment_user_name[i], show_comment_text[i], show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
         }
 
         containerDiv.appendChild(komentareTelo);
@@ -564,18 +586,19 @@
 
     }
 
-    function createComment(profil_image, profil_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
+    function createComment(profile_id, profile_image, profile_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
         const komentar = document.createElement('div');
         komentar.className = 'domov_zobrazenie_komentare_komentar';
         showPostCommentsDiv.appendChild(komentar);
         let position = showPostComments.length;
         showPostComments[showPostComments.length] = komentar;
 
-        const komentarObrazokDiv = document.createElement('div');
+        const komentarObrazokDiv = document.createElement('a');
+        komentarObrazokDiv.href = '/profil/' + profile_id;
         komentarObrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
         komentar.appendChild(komentarObrazokDiv);
         const komentarObrazokImg = document.createElement('img');
-        komentarObrazokImg.src = '/storage/' + profil_image;
+        komentarObrazokImg.src = '/storage/' + profile_image;
         //'images/profiles/1OqCPZidVBRtc6Ngz9XouhnBT5Ux0nrtQMDhSB58.jpg'
         komentarObrazokDiv.appendChild(komentarObrazokImg);
 
@@ -584,7 +607,7 @@
         komentar.appendChild(komentarTelo);
 
         const komentarTeloMeno = document.createElement('p');
-        komentarTeloMeno.textContent = profil_name;
+        komentarTeloMeno.textContent = profile_name;
         komentarTeloMeno.className = 'domov_zobrazenie_komentare_komentar_meno';
         komentarTelo.appendChild(komentarTeloMeno);
 
@@ -635,13 +658,14 @@
                 method: 'POST',
                 data: { post_id: post_id, comment_text: showPostCommentInput.value, _token: '{{ csrf_token() }}' },
                 success: function (response) {
+                    show_comment_profile_id[show_comment_profile_id.length] = user_profile_id;
                     show_comment_image[show_comment_image.length] = user_profile_image;
                     show_comment_user_name[show_comment_user_name.length] = user_name;
                     show_comment_text[show_comment_text.length] = showPostCommentInput.value;
                     show_comment_up_vote[show_comment_up_vote.length] = 0;
                     show_comment_down_vote[show_comment_down_vote.length] = 0;
                     show_comment_user_voted[show_comment_user_voted.length] = '';
-                    createComment(user_profile_image, user_name, showPostCommentInput.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
+                    createComment(user_profile_id, user_profile_image, user_name, showPostCommentInput.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
                     showPostCommentInput.value = '';
                     //show_post_vote_status = response.post_vote_status;
 
@@ -694,14 +718,10 @@
         //let downVoteNumP = downVoteDiv[0].querySelector("p");
         //downVoteNumP.textContent = show_comment_down_vote[position];
 
-        for (let i = 0; i < showPostComments.length; i++) {
-            let upVoteDiv = showPostComments[i].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_za_kontajner");
-            let downVoteDiv = showPostComments[i].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_proti_kontajner");
-            let upVoteNumP = upVoteDiv[0].querySelector("p");
-            upVoteNumP.textContent = show_comment_up_vote[i];
-            let downVoteNumP = downVoteDiv[0].querySelector("p");
-            downVoteNumP.textContent = show_comment_down_vote[i];
-        }
+        let upVoteNumP = upVoteDiv[0].querySelector("p");
+        upVoteNumP.textContent = show_comment_up_vote[position];
+        let downVoteNumP = downVoteDiv[0].querySelector("p");
+        downVoteNumP.textContent = show_comment_down_vote[position];
     }
 
 
@@ -810,7 +830,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-
+        buttonBack.style.display = "none";
         var oldIndex = localStorage.getItem('oldIndex');
 
         if (oldIndex !== null) {

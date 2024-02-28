@@ -68,6 +68,7 @@ class PostController extends Controller
 
         //Adding comments to showed post
         $comments = Post_comment::where('post_id', $post_id)->orderBy('down_votes')->orderByDesc('up_votes')->get();
+        $post_comments_profile_id = [];
         $post_comments_id = [];
         $post_comments_user_profile_image = [];
         $post_comments_user_profile_name = [];
@@ -79,6 +80,7 @@ class PostController extends Controller
             $post_comments_id[] = $comment->id;
             $comment_user_id = $comment->user_id;
             $comment_user = User::where('id', $comment_user_id)->first();
+            $post_comments_profile_id[] = $comment_user_id;
             $post_comments_user_profile_image[] = $comment_user->image_name;
             $post_comments_user_profile_name[] = $comment_user->name;
             $post_comments_text[] = $comment->text;
@@ -108,6 +110,7 @@ class PostController extends Controller
             'poll_up_votes' => $post_up_votes,
             'poll_down_votes' => $post_down_votes,
             'poll_oppened' => $post_openned,
+            'comment_profile_id' => $post_comments_profile_id,
             'comment_id' => $post_comments_id,
             'comment_image' => $post_comments_user_profile_image,
             'comment_user_name' => $post_comments_user_profile_name,

@@ -76,6 +76,7 @@ class AuthController extends Controller
             $request->session()->put('posts_regions', $posts_regions);
 
             $request->session()->put('user_name', Auth::user()->name);
+            $request->session()->put('user_profile_id', Auth::user()->id);
             $request->session()->put('user_profile_image', Auth::user()->image_name);
 
             //Setting tags chosen be user to session
@@ -137,6 +138,11 @@ class AuthController extends Controller
         $request->session()->flush();
         Auth::logout();
         return redirect(route(('prihlasenie')));
+    }
+
+    function profil($id){
+        $user = User::findOrFail($id);
+        return view('profil', compact('user'));
     }
 
     function profil_uprava(Request $request){
