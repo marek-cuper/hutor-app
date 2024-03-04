@@ -55,6 +55,7 @@
     var show_post_openned;
     var show_comment_profile_id;
     var show_comment_id;
+    var show_comment_upper_id;
     var show_comment_image;
     var show_comment_user_name;
     var show_comment_text;
@@ -85,7 +86,6 @@
 
     let showPostCommentsDiv;
     let showPostComments = [];
-    let showPostCommentInput;
 
     function returnHome(){
         buttonBack.style.display = "none";
@@ -121,6 +121,7 @@
                 show_post_openned = response.poll_oppened;
                 show_comment_profile_id = response.comment_profile_id;
                 show_comment_id = response.comment_id;
+                show_comment_upper_id = response.comment_upper_id;
                 show_comment_image = response.comment_image;
                 show_comment_user_name = response.comment_user_name;
                 show_comment_text = response.comment_text;
@@ -419,13 +420,13 @@
         komentarePridajKontjaner.className = 'domov_zobrazenie_komentare_pridaj_kontajner';
         komentareTelo.appendChild(komentarePridajKontjaner);
 
-        showPostCommentInput = document.createElement('input');
+        let showPostCommentInput = document.createElement('input');
         komentarePridajKontjaner.appendChild(showPostCommentInput);
         const komentarePridajTlacitko = document.createElement('i');
         komentarePridajTlacitko.className = 'fa fa-paper-plane fa-1x';
         komentarePridajKontjaner.appendChild(komentarePridajTlacitko);
         komentarePridajKontjaner.addEventListener("click", function() {
-            sendComment();
+            sendComment(showPostCommentInput ,null);
         });
 
         showPostCommentsDiv = document.createElement('div');
@@ -433,7 +434,15 @@
         komentareTelo.appendChild(showPostCommentsDiv);
 
         for (let i = 0; i < show_comment_image.length; i++) {
-            createComment(show_comment_profile_id[i], show_comment_image[i], show_comment_user_name[i], show_comment_text[i], show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+            if(show_comment_upper_id[i] === null){
+                createComment(showPostComments.length, show_comment_profile_id[i],
+                    show_comment_image[i], show_comment_user_name[i], show_comment_text[i],
+                    show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+            }else {
+                createLowerComment(showPostComments.length, show_comment_profile_id[i],
+                    show_comment_image[i], show_comment_user_name[i], show_comment_text[i],
+                    show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+            }
         }
 
         containerDiv.appendChild(komentareTelo);
@@ -586,17 +595,35 @@
 
     }
 
-    function createComment(profile_id, profile_image, profile_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
+    function createComment(position, profile_id, profile_image, profile_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
         const komentar = document.createElement('div');
         komentar.className = 'domov_zobrazenie_komentare_komentar';
         showPostCommentsDiv.appendChild(komentar);
-        let position = showPostComments.length;
         showPostComments[showPostComments.length] = komentar;
+
+
+        const komentarVrch = document.createElement('div');
+        komentarVrch.className = 'domov_zobrazenie_komentare_komentar_vrch';
+        komentar.appendChild(komentarVrch);
+
+        const komentarSpodok = document.createElement('div');
+        komentarSpodok.className = 'domov_zobrazenie_komentare_komentar_spodok';
+        komentar.appendChild(komentarSpodok);
+
+        const komentarStred = document.createElement('div');
+        komentarStred.className = 'domov_zobrazenie_komentare_komentar_stred';
+        komentar.appendChild(komentarStred);
+
+        const komentarPodKomentare = document.createElement('div');
+        komentarPodKomentare.className = 'domov_zobrazenie_komentare_komentar_komentare';
+        komentarPodKomentare.id = 'domov_zobrazenie_komentare_komentar_komentare';
+        komentar.appendChild(komentarPodKomentare);
+
 
         const komentarObrazokDiv = document.createElement('a');
         komentarObrazokDiv.href = '/profil/' + profile_id;
         komentarObrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
-        komentar.appendChild(komentarObrazokDiv);
+        komentarVrch.appendChild(komentarObrazokDiv);
         const komentarObrazokImg = document.createElement('img');
         komentarObrazokImg.src = '/storage/' + profile_image;
         //'images/profiles/1OqCPZidVBRtc6Ngz9XouhnBT5Ux0nrtQMDhSB58.jpg'
@@ -604,7 +631,7 @@
 
         const komentarTelo = document.createElement('div');
         komentarTelo.className = 'domov_zobrazenie_komentare_komentar_telo';
-        komentar.appendChild(komentarTelo);
+        komentarVrch.appendChild(komentarTelo);
 
         const komentarTeloMeno = document.createElement('p');
         komentarTeloMeno.textContent = profile_name;
@@ -619,7 +646,7 @@
         const komentarTeloHlasyZaKontajner  = document.createElement('div');
         //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
         komentarTeloHlasyZaKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_za_kontajner';
-        komentar.appendChild(komentarTeloHlasyZaKontajner);
+        komentarStred.appendChild(komentarTeloHlasyZaKontajner);
 
         const hlasZaSipkaHore = document.createElement('i');
         hlasZaSipkaHore.className = 'fa fa-arrow-up fa-1x';
@@ -634,7 +661,116 @@
         const komentarTeloHlasyProtiKontajner  = document.createElement('div');
         //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
         komentarTeloHlasyProtiKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
-        komentar.appendChild(komentarTeloHlasyProtiKontajner);
+        komentarStred.appendChild(komentarTeloHlasyProtiKontajner);
+
+        const hlasProtiSipkaHore = document.createElement('i');
+        hlasProtiSipkaHore.className = 'fa fa-arrow-down fa-1x';
+        komentarTeloHlasyProtiKontajner.appendChild(hlasProtiSipkaHore);
+        const hlasProtiCislo = document.createElement('p');
+        hlasProtiCislo.textContent = comment_down_votes;
+        komentarTeloHlasyProtiKontajner.appendChild(hlasProtiCislo);
+        komentarTeloHlasyProtiKontajner.addEventListener("click", function() {
+            voteComment(position, 0);
+        });
+        setVoteComment(position, vote_status);
+
+        const komentarTeloPridajKomentarKontajner  = document.createElement('div');
+        komentarTeloPridajKomentarKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+        komentarStred.appendChild(komentarTeloPridajKomentarKontajner);
+
+        const komentarZnak = document.createElement('i');
+        komentarZnak.className = 'fa fa-comment fa-1x';
+        komentarTeloPridajKomentarKontajner.appendChild(komentarZnak);
+        komentarTeloPridajKomentarKontajner.addEventListener("click", function() {
+            komentarTeloPridajKomentarKontajner.style.display = 'none';
+            const komentarePridajKontjaner = document.createElement('div');
+            komentarePridajKontjaner.className = 'domov_zobrazenie_komentare_pridaj_kontajner';
+            //komentarePridajKontjaner.style.width = "80%";
+            //komentarePridajKontjaner.style.marginRight = "auto";
+            komentarSpodok.appendChild(komentarePridajKontjaner);
+            komentarSpodok.style.height = "35px";
+
+            let showPostCommentInput = document.createElement('input');
+            komentarePridajKontjaner.appendChild(showPostCommentInput);
+            const komentarePridajTlacitko = document.createElement('i');
+            komentarePridajTlacitko.className = 'fa fa-paper-plane fa-1x';
+            komentarePridajKontjaner.appendChild(komentarePridajTlacitko);
+            komentarePridajKontjaner.addEventListener("click", function() {
+                sendComment(showPostCommentInput, show_comment_id[position]);
+            });
+        });
+    }
+
+    function createLowerComment(position, profile_id, profile_image, profile_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
+        const komentar = document.createElement('div');
+        komentar.className = 'domov_zobrazenie_komentare_komentar';
+        komentar.style.width = '90%';
+        komentar.style.marginLeft = 'auto';
+        komentar.style.marginRight = '0';
+        mainPosition = position;
+        while (true){
+            mainPosition--;
+            if (show_comment_upper_id[mainPosition] == null){
+                break;
+            }
+        }
+        let hlavnyKomentar = showPostComments[mainPosition].querySelector('#domov_zobrazenie_komentare_komentar_komentare');
+        hlavnyKomentar.appendChild(komentar);
+        showPostComments.splice(position, 0, komentar);
+
+
+        const komentarVrch = document.createElement('div');
+        komentarVrch.className = 'domov_zobrazenie_komentare_komentar_vrch';
+        komentar.appendChild(komentarVrch);
+
+
+        const komentarStred = document.createElement('div');
+        komentarStred.className = 'domov_zobrazenie_komentare_komentar_stred';
+        komentar.appendChild(komentarStred);
+
+
+        const komentarObrazokDiv = document.createElement('a');
+        komentarObrazokDiv.href = '/profil/' + profile_id;
+        komentarObrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
+        komentarVrch.appendChild(komentarObrazokDiv);
+        const komentarObrazokImg = document.createElement('img');
+        komentarObrazokImg.src = '/storage/' + profile_image;
+        //'images/profiles/1OqCPZidVBRtc6Ngz9XouhnBT5Ux0nrtQMDhSB58.jpg'
+        komentarObrazokDiv.appendChild(komentarObrazokImg);
+
+        const komentarTelo = document.createElement('div');
+        komentarTelo.className = 'domov_zobrazenie_komentare_komentar_telo';
+        komentarVrch.appendChild(komentarTelo);
+
+        const komentarTeloMeno = document.createElement('p');
+        komentarTeloMeno.textContent = profile_name;
+        komentarTeloMeno.className = 'domov_zobrazenie_komentare_komentar_meno';
+        komentarTelo.appendChild(komentarTeloMeno);
+
+        const komentarTeloText = document.createElement('p');
+        komentarTeloText.textContent = comment_text;
+        komentarTeloText.className = 'domov_zobrazenie_komentare_komentar_text';
+        komentarTelo.appendChild(komentarTeloText);
+
+        const komentarTeloHlasyZaKontajner  = document.createElement('div');
+        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
+        komentarTeloHlasyZaKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_za_kontajner';
+        komentarStred.appendChild(komentarTeloHlasyZaKontajner);
+
+        const hlasZaSipkaHore = document.createElement('i');
+        hlasZaSipkaHore.className = 'fa fa-arrow-up fa-1x';
+        komentarTeloHlasyZaKontajner.appendChild(hlasZaSipkaHore);
+        const hlasZaCislo = document.createElement('p');
+        hlasZaCislo.textContent = comment_up_votes;
+        komentarTeloHlasyZaKontajner.appendChild(hlasZaCislo);
+        komentarTeloHlasyZaKontajner.addEventListener("click", function() {
+            voteComment(position, 1);
+        });
+
+        const komentarTeloHlasyProtiKontajner  = document.createElement('div');
+        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
+        komentarTeloHlasyProtiKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+        komentarStred.appendChild(komentarTeloHlasyProtiKontajner);
 
         const hlasProtiSipkaHore = document.createElement('i');
         hlasProtiSipkaHore.className = 'fa fa-arrow-down fa-1x';
@@ -649,24 +785,32 @@
 
     }
 
-    function sendComment(){
-        if(showPostCommentInput.value !== ''){
+    function sendComment(inputText, upperCommentNumber){
+        if(inputText.value !== ''){
             var post_id = posts[index].id;
 
             $.ajax({
                 url: '/domov/zobrazenie/pridaj_koment',
                 method: 'POST',
-                data: { post_id: post_id, comment_text: showPostCommentInput.value, _token: '{{ csrf_token() }}' },
+                data: { post_id: post_id, upper_comment_id: upperCommentNumber, comment_text: inputText.value, _token: '{{ csrf_token() }}' },
                 success: function (response) {
-                    show_comment_profile_id[show_comment_profile_id.length] = user_profile_id;
-                    show_comment_image[show_comment_image.length] = user_profile_image;
-                    show_comment_user_name[show_comment_user_name.length] = user_name;
-                    show_comment_text[show_comment_text.length] = showPostCommentInput.value;
-                    show_comment_up_vote[show_comment_up_vote.length] = 0;
-                    show_comment_down_vote[show_comment_down_vote.length] = 0;
-                    show_comment_user_voted[show_comment_user_voted.length] = '';
-                    createComment(user_profile_id, user_profile_image, user_name, showPostCommentInput.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
-                    showPostCommentInput.value = '';
+                    if(upperCommentNumber === null){
+                        show_comment_profile_id[show_comment_profile_id.length] = user_profile_id;
+                        show_comment_id[show_comment_id.length] = response.comment_id;
+                        show_comment_upper_id[show_comment_upper_id.length] = null;
+                        show_comment_image[show_comment_image.length] = user_profile_image;
+                        show_comment_user_name[show_comment_user_name.length] = user_name;
+                        show_comment_text[show_comment_text.length] = inputText.value;
+                        show_comment_up_vote[show_comment_up_vote.length] = 0;
+                        show_comment_down_vote[show_comment_down_vote.length] = 0;
+                        show_comment_user_voted[show_comment_user_voted.length] = '';
+                        createComment(showPostComments.length, user_profile_id, user_profile_image, user_name, inputText.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
+                        inputText.value = '';
+                    }else {
+                        inputText.value = '';
+                        //alert(upperCommentNumber);
+                    }
+
                     //show_post_vote_status = response.post_vote_status;
 
 

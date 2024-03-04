@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('upper_comment_id')->nullable()->default(null);
+            $table->unsignedBigInteger('order')->nullable()->default(null);
             $table->string('text');
             $table->unsignedBigInteger('up_votes');
             $table->unsignedBigInteger('down_votes');
@@ -22,6 +24,7 @@ return new class extends Migration
 
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('upper_comment_id')->references('id')->on('post_comment')->onDelete('cascade');
         });
     }
 

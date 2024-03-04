@@ -14,6 +14,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use function Sodium\add;
 
 class PostController extends Controller
 {
@@ -66,10 +67,22 @@ class PostController extends Controller
         $post_down_votes = $post->down_votes;
         $post_openned = $post->openned;
 
-        //Adding comments to showed post
-        $comments = Post_comment::where('post_id', $post_id)->orderBy('down_votes')->orderByDesc('up_votes')->get();
+        //Adding comments to showed post, make sure for right order
+        $comments = [];
+        $comments_main = Post_comment::where('post_id', $post_id)->where('upper_comment_id', null)->orderBy('down_votes')->orderByDesc('up_votes')->get();
+        foreach ($comments_main as $comment) {
+            $comments[] = $comment;
+            $comments_lower = Post_comment::where('upper_comment_id', $comment->id)->orderBy('order')->get();
+            if ($comments_lower){
+                foreach ($comments_lower as $comment_lower) {
+                    $comments[] = $comment_lower;
+                }
+            }
+
+        }
         $post_comments_profile_id = [];
         $post_comments_id = [];
+        $post_comments_upper_id = [];
         $post_comments_user_profile_image = [];
         $post_comments_user_profile_name = [];
         $post_comments_text = [];
@@ -79,6 +92,7 @@ class PostController extends Controller
         foreach ($comments as $comment) {
             $post_comments_id[] = $comment->id;
             $comment_user_id = $comment->user_id;
+            $post_comments_upper_id[] = $comment->upper_comment_id;
             $comment_user = User::where('id', $comment_user_id)->first();
             $post_comments_profile_id[] = $comment_user_id;
             $post_comments_user_profile_image[] = $comment_user->image_name;
@@ -112,6 +126,7 @@ class PostController extends Controller
             'poll_oppened' => $post_openned,
             'comment_profile_id' => $post_comments_profile_id,
             'comment_id' => $post_comments_id,
+            'comment_upper_id' => $post_comments_upper_id,
             'comment_image' => $post_comments_user_profile_image,
             'comment_user_name' => $post_comments_user_profile_name,
             'comment_text' => $post_comments_text,
@@ -192,14 +207,38 @@ class PostController extends Controller
     }
 
     public function post_pridaj_komentPost(Request $request){
+
+        $order = null;
+        $upper_comment_id = null;
+        if($request->input('upper_comment_id') != null){
+            $com = Post_comment::where('post_id', $request->input('post_id'))
+                ->where('upper_comment_id', $request->input('upperCommentNumber'))
+                ->orderByDesc('order')
+                ->first();
+            if($com->order != null){
+                $order = $com->order + 1;
+            }else{
+                $order = 0;
+            }
+            $upper_comment_id = $com->id;
+
+        }
+
         $post_comment = new Post_comment([
             'post_id' => $request->input('post_id'),
             'user_id' => Auth::user()->id,
+            'upper_comment_id' => $upper_comment_id,
+            'order' => $order,
             'text' => $request->input('comment_text'),
             'up_votes' => 0,
             'down_votes' => 0,
         ]);
         $post_comment->save();
+
+        return response()->json([
+            'comment_id' => $post_comment->id,
+
+        ]);
     }
 
     public function post_hlasuj_komentPost(Request $request){

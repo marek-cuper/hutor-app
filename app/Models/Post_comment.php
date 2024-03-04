@@ -14,6 +14,8 @@ class Post_comment extends Model
     protected $fillable = [
         'post_id',
         'user_id',
+        'upper_comment_id',
+        'order',
         'text',
         'up_votes',
         'down_votes',

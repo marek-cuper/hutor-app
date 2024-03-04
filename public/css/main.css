@@ -577,9 +577,31 @@ html, body {
 }
 
 .domov_zobrazenie_komentare_komentar{
-    margin-bottom: 1%;
-    border:2px solid lightgray;
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2%;
+}
+
+.domov_zobrazenie_komentare_komentar_vrch{
     display: flex;
+    width: 100%;
+    border:2px solid lightgray;
+}
+
+.domov_zobrazenie_komentare_komentar_stred{
+    display: flex;
+    height: 40px;
+    width: 100%;
+
+}
+
+.domov_zobrazenie_komentare_komentar_spodok{
+    display: flex;
+    width: 100%;
+}
+domov_zobrazenie_komentare_komentar_komentare{
+
 }
 
 .domov_zobrazenie_komentare_komentar_obrazok{
