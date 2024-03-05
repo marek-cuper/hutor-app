@@ -111,14 +111,18 @@
             data: { post_id: post_id, _token: '{{ csrf_token() }}' },
             success: function (response) {
                 show_posts_images = response.show_posts_images;
+
                 show_post_poll_options_image = response.post_poll_options_images;
                 show_post_poll_options_text = response.post_poll_options_text;
                 show_user_poll_option_number = response.user_poll_option_number;
                 show_poll_option_votes = response.poll_option_votes;
+
                 show_post_vote_status = response.post_vote_status;
+
                 show_post_up_voted = response.poll_up_votes;
                 show_post_down_voted = response.poll_down_votes;
                 show_post_openned = response.poll_oppened;
+
                 show_comment_profile_id = response.comment_profile_id;
                 show_comment_id = response.comment_id;
                 show_comment_upper_id = response.comment_upper_id;
@@ -369,7 +373,6 @@
         hlasZaSipkaHore.className = 'fa fa-arrow-up fa-1x';
         hlasovanieTeloHlasyZaKontajner.appendChild(hlasZaSipkaHore);
         const hlasZaCislo = document.createElement('p');
-        //hlasZaCislo.textContent = show_post_up_voted;
         hlasovanieTeloHlasyZaKontajner.appendChild(hlasZaCislo);
         hlasovanieTeloHlasyZaKontajner.addEventListener("click", function() {
             votePost(1);
@@ -405,7 +408,6 @@
         zobrazenieUzivatelia.className = 'fa fa-users  fa-1x';
         hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieUzivatelia);
         const zobrazenieCislo = document.createElement('p');
-        //zobrazenieCislo.textContent = show_post_openned;
         hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieCislo);
 
         containerDiv.appendChild(hlasovanieTelo);
@@ -811,6 +813,7 @@
                         inputText.value = '';
                     }else {
                         let position = 0;
+                        let mainCommentPosition = 0;
                         let found = false;
                         for (let i = 0; i < show_comment_id.length; i++) {
                             if(found){
@@ -821,11 +824,11 @@
                             }
                             if(upperCommentId === show_comment_id[i]){
                                 found = true;
-                                if(show_comment_id.length == i){
-                                    position = show_comment_id.length;
-                                    break;
-                                }
+                                mainCommentPosition = i+1;
                             }
+                        }
+                        if(position == 0){
+                            position = mainCommentPosition;
                         }
                         show_comment_profile_id.splice(position, 0, user_profile_id);
                         show_comment_id.splice(position, 0, response.comment_id);
