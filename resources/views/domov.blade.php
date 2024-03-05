@@ -600,6 +600,7 @@
         komentar.className = 'domov_zobrazenie_komentare_komentar';
         showPostCommentsDiv.appendChild(komentar);
         showPostComments[showPostComments.length] = komentar;
+        komentar.style.marginBottom = '3%';
 
 
         const komentarVrch = document.createElement('div');
@@ -719,6 +720,8 @@
         showPostComments.splice(position, 0, komentar);
 
 
+
+
         const komentarVrch = document.createElement('div');
         komentarVrch.className = 'domov_zobrazenie_komentare_komentar_vrch';
         komentar.appendChild(komentarVrch);
@@ -785,16 +788,16 @@
 
     }
 
-    function sendComment(inputText, upperCommentNumber){
+    function sendComment(inputText, upperCommentId){
         if(inputText.value !== ''){
             var post_id = posts[index].id;
 
             $.ajax({
                 url: '/domov/zobrazenie/pridaj_koment',
                 method: 'POST',
-                data: { post_id: post_id, upper_comment_id: upperCommentNumber, comment_text: inputText.value, _token: '{{ csrf_token() }}' },
+                data: { post_id: post_id, upper_comment_id: upperCommentId, comment_text: inputText.value, _token: '{{ csrf_token() }}' },
                 success: function (response) {
-                    if(upperCommentNumber === null){
+                    if(upperCommentId === null){
                         show_comment_profile_id[show_comment_profile_id.length] = user_profile_id;
                         show_comment_id[show_comment_id.length] = response.comment_id;
                         show_comment_upper_id[show_comment_upper_id.length] = null;
@@ -807,7 +810,40 @@
                         createComment(showPostComments.length, user_profile_id, user_profile_image, user_name, inputText.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
                         inputText.value = '';
                     }else {
+                        let position = 0;
+                        let found = false;
+                        for (let i = 0; i < show_comment_id.length; i++) {
+                            if(found){
+                                if(show_comment_upper_id[i] === null){
+                                    position = i;
+                                    break;
+                                }
+                            }
+                            if(upperCommentId === show_comment_id[i]){
+                                found = true;
+                                if(show_comment_id.length == i){
+                                    position = show_comment_id.length;
+                                    break;
+                                }
+                            }
+                        }
+                        show_comment_profile_id.splice(position, 0, user_profile_id);
+                        show_comment_id.splice(position, 0, response.comment_id);
+                        show_comment_upper_id.splice(position, 0, upperCommentId);
+                        show_comment_image.splice(position, 0, user_profile_image);
+                        show_comment_user_name.splice(position, 0, user_name);
+                        show_comment_text.splice(position, 0, inputText.value);
+                        for (let i = 0; i < show_comment_text.length; i++) {
+                            //alert(show_comment_text[i] + ' upperID: ' +show_comment_upper_id[i]);
+                        }
+                        show_comment_up_vote.splice(position, 0, 0);
+                        show_comment_down_vote.splice(position, 0, 0);
+                        show_comment_user_voted.splice(position, 0, '');
+                        createLowerComment(position, user_profile_id, user_profile_image, user_name, inputText.value, show_comment_up_vote[position], show_comment_down_vote[position], '');
+
                         inputText.value = '';
+
+
                         //alert(upperCommentNumber);
                     }
 

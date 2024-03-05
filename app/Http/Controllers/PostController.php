@@ -212,15 +212,16 @@ class PostController extends Controller
         $upper_comment_id = null;
         if($request->input('upper_comment_id') != null){
             $com = Post_comment::where('post_id', $request->input('post_id'))
-                ->where('upper_comment_id', $request->input('upperCommentNumber'))
+                ->where('upper_comment_id', $request->input('upper_comment_id'))
+                ->whereNotNull('order')
                 ->orderByDesc('order')
                 ->first();
-            if($com->order != null){
+            if($com){
                 $order = $com->order + 1;
             }else{
                 $order = 0;
             }
-            $upper_comment_id = $com->id;
+            $upper_comment_id = $request->input('upper_comment_id');
 
         }
 
