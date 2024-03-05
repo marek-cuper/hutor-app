@@ -44,9 +44,11 @@ class PollController extends Controller
         $poll_option->save();
 
 
+        $poll_options = Poll_option::where('post_id', $input_post_id)->orderBy('order')->get();
         $poll_option_votes = Poll_option::where('post_id', $input_post_id)->orderBy('order')->get()->pluck('votes')->toArray();
 
         return response()->json([
+            'poll_options' => $poll_options,
             'poll_option_votes' => $poll_option_votes,
         ]);
     }

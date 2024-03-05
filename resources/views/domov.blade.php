@@ -34,9 +34,7 @@
     // Listen for the scroll event
     let canScroll = true;
     let index = 0;
-    var user_name = @json(session('user_name'));
-    var user_profile_id = @json(session('user_profile_id'));
-    var user_profile_image = @json(session('user_profile_image'));
+    var user = @json(session('user'));
 
     var posts = @json(session('posts'));
     var posts_images = @json(session('posts_images'));
@@ -44,25 +42,14 @@
     var posts_regions = @json(session('posts_regions'));
 
     var show_posts_images = [];
-    var show_post_poll_options_image = [];
-    var show_post_poll_options_text = [];
+    var show_poll_options = [];
     var show_user_poll_option_number;
-    var show_poll_option_votes = [];
     // "","+","-"
     var show_post_vote_status = "";
-    var show_post_up_voted;
-    var show_post_down_voted;
-    var show_post_openned;
-    var show_comment_profile_id;
-    var show_comment_id;
-    var show_comment_upper_id;
-    var show_comment_image;
-    var show_comment_user_name;
-    var show_comment_text;
-    var show_comment_up_vote;
-    var show_comment_down_vote;
-    var show_comment_user_voted;
 
+    var show_comments;
+    var show_comment_profiles;
+    var show_comment_user_voted;
 
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
@@ -112,25 +99,12 @@
             success: function (response) {
                 show_posts_images = response.show_posts_images;
 
-                show_post_poll_options_image = response.post_poll_options_images;
-                show_post_poll_options_text = response.post_poll_options_text;
+                show_poll_options = response.poll_options;
                 show_user_poll_option_number = response.user_poll_option_number;
-                show_poll_option_votes = response.poll_option_votes;
-
                 show_post_vote_status = response.post_vote_status;
 
-                show_post_up_voted = response.poll_up_votes;
-                show_post_down_voted = response.poll_down_votes;
-                show_post_openned = response.poll_oppened;
-
-                show_comment_profile_id = response.comment_profile_id;
-                show_comment_id = response.comment_id;
-                show_comment_upper_id = response.comment_upper_id;
-                show_comment_image = response.comment_image;
-                show_comment_user_name = response.comment_user_name;
-                show_comment_text = response.comment_text;
-                show_comment_up_vote = response.comment_up_votes;
-                show_comment_down_vote = response.comment_down_votes;
+                show_comments = response.comments;
+                show_comment_profiles = response.comment_profiles;
                 show_comment_user_voted = response.comment_user_voted;
                 showPost();
                 buttonBack.style.display = "flex";
@@ -234,7 +208,7 @@
         obrazkyKontajnerDiv.appendChild(obrazkyTlacitkoPraveDiv);
         containerDiv.appendChild(obrazkyKontajnerDiv);
 
-        //It shows buttons ifthere are more images
+        //It shows buttons if there are more images
         updateShowImageButtons();
 
 
@@ -249,7 +223,7 @@
             // Append the main container to the document body or any other desired parent element
             anketaKontajner.appendChild(anketaOtazkaDiv);
 
-            for (let i = 0; i < show_post_poll_options_image.length; i++) {
+            for (let i = 0; i < show_poll_options.length; i++) {
                 const anketaMoznostKontajnerDiv = document.createElement('div');
                 anketaMoznostKontajnerDiv.id = 'domov_zobrazenie_anketa_moznost_kontajner' + post.id;
                 anketaMoznostKontajnerDiv.className = 'domov_zobrazenie_anketa_moznost_kontajner';
@@ -260,10 +234,10 @@
                 anketaMoznostObrazokDiv.className = 'domov_zobrazenie_anketa_moznost_obrazok';
 
                 const anketaMoznostObrazok = document.createElement('img');
-                if(show_post_poll_options_image[i] === null){
+                if(show_poll_options[i].image_name === null){
                     anketaMoznostObrazok.style.visibility = 'hidden';
                 }else {
-                    anketaMoznostObrazok.src = '/storage/' + show_post_poll_options_image[i];
+                    anketaMoznostObrazok.src = '/storage/' + show_poll_options[i].image_name;
                 }
                 anketaMoznostObrazokDiv.appendChild(anketaMoznostObrazok);
                 anketaMoznostKontajnerDiv.appendChild(anketaMoznostObrazokDiv);
@@ -275,7 +249,7 @@
 
                 const anketaMoznostTextNazov = document.createElement('p');
                 anketaMoznostTextNazov.className = 'domov_zobrazenie_anketa_moznost_text_nazov'
-                anketaMoznostTextNazov.textContent = show_post_poll_options_text[i];
+                anketaMoznostTextNazov.textContent = show_poll_options[i].text;
 
                 const anketaMoznostTextCislo = document.createElement('p');
                 anketaMoznostTextCislo.className = 'domov_zobrazenie_anketa_moznost_text_cislo'
@@ -435,15 +409,15 @@
         showPostCommentsDiv.className = 'domov_zobrazenie_komentare_telo_komentare_kontajner';
         komentareTelo.appendChild(showPostCommentsDiv);
 
-        for (let i = 0; i < show_comment_image.length; i++) {
-            if(show_comment_upper_id[i] === null){
-                createComment(showPostComments.length, show_comment_profile_id[i],
-                    show_comment_image[i], show_comment_user_name[i], show_comment_text[i],
-                    show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+        for (let i = 0; i < show_comments.length; i++) {
+            if(show_comments[i].upper_comment_id === null){
+                createComment(showPostComments.length, show_comment_profiles[i].id,
+                    show_comment_profiles[i].image_name, show_comment_profiles[i].name, show_comments[i].text,
+                    show_comments[i].up_votes, show_comments[i].down_votes, show_comment_user_voted[i]);
             }else {
-                createLowerComment(showPostComments.length, show_comment_profile_id[i],
-                    show_comment_image[i], show_comment_user_name[i], show_comment_text[i],
-                    show_comment_up_vote[i], show_comment_down_vote[i], show_comment_user_voted[i]);
+                createLowerComment(showPostComments.length, show_comment_profiles[i].id,
+                    show_comment_profiles[i].image_name, show_comment_profiles[i].name, show_comments[i].text,
+                    show_comments[i].up_votes, show_comments[i].down_votes, show_comment_user_voted[i]);
             }
         }
 
@@ -507,6 +481,7 @@
             data: { post_id: post_id, poll_option_number: showPostChosoenPollOption, _token: '{{ csrf_token() }}' },
             success: function (response) {
                 show_poll_option_votes = response.poll_option_votes
+                show_poll_options = response.poll_options;
                 userVotedPoll();
             },
             error: function (error) {
@@ -517,14 +492,14 @@
 
     function userVotedPoll(){
         let sumVotes = 0;
-        for (let i = 0; i < show_poll_option_votes.length; i++) {
-            sumVotes += show_poll_option_votes[i];
+        for (let i = 0; i < show_poll_options.length; i++) {
+            sumVotes += show_poll_options[i].votes;
         }
 
         for (let i = 0; i < showPostPollOptions.length; i++) {
             //Adding filled background depends on % votes
             const optionBackgroundDiv = showPostPollOptions[i].querySelector('.domov_zobrazenie_anketa_moznost_text_pozadie');
-            let number = (show_poll_option_votes[i] / sumVotes * 100);
+            let number = (show_poll_options[i].votes / sumVotes * 100);
             let roundedNumber = Math.round(number * 10) / 10;
             optionBackgroundDiv.style.width = roundedNumber + '%';
 
@@ -566,9 +541,9 @@
             data: { post_id: post_id, up_vote: up_vote, _token: '{{ csrf_token() }}' },
             success: function (response) {
                 show_post_vote_status = response.post_vote_status;
-                show_post_up_voted = response.poll_up_votes;
-                show_post_down_voted = response.poll_down_votes;
-                show_post_openned = response.poll_oppened;
+                posts[index].up_votes = response.post_up_votes;
+                posts[index].down_votes = response.post_down_votes;
+                posts[index].openned = response.post_oppened;
                 userVotedPost();
             },
             error: function (error) {
@@ -579,13 +554,13 @@
 
     function userVotedPost(){
         let up_votes_div = showPostStats[0].querySelector('p');
-        up_votes_div.textContent = show_post_up_voted;
+        up_votes_div.textContent = posts[index].up_votes;
 
         let down_votes_div = showPostStats[1].querySelector('p');
-        down_votes_div.textContent = show_post_down_voted;
+        down_votes_div.textContent = posts[index].down_votes;
 
         let openned_div = showPostStats[2].querySelector('p');
-        openned_div.textContent = show_post_openned;
+        openned_div.textContent = posts[index].openned;
 
         showPostStats[0].style.backgroundColor = 'white';
         showPostStats[1].style.backgroundColor = 'white';
@@ -603,7 +578,6 @@
         showPostCommentsDiv.appendChild(komentar);
         showPostComments[showPostComments.length] = komentar;
         komentar.style.marginBottom = '3%';
-
 
         const komentarVrch = document.createElement('div');
         komentarVrch.className = 'domov_zobrazenie_komentare_komentar_vrch';
@@ -699,7 +673,7 @@
             komentarePridajTlacitko.className = 'fa fa-paper-plane fa-1x';
             komentarePridajKontjaner.appendChild(komentarePridajTlacitko);
             komentarePridajKontjaner.addEventListener("click", function() {
-                sendComment(showPostCommentInput, show_comment_id[position]);
+                sendComment(showPostCommentInput, show_comments[position].id);
             });
         });
     }
@@ -713,7 +687,7 @@
         mainPosition = position;
         while (true){
             mainPosition--;
-            if (show_comment_upper_id[mainPosition] == null){
+            if (show_comments[mainPosition].upper_comment_id == null){
                 break;
             }
         }
@@ -721,18 +695,13 @@
         hlavnyKomentar.appendChild(komentar);
         showPostComments.splice(position, 0, komentar);
 
-
-
-
         const komentarVrch = document.createElement('div');
         komentarVrch.className = 'domov_zobrazenie_komentare_komentar_vrch';
         komentar.appendChild(komentarVrch);
 
-
         const komentarStred = document.createElement('div');
         komentarStred.className = 'domov_zobrazenie_komentare_komentar_stred';
         komentar.appendChild(komentarStred);
-
 
         const komentarObrazokDiv = document.createElement('a');
         komentarObrazokDiv.href = '/profil/' + profile_id;
@@ -740,7 +709,6 @@
         komentarVrch.appendChild(komentarObrazokDiv);
         const komentarObrazokImg = document.createElement('img');
         komentarObrazokImg.src = '/storage/' + profile_image;
-        //'images/profiles/1OqCPZidVBRtc6Ngz9XouhnBT5Ux0nrtQMDhSB58.jpg'
         komentarObrazokDiv.appendChild(komentarObrazokImg);
 
         const komentarTelo = document.createElement('div');
@@ -800,29 +768,38 @@
                 data: { post_id: post_id, upper_comment_id: upperCommentId, comment_text: inputText.value, _token: '{{ csrf_token() }}' },
                 success: function (response) {
                     if(upperCommentId === null){
-                        show_comment_profile_id[show_comment_profile_id.length] = user_profile_id;
-                        show_comment_id[show_comment_id.length] = response.comment_id;
-                        show_comment_upper_id[show_comment_upper_id.length] = null;
-                        show_comment_image[show_comment_image.length] = user_profile_image;
-                        show_comment_user_name[show_comment_user_name.length] = user_name;
-                        show_comment_text[show_comment_text.length] = inputText.value;
-                        show_comment_up_vote[show_comment_up_vote.length] = 0;
-                        show_comment_down_vote[show_comment_down_vote.length] = 0;
+                        const comment = {
+                            id: response.comment_id,
+                            comment_upper_id: null,
+                            text: inputText.value,
+                            up_votes: 0,
+                            down_votes: 0
+                        };
+                        show_comments[show_comments.length] = comment;
+
+                        const profile = {
+                            id: user.id,
+                            image_name: user.image_name,
+                            name: user.name
+                        };
+                        show_comment_profiles[show_comment_profiles.length] = profile;
+
                         show_comment_user_voted[show_comment_user_voted.length] = '';
-                        createComment(showPostComments.length, user_profile_id, user_profile_image, user_name, inputText.value, show_comment_up_vote[show_comment_up_vote.length - 1], show_comment_down_vote[show_comment_down_vote.length - 1], '');
+                        createComment(showPostComments.length, user.id, user.image_name, user.name, inputText.value, show_comments[show_comments.length - 1].up_votes,
+                            show_comments[show_comments.length - 1].down_votes, '');
                         inputText.value = '';
                     }else {
                         let position = 0;
                         let mainCommentPosition = 0;
                         let found = false;
-                        for (let i = 0; i < show_comment_id.length; i++) {
+                        for (let i = 0; i < show_comments.length; i++) {
                             if(found){
-                                if(show_comment_upper_id[i] === null){
+                                if(show_comments[i].upper_comment_id === null){
                                     position = i;
                                     break;
                                 }
                             }
-                            if(upperCommentId === show_comment_id[i]){
+                            if(upperCommentId === show_comments[i].id){
                                 found = true;
                                 mainCommentPosition = i+1;
                             }
@@ -830,29 +807,28 @@
                         if(position == 0){
                             position = mainCommentPosition;
                         }
-                        show_comment_profile_id.splice(position, 0, user_profile_id);
-                        show_comment_id.splice(position, 0, response.comment_id);
-                        show_comment_upper_id.splice(position, 0, upperCommentId);
-                        show_comment_image.splice(position, 0, user_profile_image);
-                        show_comment_user_name.splice(position, 0, user_name);
-                        show_comment_text.splice(position, 0, inputText.value);
-                        for (let i = 0; i < show_comment_text.length; i++) {
-                            //alert(show_comment_text[i] + ' upperID: ' +show_comment_upper_id[i]);
-                        }
-                        show_comment_up_vote.splice(position, 0, 0);
-                        show_comment_down_vote.splice(position, 0, 0);
+                        const comment = {
+                            id: response.comment_id,
+                            comment_upper_id: upperCommentId,
+                            text: inputText.value,
+                            up_votes: 0,
+                            down_votes: 0
+                        };
+                        show_comments.splice(position, 0, comment);
+
+                        const profile = {
+                            id: user.id,
+                            image_name: user.image_name,
+                            name: user.name
+                        };
+                        show_comment_profiles.splice(position, 0, profile);
+
                         show_comment_user_voted.splice(position, 0, '');
-                        createLowerComment(position, user_profile_id, user_profile_image, user_name, inputText.value, show_comment_up_vote[position], show_comment_down_vote[position], '');
+                        createLowerComment(position, user.id, user.image_name, user.name, inputText.value, show_comments[position].up_votes,
+                            show_comments[position].down_votes, '');
 
                         inputText.value = '';
-
-
-                        //alert(upperCommentNumber);
                     }
-
-                    //show_post_vote_status = response.post_vote_status;
-
-
                 },
                 error: function (error) {
                     console.error('Error:', error);
@@ -862,17 +838,17 @@
     }
 
     function voteComment(position, up_vote){
-        let comment_id = show_comment_id[position];
+        let comment_id = show_comments[position].id;
 
         $.ajax({
             url: '/domov/zobrazenie/hlasuj_koment',
             method: 'POST',
-            data: { comments_id: show_comment_id, comment_id: comment_id, up_vote: up_vote, _token: '{{ csrf_token() }}' },
+            data: { comments: show_comments, comment_id: comment_id, up_vote: up_vote, _token: '{{ csrf_token() }}' },
             success: function (response) {
 
-                show_comment_up_vote = response.comment_up_votes;
-                show_comment_down_vote =response.comment_down_votes;
-                setVoteComment(position,response.comment_vote_result);
+                show_comments[position].up_votes = response.comment_up_votes;
+                show_comments[position].down_votes  =response.comment_down_votes;
+                setVoteComment(position, response.comment_vote_result);
                 //show_post_vote_status = response.post_vote_status;
 
             },
@@ -896,15 +872,11 @@
             downVoteDiv[0].style.backgroundColor = 'lightcoral';
         }
 
-        //let upVoteNumP = upVoteDiv[0].querySelector("p");
-        //upVoteNumP.textContent = show_comment_up_vote[position];
-        //let downVoteNumP = downVoteDiv[0].querySelector("p");
-        //downVoteNumP.textContent = show_comment_down_vote[position];
 
         let upVoteNumP = upVoteDiv[0].querySelector("p");
-        upVoteNumP.textContent = show_comment_up_vote[position];
+        upVoteNumP.textContent = show_comments[position].up_votes;
         let downVoteNumP = downVoteDiv[0].querySelector("p");
-        downVoteNumP.textContent = show_comment_down_vote[position];
+        downVoteNumP.textContent = show_comments[position].down_votes;
     }
 
 

@@ -46,7 +46,7 @@
 <script>
     var hiddenImageNameInput;
 
-    var user_profile_image = @json(session('user_profile_image'));
+    var user = @json(session('user'));
 
     const profileImageImg = document.getElementById('profil_obrazok');
     const profileImageInput = document.getElementById('profil_obrazok_vstup');
@@ -54,10 +54,10 @@
 
 
     document.addEventListener('DOMContentLoaded', function() {
-        profileImageImg.src = '/storage/' + user_profile_image;
+        profileImageImg.src = '/storage/' + user.image_name;
 
         hiddenImageNameInput = document.createElement('input');
-        hiddenImageNameInput.value = user_profile_image;
+        hiddenImageNameInput.value = user.image_name;
         hiddenImageNameInput.name = 'profile_image_name';
         hiddenImageNameInput.type = 'text';
         hiddenImageNameInput.style.display = 'none';
@@ -103,8 +103,8 @@
     });
 
     function resetFunction(){
-        profileImageImg.src = '/storage/' + user_profile_image;
-        hiddenImageNameInput.value = user_profile_image;
+        profileImageImg.src = '/storage/' + user.image_name;
+        hiddenImageNameInput.value = user.image_name;
     }
 </script>
 

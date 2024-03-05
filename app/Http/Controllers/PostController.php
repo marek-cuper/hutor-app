@@ -31,27 +31,21 @@ class PostController extends Controller
         $post->openned += 1;
         $post->save();
 
-        $post_question = $post->poll_text;
-        $post_poll_options_images = null;
-        $post_poll_options_text = null;
-        if($post_question !== null){
-            $post_poll_options = Poll_option::where('post_id', $post_id)->orderBy('order')->get();
-            $post_poll_options_images = $post_poll_options->pluck('image_name')->toArray();
-            $post_poll_options_text = $post_poll_options->pluck('text')->toArray();
+        $poll_options = [];
+        if($post->poll_text !== null){
+            $poll_options = Poll_option::where('post_id', $post_id)->orderBy('order')->get();
         }
 
-        $post_poll_options_id = Poll_option::where('post_id', $post_id)->get()->pluck('id')->toArray();
         $user_poll_votes_id = User_poll_vote::where('user_id', Auth::user()->id)->get()->pluck('poll_option_id')->toArray();
 
         $user_poll_option_number = -1;
-        foreach ($post_poll_options_id as $option_id) {
-            if(in_array($option_id, $user_poll_votes_id)){
-                $user_poll_option_number = Poll_option::where('id', $option_id)->first()->order;
+        foreach ($poll_options as $option) {
+            if(in_array($option->id, $user_poll_votes_id)){
+                $user_poll_option_number = $option->order;
                 break;
             }
         }
 
-        $poll_option_votes = Poll_option::where('post_id', $post_id)->orderBy('order')->get()->pluck('votes')->toArray();
 
         $post_vote_status = "";
         $post_vote = User_post_vote::where('user_id', Auth::user()->id)->where('post_id', $post_id)->first();
@@ -78,28 +72,13 @@ class PostController extends Controller
                     $comments[] = $comment_lower;
                 }
             }
-
         }
-        $post_comments_profile_id = [];
-        $post_comments_id = [];
-        $post_comments_upper_id = [];
-        $post_comments_user_profile_image = [];
-        $post_comments_user_profile_name = [];
-        $post_comments_text = [];
-        $post_comments_up_votes = [];
-        $post_comments_down_votes = [];
+        $comment_profiles = [];
         $post_comments_user_voted = [];
         foreach ($comments as $comment) {
-            $post_comments_id[] = $comment->id;
             $comment_user_id = $comment->user_id;
-            $post_comments_upper_id[] = $comment->upper_comment_id;
-            $comment_user = User::where('id', $comment_user_id)->first();
-            $post_comments_profile_id[] = $comment_user_id;
-            $post_comments_user_profile_image[] = $comment_user->image_name;
-            $post_comments_user_profile_name[] = $comment_user->name;
-            $post_comments_text[] = $comment->text;
-            $post_comments_up_votes[] = $comment->up_votes;
-            $post_comments_down_votes[] = $comment->down_votes;
+            $comment_profiles[] = User::where('id', $comment_user_id)->first();
+
             $comment_user_vote = User_comment_vote::where('comment_id', $comment->id)->where('user_id', Auth::user()->id)->first();
             if($comment_user_vote){
                 if($comment_user_vote->up_vote){
@@ -110,28 +89,18 @@ class PostController extends Controller
             }else{
                 $post_comments_user_voted[] = '';
             }
-
         }
-
 
         return response()->json([
             'show_posts_images' => $show_posts_images,
-            'post_poll_options_images' => $post_poll_options_images,
-            'post_poll_options_text' => $post_poll_options_text,
+            'poll_options' => $poll_options,
             'user_poll_option_number' => $user_poll_option_number,
-            'poll_option_votes' => $poll_option_votes,
             'post_vote_status' => $post_vote_status,
             'poll_up_votes' => $post_up_votes,
             'poll_down_votes' => $post_down_votes,
             'poll_oppened' => $post_openned,
-            'comment_profile_id' => $post_comments_profile_id,
-            'comment_id' => $post_comments_id,
-            'comment_upper_id' => $post_comments_upper_id,
-            'comment_image' => $post_comments_user_profile_image,
-            'comment_user_name' => $post_comments_user_profile_name,
-            'comment_text' => $post_comments_text,
-            'comment_up_votes' => $post_comments_up_votes,
-            'comment_down_votes' => $post_comments_down_votes,
+            'comments' => $comments,
+            'comment_profiles' => $comment_profiles,
             'comment_user_voted' => $post_comments_user_voted,
         ]);
 
@@ -189,9 +158,9 @@ class PostController extends Controller
 
         return response()->json([
             'post_vote_status' => $post_vote_status,
-            'poll_up_votes' => $post_up_votes,
-            'poll_down_votes' => $post_down_votes,
-            'poll_oppened' => $post_openned,
+            'post_up_votes' => $post_up_votes,
+            'post_down_votes' => $post_down_votes,
+            'post_oppened' => $post_openned,
 
         ]);
     }
@@ -285,21 +254,15 @@ class PostController extends Controller
             $comment_vote_result = '-';
         }
 
-        $post_comments_up_votes = [];
-        $post_comments_down_votes = [];
-
-        $comment_id_array = $request->input('comments_id');
-        for ($i = 0; $i < sizeof($comment_id_array); $i++) {
-            $comment = Post_comment::where('id', $comment_id_array[$i])->first();
-            $post_comments_up_votes[] = $comment->up_votes;
-            $post_comments_down_votes[] = $comment->down_votes;
-        }
+        $user_comment = Post_comment::where('id', $input_comment_id)->first();
+        $post_comment_up_votes = $user_comment->up_votes;
+        $post_comment_down_votes = $user_comment->down_votes;
 
 
         return response()->json([
             'comment_vote_result' => $comment_vote_result,
-            'comment_up_votes' => $post_comments_up_votes,
-            'comment_down_votes' => $post_comments_down_votes,
+            'comment_up_votes' => $post_comment_up_votes,
+            'comment_down_votes' => $post_comment_down_votes,
         ]);
     }
 
