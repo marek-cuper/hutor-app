@@ -35,48 +35,12 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $posts = app('App\Http\Controllers\PostController')->vrat_prispevky();
+            $request->session()->put('user', Auth::user());
             $tags = Tag::all();
             $regions = Region::all();
 
-            $request->session()->put('posts', $posts);
             $request->session()->put('tags', $tags);
             $request->session()->put('regions', $regions);
-
-            $posts_images = [];
-            $posts_tags = [];
-            $posts_regions = [];
-            foreach ($posts as $post) {
-                $post_id = $post->id;
-
-                //Check if post have image
-                $post_img =(Post_image::all()->where('post_id', $post_id))->where('order', 0)->first();
-                if($post_img !== null){
-                    $posts_images[] = $post_img->image_name;
-                }else{
-                    $posts_images[] = null;
-                }
-                $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
-                $regions_on_post = (Post_region::all()->where('post_id', $post_id));
-
-                $tags_in_array = [];
-                foreach ($tags_on_post as $tag) {
-                    $tags_in_array[] = $tag->tag_id;
-                }
-                $posts_tags[sizeof($posts_tags)] = $tags_in_array;
-
-                $regions_in_array = [];
-                foreach ($regions_on_post as $region) {
-                    $regions_in_array[] = $region->region_id;
-                }
-                $posts_regions[sizeof($posts_regions)] = $regions_in_array;
-            }
-            $request->session()->put('posts_images', $posts_images);
-            $request->session()->put('posts_tags', $posts_tags);
-            $request->session()->put('posts_regions', $posts_regions);
-
-
-            $request->session()->put('user', Auth::user());
 
             //Setting tags chosen be user to session
             $user_tags_pref = [];
@@ -100,8 +64,7 @@ class AuthController extends Controller
             }
             $request->session()->put('user_regions', $user_regions);
 
-
-
+            app('App\Http\Controllers\PostController')->nacitaj_prispevkyPost($request);
 
             return redirect()->route('domov');
         }
@@ -175,7 +138,7 @@ class AuthController extends Controller
         $user->image_name = $request->input('profile_image_name');
         $user->save();
 
-        $request->session()->put('user_profile_image', $user->image_name);
+        $request->session()->put('user', Auth::user());
 
         return redirect(route(('profil_uprava')));
     }

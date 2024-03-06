@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Poll_option;
 use App\Models\Post_comment;
 use App\Models\Post_image;
+use App\Models\Post_region;
+use App\Models\Post_tag;
 use App\Models\User;
 use App\Models\User_comment_vote;
 use App\Models\User_poll_vote;
@@ -342,9 +344,83 @@ class PostController extends Controller
     }
 
 
-    public function vrat_prispevky() {
-        $posts = Post::all();
+    public function nacitaj_prispevkyPost(Request $request) {
 
-        return $posts;
+        $post_to_load = [];
+        if(!$request->session()->has(['post_loaded_lowest_time', 'post_loaded_highest_time'])){
+            $post_to_load = Post::orderByDesc('created_at')->limit(10)->get();
+            $request->session()->put('post_loaded_highest_time', $post_to_load->first()->created_at);
+            $request->session()->put('post_loaded_lowest_time', $post_to_load->last()->created_at);
+        }else{
+            $post_loaded_highest_time = $request->session()->get('post_loaded_highest_time');
+            $post_loaded_lowest_time = $request->session()->get('post_loaded_lowest_time');
+
+            $post_to_load_higher_part = Post::where('created_at', '>', $post_loaded_highest_time)->orderBy('created_at')->limit(10)->get();
+            $post_to_load_lower_part = Post::where('created_at', '<', $post_loaded_lowest_time)->orderByDesc('created_at')->limit(10)->get();
+
+            if(!$post_to_load_higher_part->isEmpty() && !$post_to_load_lower_part->isEmpty()){
+                $request->session()->put('post_loaded_highest_time', $post_to_load_higher_part->last()->created_at);
+                $request->session()->put('post_loaded_lowest_time', $post_to_load_lower_part->last()->created_at);
+                $post_to_load = $post_to_load_higher_part->merge($post_to_load_lower_part);
+            }elseif (!$post_to_load_higher_part->isEmpty()){
+                $request->session()->put('post_loaded_highest_time', $post_to_load_higher_part->last()->created_at);
+                $post_to_load = $post_to_load_higher_part;
+            }elseif (!$post_to_load_lower_part->isEmpty()){
+                $request->session()->put('post_loaded_lowest_time', $post_to_load_lower_part->last()->created_at);
+                $post_to_load = $post_to_load_lower_part;
+            }
+
+        }
+        $posts = null;
+        if($request->session()->has('posts')){
+            $posts = $request->session()->get('posts');
+            $posts = $posts->merge($post_to_load);
+        }else{
+            $posts = $post_to_load;
+        }
+
+        //$posts = Post::all();
+
+        $posts_images = [];
+        $posts_tags = [];
+        $posts_regions = [];
+        foreach ($posts as $post) {
+            $post_id = $post->id;
+
+            //Check if post have image
+            $post_img =(Post_image::all()->where('post_id', $post_id))->where('order', 0)->first();
+            if($post_img !== null){
+                $posts_images[] = $post_img->image_name;
+            }else{
+                $posts_images[] = null;
+            }
+            $tags_on_post = (Post_tag::all()->where('post_id', $post_id));
+            $regions_on_post = (Post_region::all()->where('post_id', $post_id));
+
+            $tags_in_array = [];
+            foreach ($tags_on_post as $tag) {
+                $tags_in_array[] = $tag->tag_id;
+            }
+            $posts_tags[sizeof($posts_tags)] = $tags_in_array;
+
+            $regions_in_array = [];
+            foreach ($regions_on_post as $region) {
+                $regions_in_array[] = $region->region_id;
+            }
+            $posts_regions[sizeof($posts_regions)] = $regions_in_array;
+        }
+
+
+        $request->session()->put('posts', $posts);
+        $request->session()->put('posts_images', $posts_images);
+        $request->session()->put('posts_tags', $posts_tags);
+        $request->session()->put('posts_regions', $posts_regions);
+
+        return response()->json([
+            'posts' => $posts,
+            'posts_images' => $posts_images,
+            'posts_tags' => $posts_tags,
+            'posts_regions' => $posts_regions,
+        ]);
     }
 }

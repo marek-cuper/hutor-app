@@ -880,7 +880,7 @@
     }
 
 
-    function updateLoadPosts(next){
+    function updateLoadPostsAnimation(next){
         //position 0-is previous, 1 is actuall and 2 is next post
         if(next){
             if (loadedPosts[0] !== null) {
@@ -919,7 +919,7 @@
         animate()
     }
 
-    function updateLocation(){
+    function updatePostsLocation(){
         if (loadedPosts[0] !== null) {
             loadedPosts[0].style.top = '-50%';
         }
@@ -952,6 +952,30 @@
         requestAnimationFrame(animate);
     }
 
+    function loadAnotherPosts(){
+        //After click to post disable scrolling
+        scrollListener = false;
+
+        $.ajax({
+            url: '/domov/nacitaj_prispevky',
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function (response) {
+
+                posts = response.posts;
+                posts_images = response.posts_images;
+                posts_tags = response.posts_tags;
+                posts_regions = response.posts_regions;
+                alert(posts.length)
+                scrollListener = true;
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
     window.addEventListener("wheel", (event) => {
         //Enable or disable scroll listener if user watch just one post
         if(scrollListener){
@@ -964,15 +988,18 @@
             if (event.deltaY > 0) {
                 if(posts.length - 1 > index ){
                     index++;
-                    updateLoadPosts(true);
+                    updateLoadPostsAnimation(true);
                     //updatePost(index);
-
                 }
+                if(posts.length - 2 === index ){
+                    loadAnotherPosts();
+                }
+
 
             } else if (event.deltaY < 0) {
                 if(0 < index){
                     index--;
-                    updateLoadPosts(false);
+                    updateLoadPostsAnimation(false);
                     //updatePost(index);
                 }
             }
