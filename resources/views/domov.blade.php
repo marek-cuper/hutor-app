@@ -54,6 +54,10 @@
     var tags = @json(session('tags'));
     var regions = @json(session('regions'));
 
+    var user_tags_pref = @json(session('user_tags_pref'));
+    var user_tags_block = @json(session('user_tags_block'));
+    var user_regions = @json(session('user_regions'));
+
     var loadedPosts = [];
     const buttonBack = document.getElementById('domov_tlacitko_nazad');
     const homeContainer = document.getElementById('domov_kontajner_prispevky');
@@ -1125,11 +1129,25 @@
             oznaceniaDiv.id = 'domov_oznacenia' + post.id;
             oznaceniaDiv.className = 'domov_oznacenia';
 
+
             for (let i = 0; i < posts_tags[postIndex].length; i++) {
                 var newTag = document.createElement("div");
                 newTag.className = 'domov_oznacenie';
                 newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
+
+                let found = false;
+                for (let j = 0; j < user_tags_pref.length; j++) {
+                    if(posts_tags[postIndex][i] === user_tags_pref[j]){
+                        found = true;
+                    }
+                }
+                if(found){
+                    newTag.style.backgroundColor = '#ffb955';
+                    newTag.style.fontWeight = "bold";
+                }
+
                 oznaceniaDiv.appendChild(newTag);
+
             }
             oznaceniaRegionyDiv.appendChild(oznaceniaDiv);
         }
@@ -1145,6 +1163,18 @@
                 var newReg = document.createElement("div");
                 newReg.className = 'domov_region';
                 newReg.textContent = regions.find(region => region.id === posts_regions[postIndex][i]).name;
+
+                let found = false;
+                for (let j = 0; j < user_regions.length; j++) {
+                    if(posts_regions[postIndex][i] === user_regions[j]){
+                        found = true;
+                    }
+                }
+                if(found){
+                    newReg.style.backgroundColor = '#ffb955';
+                    newReg.style.fontWeight = "bold";
+                }
+
                 regionyDiv.appendChild(newReg);
             }
 

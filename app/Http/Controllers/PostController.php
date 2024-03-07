@@ -342,20 +342,56 @@ class PostController extends Controller
 
         return redirect('/domov')->with('success', 'Post created successfully');
     }
+    function index_to_insert($sortedArray, $number) {
+        $left = 0;
+        if (count($sortedArray) == 0){
+            return 0;
+        }
+        $right = count($sortedArray) - 1;
 
+        while ($left <= $right) {
+            $mid = $left + intval(($right - $left) / 2);
+
+            // If the number is greater than the current element,
+            // move right to search in the upper half
+            if ($sortedArray[$mid] < $number) {
+                $left = $mid + 1;
+            }
+            // If the number is smaller than or equal to the current element,
+            // move left to search in the lower half
+            else {
+                $right = $mid - 1;
+            }
+        }
+
+        // Return the index where the number should be inserted
+        return $left;
+    }
+
+    private function post_credit(mixed $post) {
+        return $post->openned;
+    }
 
     public function nacitaj_prispevkyPost(Request $request) {
 
-        $post_to_load = [];
+        $big_container_posts_id_sorted = [];
+        $big_container_posts_credit_sorted = [];
         if(!$request->session()->has(['post_loaded_lowest_time', 'post_loaded_highest_time'])){
-            $post_to_load = Post::orderByDesc('created_at')->limit(10)->get();
-            $request->session()->put('post_loaded_highest_time', $post_to_load->first()->created_at);
-            $request->session()->put('post_loaded_lowest_time', $post_to_load->last()->created_at);
+            $big_container_posts_unsorted = Post::orderByDesc('created_at')->limit(10)->get();
+            $request->session()->put('post_loaded_highest_time', $big_container_posts_unsorted->first()->created_at);
+            $request->session()->put('post_loaded_lowest_time', $big_container_posts_unsorted->last()->created_at);
+            foreach ($big_container_posts_unsorted as $post) {
+                $credit = $this->post_credit($post);
+                $index = $this->index_to_insert($big_container_posts_credit_sorted, $credit);
+                array_splice($big_container_posts_credit_sorted, $index, 0, $credit);
+                array_splice($big_container_posts_id_sorted, $index, 0, $post->id);
+            }
         }else{
+            $post_to_load = [];
             $post_loaded_highest_time = $request->session()->get('post_loaded_highest_time');
             $post_loaded_lowest_time = $request->session()->get('post_loaded_lowest_time');
 
-            $post_to_load_higher_part = Post::where('created_at', '>', $post_loaded_highest_time)->orderBy('created_at')->limit(10)->get();
+            $post_to_load_higher_part = Post::where('created_at', '>', $post_loaded_highest_time)->orderBy('created_at')->limit(5)->get();
             $post_to_load_lower_part = Post::where('created_at', '<', $post_loaded_lowest_time)->orderByDesc('created_at')->limit(10)->get();
 
             if(!$post_to_load_higher_part->isEmpty() && !$post_to_load_lower_part->isEmpty()){
@@ -369,15 +405,32 @@ class PostController extends Controller
                 $request->session()->put('post_loaded_lowest_time', $post_to_load_lower_part->last()->created_at);
                 $post_to_load = $post_to_load_lower_part;
             }
-
+            foreach ($post_to_load as $post) {
+                $credit = $this->post_credit($post);
+                $index = $this->index_to_insert($big_container_posts_credit_sorted, $credit);
+                array_splice($big_container_posts_credit_sorted, $index, 0, $credit);
+                array_splice($big_container_posts_id_sorted, $index, 0, $post->id);
+            }
         }
-        $posts = null;
+
+        $posts = [];
+
+
+        $num_of_posts = sizeof($big_container_posts_id_sorted);
+        if($num_of_posts > 10){
+            $num_of_posts = 10;
+        }
         if($request->session()->has('posts')){
             $posts = $request->session()->get('posts');
-            $posts = $posts->merge($post_to_load);
-        }else{
-            $posts = $post_to_load;
         }
+        for ($i = 0; $i < $num_of_posts; $i++) {
+            $post = Post::where('id', $big_container_posts_id_sorted[$i])->first();
+            $posts[] = $post;
+        }
+
+        array_splice($big_container_posts_id_sorted, 0, $num_of_posts);
+        array_splice($big_container_posts_credit_sorted, 0, $num_of_posts);
+
 
         //$posts = Post::all();
 
@@ -423,4 +476,6 @@ class PostController extends Controller
             'posts_regions' => $posts_regions,
         ]);
     }
+
+
 }
