@@ -342,57 +342,112 @@ class PostController extends Controller
 
         return redirect('/domov')->with('success', 'Post created successfully');
     }
+    function add_to_big_container($request, $unsortedArray, &$big_container_posts_id_sorted, &$big_container_posts_credit_sorted) {
+        $user_tags_block = $request->session()->get('user_tags_block');
+        foreach ($unsortedArray as $post) {
+            $found = false;
+            foreach ($user_tags_block as $tag_id){
+                $post_tags = Post_tag::where('post_id', $post->id)->pluck('tag_id')->toArray();
+                if (in_array($tag_id, $post_tags)) {
+                    $found = true;
+                }
+            }
+            if (!$found){
+                $credit = $this->post_credit($request, $post);
+                $index = $this->index_to_insert($big_container_posts_credit_sorted, $credit);
+                array_splice($big_container_posts_credit_sorted, $index, 0, $credit);
+                array_splice($big_container_posts_id_sorted, $index, 0, $post->id);
+            }
+        }
+
+    }
+
     function index_to_insert($sortedArray, $number) {
         $left = 0;
-        if (count($sortedArray) == 0){
-            return 0;
-        }
         $right = count($sortedArray) - 1;
 
-        while ($left <= $right) {
-            $mid = $left + intval(($right - $left) / 2);
+        // Handle the case when the array is empty
+        if (count($sortedArray) === 0) {
+            return 0;
+        }
 
-            // If the number is greater than the current element,
-            // move right to search in the upper half
+        while ($left <= $right) {
+            $mid = $left + floor(($right - $left) / 2);
+
             if ($sortedArray[$mid] < $number) {
-                $left = $mid + 1;
-            }
-            // If the number is smaller than or equal to the current element,
-            // move left to search in the lower half
-            else {
                 $right = $mid - 1;
+            } else {
+                $left = $mid + 1;
             }
         }
 
-        // Return the index where the number should be inserted
         return $left;
     }
 
-    private function post_credit(mixed $post) {
-        return $post->openned;
+    private function post_credit($request, mixed $post) {
+        $credit = 0;
+
+        //adding <-5, 8> credits depend on watch and open post ratio
+        if($post->openned != 0 || $post->watched != 0){
+            $woKoef = $post->openned/$post->watched;
+            $woCredits = 4 - ($woKoef * 8);
+            $credit -= $woCredits;
+        }
+
+        //adding <-10, 10> credits depend on up and down votes ratio
+        if($post->up_votes != 0 || $post->down_votes != 0){
+            $votesKoef = ($post->up_votes - $post->down_votes) / ($post->up_votes + $post->down_votes);
+            $votesCredits = $votesKoef * 10;
+            $credit += $votesCredits;
+        }
+
+        //adding <0, 24> credits depend on tags preferably
+        $tagCredits = 0;
+        $user_tags_pref = $request->session()->get('user_tags_pref');
+        $post_tags = Post_tag::where('post_id', $post->id)->pluck('tag_id')->toArray();
+        foreach ($user_tags_pref as $tag_id){
+            if (in_array($tag_id, $post_tags)) {
+                $tagCredits += 3;
+            }
+        }
+        $credit += $tagCredits;
+
+        //adding <0, 12> credits depend on regions preferably
+        $regCredits = 0;
+        $user_regs = $request->session()->get('user_regions');
+        $post_regs = Post_region::where('post_id', $post->id)->pluck('region_id')->toArray();
+        foreach ($user_regs as $reg_id){
+            if (in_array($reg_id, $post_regs)) {
+                $regCredits += 3;
+            }
+        }
+        $credit += $regCredits;
+
+
+        return $credit;
     }
 
     public function nacitaj_prispevkyPost(Request $request) {
 
         $big_container_posts_id_sorted = [];
         $big_container_posts_credit_sorted = [];
+        if($request->session()->has(['big_container_posts_id_sorted', 'big_container_posts_credit_sorted'])){
+            $big_container_posts_id_sorted = $request->session()->get('big_container_posts_id_sorted');
+            $big_container_posts_credit_sorted = $request->session()->get('big_container_posts_credit_sorted');
+        }
+
         if(!$request->session()->has(['post_loaded_lowest_time', 'post_loaded_highest_time'])){
-            $big_container_posts_unsorted = Post::orderByDesc('created_at')->limit(10)->get();
+            $big_container_posts_unsorted = Post::orderByDesc('created_at')->limit(100)->get();
             $request->session()->put('post_loaded_highest_time', $big_container_posts_unsorted->first()->created_at);
             $request->session()->put('post_loaded_lowest_time', $big_container_posts_unsorted->last()->created_at);
-            foreach ($big_container_posts_unsorted as $post) {
-                $credit = $this->post_credit($post);
-                $index = $this->index_to_insert($big_container_posts_credit_sorted, $credit);
-                array_splice($big_container_posts_credit_sorted, $index, 0, $credit);
-                array_splice($big_container_posts_id_sorted, $index, 0, $post->id);
-            }
+            $this->add_to_big_container($request, $big_container_posts_unsorted, $big_container_posts_id_sorted, $big_container_posts_credit_sorted);
         }else{
             $post_to_load = [];
             $post_loaded_highest_time = $request->session()->get('post_loaded_highest_time');
             $post_loaded_lowest_time = $request->session()->get('post_loaded_lowest_time');
 
             $post_to_load_higher_part = Post::where('created_at', '>', $post_loaded_highest_time)->orderBy('created_at')->limit(5)->get();
-            $post_to_load_lower_part = Post::where('created_at', '<', $post_loaded_lowest_time)->orderByDesc('created_at')->limit(10)->get();
+            $post_to_load_lower_part = Post::where('created_at', '<', $post_loaded_lowest_time)->orderByDesc('created_at')->limit(15)->get();
 
             if(!$post_to_load_higher_part->isEmpty() && !$post_to_load_lower_part->isEmpty()){
                 $request->session()->put('post_loaded_highest_time', $post_to_load_higher_part->last()->created_at);
@@ -405,32 +460,31 @@ class PostController extends Controller
                 $request->session()->put('post_loaded_lowest_time', $post_to_load_lower_part->last()->created_at);
                 $post_to_load = $post_to_load_lower_part;
             }
-            foreach ($post_to_load as $post) {
-                $credit = $this->post_credit($post);
-                $index = $this->index_to_insert($big_container_posts_credit_sorted, $credit);
-                array_splice($big_container_posts_credit_sorted, $index, 0, $credit);
-                array_splice($big_container_posts_id_sorted, $index, 0, $post->id);
-            }
+            $this->add_to_big_container($request, $post_to_load, $big_container_posts_id_sorted, $big_container_posts_credit_sorted);
         }
 
         $posts = [];
 
 
         $num_of_posts = sizeof($big_container_posts_id_sorted);
-        if($num_of_posts > 10){
-            $num_of_posts = 10;
+        if($num_of_posts > 15){
+            $num_of_posts = 15;
         }
         if($request->session()->has('posts')){
             $posts = $request->session()->get('posts');
         }
         for ($i = 0; $i < $num_of_posts; $i++) {
             $post = Post::where('id', $big_container_posts_id_sorted[$i])->first();
+            $post->watched += 1;
+            $post->save();
             $posts[] = $post;
         }
 
         array_splice($big_container_posts_id_sorted, 0, $num_of_posts);
         array_splice($big_container_posts_credit_sorted, 0, $num_of_posts);
 
+        $request->session()->put('big_container_posts_id_sorted', $big_container_posts_id_sorted);
+        $request->session()->put('big_container_posts_credit_sorted', $big_container_posts_credit_sorted);
 
         //$posts = Post::all();
 

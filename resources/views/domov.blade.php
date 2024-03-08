@@ -919,6 +919,7 @@
             }
             direction = -1;
         }
+
         localStorage.setItem('oldIndex', index);
         animate()
     }
@@ -1017,11 +1018,14 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         buttonBack.style.display = "none";
-        var oldIndex = localStorage.getItem('oldIndex');
+        if (posts == null){
+            var oldIndex = localStorage.getItem('oldIndex');
 
-        if (oldIndex !== null) {
-            index = oldIndex;
+            if (oldIndex !== null) {
+                index = oldIndex;
+            }
         }
+
 
         loadedPosts[0] = null;
         loadedPosts[1] = null;
@@ -1137,7 +1141,7 @@
 
                 let found = false;
                 for (let j = 0; j < user_tags_pref.length; j++) {
-                    if(posts_tags[postIndex][i] === user_tags_pref[j]){
+                    if(posts_tags[postIndex][i] == user_tags_pref[j]){
                         found = true;
                     }
                 }
@@ -1166,7 +1170,7 @@
 
                 let found = false;
                 for (let j = 0; j < user_regions.length; j++) {
-                    if(posts_regions[postIndex][i] === user_regions[j]){
+                    if(posts_regions[postIndex][i] == user_regions[j]){
                         found = true;
                     }
                 }

@@ -64,7 +64,18 @@ class TagController extends Controller
         $request->session()->put('user_tags_pref', $user_tags_pref);
         $request->session()->put('user_tags_block', $user_tags_block);
 
-        return view('/preferencie');
+
+        $request->session()->forget('posts');
+        $request->session()->forget('posts_images');
+        $request->session()->forget('posts_tags');
+        $request->session()->forget('posts_regions');
+        $request->session()->forget('post_loaded_lowest_time');
+        $request->session()->forget('post_loaded_highest_time');
+        $request->session()->forget('big_container_posts_id_sorted');
+        $request->session()->forget('big_container_posts_credit_sorted');
+        app('App\Http\Controllers\PostController')->nacitaj_prispevkyPost($request);
+
+        return view('/domov');
         //$this->pouzivatelPreferencieGet($request);
     }
 
@@ -96,7 +107,17 @@ class TagController extends Controller
 
         $request->session()->put('user_regions', $user_regions);
 
-        return view('/preferencie');
+        $request->session()->forget('posts');
+        $request->session()->forget('posts_images');
+        $request->session()->forget('posts_tags');
+        $request->session()->forget('posts_regions');
+        $request->session()->forget('post_loaded_lowest_time');
+        $request->session()->forget('post_loaded_highest_time');
+        $request->session()->forget('big_container_posts_id_sorted');
+        $request->session()->forget('big_container_posts_credit_sorted');
+        app('App\Http\Controllers\PostController')->nacitaj_prispevkyPost($request);
+
+        return view('/domov');
     }
 
 }

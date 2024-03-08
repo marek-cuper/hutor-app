@@ -80,7 +80,7 @@
                 <div class="pridaj_prispevok_formular_kolonka">
                     <label><b>Oznacenie prispevku</b></label>
                     <select id="pridaj_prispevok_select_oznacenia" onchange="hideSelectedOptionTags()">
-                        <option value="" disabled selected>Vyber oznacenia(max 8)</option>
+                        <option value="" disabled selected>Vyber oznacenia(max 5)</option>
                     </select>
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
@@ -302,7 +302,7 @@
 
     function pridajOznacenie() {
 
-        if(selectedTags.childElementCount < 8){
+        if(selectedTags.childElementCount < 5){
             // Get the select element
             var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
 
@@ -373,7 +373,7 @@
     }
 
     function hideSelectedOptionTags() {
-        if(selectedTags.childElementCount < 8){
+        if(selectedTags.childElementCount < 5){
             // Get the selected option
             var selectedOption = selectDivTags.options[selectDivTags.selectedIndex];
 
