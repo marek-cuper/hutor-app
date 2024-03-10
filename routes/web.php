@@ -17,9 +17,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/spravy', function () {
-    return view('spravy');
-})->name('spravy');
+
+#CONVERSATION
+Route::get('/spravy', [\App\Http\Controllers\ConversationController::class, 'spravyGet'])->name('spravy');
+Route::get('/spravy/konverzacie', [\App\Http\Controllers\ConversationController::class, 'spravyKonverzacieGet'])->name('spravy_konverzacie');
+Route::post('/spravy/konverzacie/nacitanie', [\App\Http\Controllers\ConversationController::class, 'vrat_konverzaciePost'])->name('spravy_konverzacie_vrat.post');
+Route::post('/spravy/konverzacia_pouzivatel', [\App\Http\Controllers\ConversationController::class, 'showConversationFromUserPost'])->name('spravy_konverzacia_pouzivatel.post');
+Route::post('/spravy/konverzacia_id', [\App\Http\Controllers\ConversationController::class, 'showConversationFromIdPost'])->name('spravy_konverzacia_id.post');
+Route::post('/spravy/konverzacia/posli_spravu', [\App\Http\Controllers\ConversationController::class, 'posli_spravuPost'])->name('posli_spravu.post');
+
 
 #TAG
 Route::get('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieGet'])->name('preferencie');

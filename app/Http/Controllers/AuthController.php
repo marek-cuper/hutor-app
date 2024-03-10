@@ -104,7 +104,10 @@ class AuthController extends Controller
 
     function profil($id){
         $user = User::findOrFail($id);
-        return view('profil', compact('user'));
+        $data = [
+            'another_user' => $user
+        ];
+        return view('profil', compact('data'));
     }
 
     function profil_uprava(Request $request){

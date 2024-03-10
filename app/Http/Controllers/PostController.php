@@ -486,7 +486,6 @@ class PostController extends Controller
         $request->session()->put('big_container_posts_id_sorted', $big_container_posts_id_sorted);
         $request->session()->put('big_container_posts_credit_sorted', $big_container_posts_credit_sorted);
 
-        //$posts = Post::all();
 
         $posts_images = [];
         $posts_tags = [];

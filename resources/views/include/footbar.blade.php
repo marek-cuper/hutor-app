@@ -11,7 +11,7 @@
         <i class="fa fa-tasks fa-3x"></i>
     </a>
 
-    <a class="footbar_icon icon {{ Request::is('spravy') ? 'active_footbar_icon' : 'inactive_footbar_icon' }}" href="{{ route('spravy') }}">
+    <a class="footbar_icon icon {{ Request::is('spravy') ? 'active_footbar_icon' : 'inactive_footbar_icon' }}" href="{{ route('spravy_konverzacie') }}">
         <i class="fa fa-comments-o fa-3x"></i>
     </a>
 
