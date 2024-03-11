@@ -6,7 +6,6 @@
     <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <title>Title</title>
 
 </head>
@@ -144,6 +143,7 @@
         nadpisDiv.className = 'domov_nadpis_prispevok';
         const nadpisParagraph = document.createElement('p');
         nadpisParagraph.id = 'nadpis' + post.id;
+        nadpisParagraph.textContent = post.title;
         nadpisDiv.appendChild(nadpisParagraph);
 
         containerDiv.appendChild(nadpisDiv);

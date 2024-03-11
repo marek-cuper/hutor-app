@@ -38,7 +38,7 @@
             <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
 
             <div class="preferencie_tlacitka_okno">
-                <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
+                <button type="submit" onclick="resetIndexHome()" class="preferencie_tlacitko_uloz">ULOZ</button>
 
                 <button class="preferencie_tlacitko_reset">RESET</button>
 
@@ -79,7 +79,7 @@
             </div>
 
             <div class="preferencie_tlacitka_okno">
-                <button type="submit" class="preferencie_tlacitko_uloz">ULOZ</button>
+                <button type="submit" onclick="resetIndexHome()" class="preferencie_tlacitko_uloz">ULOZ</button>
 
                 <button class="preferencie_tlacitko_reset">RESET</button>
 
@@ -169,6 +169,11 @@
         }
         selectDivRegions.selectedIndex = "";
     });
+
+    function resetIndexHome(){
+        localStorage.setItem('oldIndex', 0);
+    }
+
 
     //choosedOption -1 blokovat, 0 neutral, 1 je preferuje
     function createTag(tagId, tagName, choosedOption){

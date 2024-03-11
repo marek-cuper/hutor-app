@@ -615,12 +615,14 @@ domov_zobrazenie_komentare_komentar_komentare{
     max-height: 40px;
     max-width: 40px;
 }
+.domov_zobrazenie_komentare_komentar_telo{
+    margin-left: 2%;
+}
 
 .domov_zobrazenie_komentare_komentar_meno{
     font-weight: bold;
     margin-top: 1%;
     margin-bottom: 1%;
-    margin-left: 2%;
     margin-right: auto;
     text-align: left;
 }
@@ -1112,6 +1114,16 @@ input:checked + .slider:before {
     overflow-y:scroll;
 }
 
+.spravy_kontajner_konverzacie_zoznam .domov_zobrazenie_komentare_komentar_vrch{
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.spravy_kontajner_konverzacie_zoznam .domov_zobrazenie_komentare_komentar_vrch img{
+    max-height: 50px;
+    max-width: 50px;
+}
+
 
 .spravy_kontajner_konverzacie_konverzacia{
 
@@ -1174,16 +1186,59 @@ input:checked + .slider:before {
     width: 80%;
     border:2px solid lightgray;
     padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
     margin-bottom: 2%;
+}
+.spravy_zobrazena_konverzacia_telo_sprava p{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+/* Stranka moderator panel */
+.moderator_panel_telo{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding-bottom: 1.75%;
+    border:2px solid lightgray;
+    height: 80%;
+    width: 50%;
+    background-color: white;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    transition: top 0.25s;
+    z-index: 1;
+    overflow-y:scroll;
+    text-align: center;
+}
+
+.moderator_panel_telo_cast{
+
+    text-align: center;
+}
+
+.moderator_panel_telo_tabulka{
+    display: flex;
+    flex-direction: column;
+}
+.moderator_panel_telo_tabulka_riadok{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2%;
+    display: flex;
+    border-radius: 5px;
+    border:2px solid lightgray;
+    justify-content: space-around;
+    align-items: center;
 
 }
 
 
 /* Prisposobenie k displayu */
 @media (max-width: 1600px){
-    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo{
+    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo, .moderator_panel_telo{
         width: 60%;
     }
     .domov_obrazok_prispevok img{
@@ -1231,7 +1286,7 @@ input:checked + .slider:before {
         margin-right: 20%;
     }
 
-    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo{
+    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo, .moderator_panel_telo{
         width: 65%;
     }
     .domov_obrazok_prispevok img{
@@ -1291,7 +1346,7 @@ input:checked + .slider:before {
     .prihlasenie_stranka_formular{
         transform: scale(1.5);
     }
-    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo{
+    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo, .moderator_panel_telo{
         width: 75%;
     }
     .domov_obrazok_prispevok img{
@@ -1359,7 +1414,7 @@ input:checked + .slider:before {
     .domov_prispevok_icon_pozadie{
         transform: scale(0.8);
     }
-    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo{
+    .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo, .moderator_panel_telo{
         width: 85%;
         height: 80%;
     }

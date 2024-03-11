@@ -25,6 +25,7 @@ Route::post('/spravy/konverzacie/nacitanie', [\App\Http\Controllers\Conversation
 Route::post('/spravy/konverzacia_pouzivatel', [\App\Http\Controllers\ConversationController::class, 'showConversationFromUserPost'])->name('spravy_konverzacia_pouzivatel.post');
 Route::post('/spravy/konverzacia_id', [\App\Http\Controllers\ConversationController::class, 'showConversationFromIdPost'])->name('spravy_konverzacia_id.post');
 Route::post('/spravy/konverzacia/posli_spravu', [\App\Http\Controllers\ConversationController::class, 'posli_spravuPost'])->name('posli_spravu.post');
+Route::post('/neprecitane', [\App\Http\Controllers\ConversationController::class, 'neprecitane_spravyPost'])->name('neprecitane.post');
 
 
 #TAG
@@ -60,3 +61,7 @@ Route::get('/profil/{id}', [AuthController::class, 'profil'])->name('profil');
 Route::get('/profil_uprava', [AuthController::class, 'profil_uprava'])->name('profil_uprava');
 Route::post('/profil_uprava/pridaj_obrazok', [AuthController::class, 'pridaj_obrazokPost'])->name('pridaj_obrazok.post');
 Route::post('/profil_uprava/uloz_obrazok', [AuthController::class, 'uloz_obrazokPost'])->name('uloz_obrazok.post');
+
+Route::get('/moderator/panel', [AuthController::class, 'moderator_panel'])->name('moderator_panel');
+Route::post('/moderator/pridaj', [AuthController::class, 'pridaj_moderatoraPost'])->name('moderator_pridaj.post');
+Route::post('/moderator/odober', [AuthController::class, 'odober_moderatoraPost'])->name('moderator_odober.post');

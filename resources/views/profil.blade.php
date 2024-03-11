@@ -45,12 +45,35 @@
     let profilName = document.getElementById('profil_meno');
     let profilImage = document.getElementById('profil_obrazok');
 
+    var user_privilege = @json(session('privileges'));
+    var mods = @json(session('mods'));
+
 
     document.addEventListener('DOMContentLoaded', function() {
         profilName.textContent = another_user.name;
         profilName.style.fontWeight = "bold";
         profilImage.src = '/storage/' + another_user.image_name;
         var panel = document.querySelector('.profil_kontajner_panel');
+        let moderator = false;
+        for (let i = 0; i < mods.length; i++) {
+            if(mods[i].user_id == another_user.id){
+                moderator = true;
+            }
+        }
+
+        if(user_privilege == 2 && !moderator){
+            const modDiv = document.createElement('div');
+            modDiv.className = 'domov_zobrazenie_komentare_pridaj_kontajner';
+            panel.appendChild(modDiv);
+
+            const modIkona = document.createElement('i');
+            modIkona.className = 'fa fa-cogs fa-2x';
+            modDiv.appendChild(modIkona);
+
+            modDiv.addEventListener("click", function() {
+                addMod();
+            });
+        }
 
         if(user.id != another_user.id){
             const spravyDiv = document.createElement('div');
@@ -87,6 +110,23 @@
             success: function (response) {
                 window.location.href = '/spravy';
 
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function addMod(){
+        //After click to post disable scrolling
+        var user_id = another_user.id;
+
+        $.ajax({
+            url: '/moderator/pridaj',
+            method: 'POST',
+            data: { user_id: user_id, _token: '{{ csrf_token() }}' },
+            success: function (response) {
+                window.location.href = '/moderator/panel';
             },
             error: function (error) {
                 console.error('Error:', error);

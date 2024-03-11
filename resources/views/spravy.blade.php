@@ -181,7 +181,12 @@
         konverzaciaTelo.appendChild(komentarTeloMeno);
 
         const komentarTeloText = document.createElement('p');
-        komentarTeloText.textContent = conversationsMessage[$index].text.substring(0, 30);
+        let text = conversationsMessage[$index].text;
+        if(text.length > 50){
+            komentarTeloText.textContent = text.substring(0, 50) + '...';
+        }else {
+            komentarTeloText.textContent = text;
+        }
         komentarTeloText.className = 'domov_zobrazenie_komentare_komentar_text';
         konverzaciaTelo.appendChild(komentarTeloText);
         if(user.id == conversations[$index].user1_id){

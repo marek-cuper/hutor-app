@@ -9,6 +9,7 @@ use App\Models\Post_tag;
 use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\User_moderator;
 use App\Models\User_region;
 use App\Models\User_tag;
 use Illuminate\Http\Request;
@@ -36,6 +37,18 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->put('user', Auth::user());
+            $mod = User_moderator::where('user_id', Auth::user()->id)->first();
+            $privileges = 0;
+            if($mod != null){
+                if($mod->admin){
+                    $privileges = 2;
+                }else{
+                    $privileges = 1;
+                }
+            }
+            $request->session()->put('privileges', $privileges);
+            $this->moderatoriSet($request);
+
             $tags = Tag::all();
             $regions = Region::all();
 
@@ -144,6 +157,35 @@ class AuthController extends Controller
         $request->session()->put('user', Auth::user());
 
         return redirect(route(('profil_uprava')));
+    }
+
+    public function moderator_panel(Request $request){
+        return view('moderator_panel');
+    }
+
+    public function moderatoriSet(Request $request){
+        $mods = User_moderator::all();
+        $users = [];
+        foreach ($mods as $mod) {
+            $users[] = User::where('id', $mod->user_id)->first();
+        }
+
+        $request->session()->put('mods', $mods);
+        $request->session()->put('mods_user', $users);
+    }
+
+    public function pridaj_moderatoraPost(Request $request){
+        $mod = new User_moderator([
+            'user_id' => $request->input('user_id'),
+            'admin' => false
+        ]);
+        $mod->save();
+        $this->moderatoriSet($request);
+    }
+
+    public function odober_moderatoraPost(Request $request){
+        User_moderator::where('user_id', $request->input('user_id'))->where('admin', false)->delete();
+        $this->moderatoriSet($request);
     }
 
 }

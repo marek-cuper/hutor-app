@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 class ConversationController extends Controller
 {
     public function spravyGet(Request $request){
-
         $conversations = Conversation::where('user1_id', Auth::user()->id)->orWhere('user2_id', Auth::user()->id)->orderByDesc('last_message_sent_at')->get();
         $messages = [];
         $users = [];
@@ -130,4 +129,30 @@ class ConversationController extends Controller
         $messages = Conversation_message::where('conversation_id', $conversation->id)->orderBy('created_at')->get();
         $request->session()->put('conversation_messages', $messages);
     }
+
+    public function neprecitane_spravyPost(Request $request){
+        $unread = false;
+        $convs = Conversation::where('user1_id', Auth::user()->id)->get();
+        foreach ($convs as $conv){
+            if(!$conv->user1_openned){
+                $unread = true;
+                break;
+            }
+        }
+        if(!$unread){
+            $convs = Conversation::where('user2_id', Auth::user()->id)->get();
+            foreach ($convs as $conv){
+                if(!$conv->user2_openned){
+                    $unread = true;
+                    break;
+                }
+            }
+        }
+
+
+        return response()->json([
+            'unread' => $unread
+        ]);
+    }
+
 }

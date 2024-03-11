@@ -76,7 +76,6 @@ class TagController extends Controller
         app('App\Http\Controllers\PostController')->nacitaj_prispevkyPost($request);
 
         return view('/domov');
-        //$this->pouzivatelPreferencieGet($request);
     }
 
     public function pouzivatelRegionySet(Request $request){

@@ -12,9 +12,9 @@
     </div>
 
     <div id="navbar-menu" >
-        <div class="navbar-icon">
-            <i class="fa fa-cog fa-2x"></i>
-        </div>
+        <a id="moderator_ikona" href="{{ route('moderator_panel') }}" class="navbar-icon" style="display: none;">
+            <i class="fa fa-cogs fa-2x"></i>
+        </a>
         <a href="{{URL::route('profil_uprava') }}" class="navbar-icon">
             <i class="fa fa-user fa-2x"></i>
         </a>
@@ -25,9 +25,20 @@
 </div>
 
 <script>
+    var modIkona = document.getElementById('moderator_ikona');
+
     var buttonLogout = document.getElementById('button-logout');
 
     buttonLogout.addEventListener('click', function() {
         localStorage.removeItem("oldIndex");
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var privileges = @json(session('privileges'));
+        if(privileges > 0){
+            modIkona.style.display = "block";
+        }else {
+            modIkona.href = '';
+        }
     });
 </script>
