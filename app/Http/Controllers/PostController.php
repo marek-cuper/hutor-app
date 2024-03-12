@@ -33,6 +33,8 @@ class PostController extends Controller
         $post->openned += 1;
         $post->save();
 
+        $post_creator = User::where('id', $post->creator_id)->first();
+
         $poll_options = [];
         if($post->poll_text !== null){
             $poll_options = Poll_option::where('post_id', $post_id)->orderBy('order')->get();
@@ -91,6 +93,7 @@ class PostController extends Controller
         }
 
         return response()->json([
+            'show_post_creator' => $post_creator,
             'show_posts_images' => $show_posts_images,
             'poll_options' => $poll_options,
             'user_poll_option_number' => $user_poll_option_number,
@@ -352,6 +355,7 @@ class PostController extends Controller
 
         return redirect('/domov')->with('success', 'Post created successfully');
     }
+
     function add_to_big_container($request, $unsortedArray, &$big_container_posts_id_sorted, &$big_container_posts_credit_sorted) {
         $user_tags_block = $request->session()->get('user_tags_block');
         foreach ($unsortedArray as $post) {
@@ -433,8 +437,24 @@ class PostController extends Controller
         }
         $credit += $regCredits;
 
-
         return $credit;
+    }
+
+    public function vymaz_prispevokPost(Request $request){
+        Post::where('id', $request->input('post_id'))->delete();
+        $this->vymaz_nacitane($request);
+        $this->nacitaj_prispevkyPost($request);
+    }
+
+    public function vymaz_nacitane(Request $request){
+        $request->session()->forget('posts');
+        $request->session()->forget('posts_images');
+        $request->session()->forget('posts_tags');
+        $request->session()->forget('posts_regions');
+        $request->session()->forget('post_loaded_lowest_time');
+        $request->session()->forget('post_loaded_highest_time');
+        $request->session()->forget('big_container_posts_id_sorted');
+        $request->session()->forget('big_container_posts_credit_sorted');
     }
 
     public function nacitaj_prispevkyPost(Request $request) {

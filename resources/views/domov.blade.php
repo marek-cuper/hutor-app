@@ -40,6 +40,7 @@
     var posts_tags = @json(session('posts_tags'));
     var posts_regions = @json(session('posts_regions'));
 
+    var show_post_creator;
     var show_posts_images = [];
     var show_poll_options = [];
     var show_user_poll_option_number;
@@ -100,6 +101,7 @@
             method: 'POST',
             data: { post_id: post_id, _token: '{{ csrf_token() }}' },
             success: function (response) {
+                show_post_creator = response.show_post_creator;
                 show_posts_images = response.show_posts_images;
 
                 show_poll_options = response.poll_options;
@@ -334,6 +336,7 @@
         //Voting
         const hlasovanieTelo = document.createElement('div');
         hlasovanieTelo.className = 'domov_zobrazenie_telo_hlasovanie';
+        containerDiv.appendChild(hlasovanieTelo);
 
         const hlasovanieTeloHlasy = document.createElement('div');
         hlasovanieTeloHlasy.className = 'domov_zobrazenie_telo_hlasovanie_hlasy';
@@ -350,6 +353,7 @@
         hlasZaSipkaHore.className = 'fa fa-arrow-up fa-1x';
         hlasovanieTeloHlasyZaKontajner.appendChild(hlasZaSipkaHore);
         const hlasZaCislo = document.createElement('p');
+        hlasZaCislo.textContent = post.up_votes;
         hlasovanieTeloHlasyZaKontajner.appendChild(hlasZaCislo);
         hlasovanieTeloHlasyZaKontajner.addEventListener("click", function() {
             votePost(1);
@@ -363,7 +367,7 @@
         hlasProtiSipkaHore.className = 'fa fa-arrow-down fa-1x';
         hlasovanieTeloHlasyProtiKontajner.appendChild(hlasProtiSipkaHore);
         const hlasProtiCislo = document.createElement('p');
-        //hlasProtiCislo.textContent = show_post_down_voted;
+        hlasProtiCislo.textContent = post.down_votes;
         hlasovanieTeloHlasyProtiKontajner.appendChild(hlasProtiCislo);
         hlasovanieTeloHlasyProtiKontajner.addEventListener("click", function() {
             votePost(0);
@@ -372,8 +376,10 @@
         const hlasovanieTeloZobrazenia = document.createElement('div');
         hlasovanieTeloZobrazenia.className = 'domov_zobrazenie_telo_hlasovanie_zobrazenia';
         hlasovanieTelo.appendChild(hlasovanieTeloZobrazenia);
+
         const hlasovanieTeloZobrazeniaKontajner = document.createElement('div');
         hlasovanieTeloZobrazeniaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
+        hlasovanieTeloZobrazeniaKontajner.style.border = '';
         const zobrazenieLabel = document.createElement('label');
         zobrazenieLabel.textContent = 'Zobrazenia: ';
         hlasovanieTeloZobrazenia.appendChild(zobrazenieLabel);
@@ -385,10 +391,36 @@
         zobrazenieUzivatelia.className = 'fa fa-users  fa-1x';
         hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieUzivatelia);
         const zobrazenieCislo = document.createElement('p');
+        zobrazenieCislo.textContent = post.openned;
         hlasovanieTeloZobrazeniaCislaKontajner.appendChild(zobrazenieCislo);
 
-        containerDiv.appendChild(hlasovanieTelo);
-        userVotedPost();
+        if(post.creator_id == user.id || user_privilege > 0){
+            const komentarTeloZmazPostKontajner  = document.createElement('div');
+            komentarTeloZmazPostKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+            komentarTeloZmazPostKontajner.style.width = '20px';
+            komentarTeloZmazPostKontajner.style.marginRight = '2%';
+            hlasovanieTelo.appendChild(komentarTeloZmazPostKontajner);
+
+            const odstranZnak = document.createElement('i');
+            odstranZnak.className = 'fa fa-trash fa-1x';
+            komentarTeloZmazPostKontajner.appendChild(odstranZnak);
+            komentarTeloZmazPostKontajner.addEventListener("click", function() {
+                deletePost(post.id);
+            });
+        }
+
+
+        //autor
+        const autorTelo = document.createElement('div');
+        autorTelo.className = 'domov_zobrazenie_telo_hlasovanie';
+        containerDiv.appendChild(autorTelo);
+
+        const autorTelotext = document.createElement('div');
+        autorTelotext.className = 'domov_zobrazenie_telo_hlasovanie_hlasy';
+        autorTelo.appendChild(autorTelotext);
+        const autorTelotextLabel = document.createElement('label');
+        autorTelotextLabel.textContent = 'Autor: ';
+        autorTelotext.appendChild(autorTelotextLabel);
 
 
         //KOMENTARE
@@ -425,7 +457,7 @@
         }
 
         containerDiv.appendChild(komentareTelo);
-
+        userVotedPost();
     }
 
     function moveImageContainer(way){
@@ -923,49 +955,54 @@
     }
 
     function deleteComment(div, comment_id){
-        let position = fromCommentIDPosition(comment_id);
-        $.ajax({
-            url: '/domov/zobrazenie/vymaz_koment',
-            method: 'POST',
-            data: { comments: show_comments, comment_id: comment_id, _token: '{{ csrf_token() }}' },
-            success: function () {
-                let num_com_to_del = 1;
-                if(show_comments[position].upper_comment_id == null){
-                    for (let i = position + 1; i < show_comments.length; i++) {
-                        if (show_comments[i].upper_comment_id == null){
-                            break;
+        var result = window.confirm("Ste si isty zmazanim komentaru?");
+
+        // Check the result of the confirmation
+        if (result) {
+            let position = fromCommentIDPosition(comment_id);
+            $.ajax({
+                url: '/domov/zobrazenie/vymaz_koment',
+                method: 'POST',
+                data: { comments: show_comments, comment_id: comment_id, _token: '{{ csrf_token() }}' },
+                success: function () {
+                    let num_com_to_del = 1;
+                    if(show_comments[position].upper_comment_id == null){
+                        for (let i = position + 1; i < show_comments.length; i++) {
+                            if (show_comments[i].upper_comment_id == null){
+                                break;
+                            }
+                            num_com_to_del += 1;
                         }
-                        num_com_to_del += 1;
+
+                        showPostCommentsDiv.removeChild(div);
+                        var indexToRemove = showPostComments.indexOf(div);
+                        showPostComments.splice(indexToRemove, 1);
+
+                    }else {
+                        mainPosition = position;
+                        while (true){
+                            mainPosition--;
+                            if (show_comments[mainPosition].upper_comment_id == null){
+                                break;
+                            }
+                        }
+                        let hlavnyKomentar = showPostComments[mainPosition].querySelector('#domov_zobrazenie_komentare_komentar_komentare');
+                        hlavnyKomentar.removeChild(div);
                     }
 
-                    showPostCommentsDiv.removeChild(div);
-                    var indexToRemove = showPostComments.indexOf(div);
-                    showPostComments.splice(indexToRemove, 1);
+                    show_comments.splice(position, num_com_to_del);
+                    show_comment_profiles.splice(position, num_com_to_del);
+                    show_comment_user_voted.splice(position, num_com_to_del);
 
-                }else {
-                    mainPosition = position;
-                    while (true){
-                        mainPosition--;
-                        if (show_comments[mainPosition].upper_comment_id == null){
-                            break;
-                        }
-                    }
-                    let hlavnyKomentar = showPostComments[mainPosition].querySelector('#domov_zobrazenie_komentare_komentar_komentare');
-                    hlavnyKomentar.removeChild(div);
+
+
+
+                },
+                error: function (error) {
+                    console.error('Error:', error);
                 }
-
-                show_comments.splice(position, num_com_to_del);
-                show_comment_profiles.splice(position, num_com_to_del);
-                show_comment_user_voted.splice(position, num_com_to_del);
-
-
-
-
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
+            });
+        }
     }
 
     function fromCommentIDPosition(comment_id){
@@ -1138,6 +1175,25 @@
 
 
     });
+
+    function deletePost(post_id){
+        var result = window.confirm("Ste si isty zmazanim prispevku?");
+        // Check the result of the confirmation
+        if (result) {
+            $.ajax({
+                url: '/domov/vymaz_prispevok',
+                method: 'POST',
+                data: { post_id: post_id, _token: '{{ csrf_token() }}' },
+                success: function () {
+                    localStorage.setItem('oldIndex', 0);
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
 
 
     function createPost(positionInLoadedPosts){
