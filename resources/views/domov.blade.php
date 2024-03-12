@@ -33,6 +33,7 @@
     let canScroll = true;
     let index = 0;
     var user = @json(session('user'));
+    var user_privilege = @json(session('privileges'));
 
     var posts = @json(session('posts'));
     var posts_images = @json(session('posts_images'));
@@ -412,13 +413,13 @@
         komentareTelo.appendChild(showPostCommentsDiv);
 
         for (let i = 0; i < show_comments.length; i++) {
-            if(show_comments[i].upper_comment_id === null){
-                createComment(showPostComments.length, show_comment_profiles[i].id,
-                    show_comment_profiles[i].image_name, show_comment_profiles[i].name, show_comments[i].text,
+            if(show_comments[i].upper_comment_id == null){
+                createComment(show_comment_profiles[i].id,
+                    show_comment_profiles[i].image_name, show_comment_profiles[i].name, show_comments[i].id, show_comments[i].text,
                     show_comments[i].up_votes, show_comments[i].down_votes, show_comment_user_voted[i]);
             }else {
-                createLowerComment(showPostComments.length, show_comment_profiles[i].id,
-                    show_comment_profiles[i].image_name, show_comment_profiles[i].name, show_comments[i].text,
+                createLowerComment(show_comment_profiles[i].id,
+                    show_comment_profiles[i].image_name, show_comment_profiles[i].name, show_comments[i].id, show_comments[i].text,
                     show_comments[i].up_votes, show_comments[i].down_votes, show_comment_user_voted[i]);
             }
         }
@@ -574,7 +575,9 @@
 
     }
 
-    function createComment(position, profile_id, profile_image, profile_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
+    function createComment(profile_id, profile_image, profile_name, comment_id, comment_text, comment_up_votes, comment_down_votes, vote_status){
+        let position = fromCommentIDPosition(comment_id)
+
         const komentar = document.createElement('div');
         komentar.className = 'domov_zobrazenie_komentare_komentar';
         showPostCommentsDiv.appendChild(komentar);
@@ -634,7 +637,7 @@
         hlasZaCislo.textContent = comment_up_votes;
         komentarTeloHlasyZaKontajner.appendChild(hlasZaCislo);
         komentarTeloHlasyZaKontajner.addEventListener("click", function() {
-            voteComment(position, 1);
+            voteComment(comment_id, 1);
         });
 
         const komentarTeloHlasyProtiKontajner  = document.createElement('div');
@@ -649,12 +652,13 @@
         hlasProtiCislo.textContent = comment_down_votes;
         komentarTeloHlasyProtiKontajner.appendChild(hlasProtiCislo);
         komentarTeloHlasyProtiKontajner.addEventListener("click", function() {
-            voteComment(position, 0);
+            voteComment(comment_id, 0);
         });
-        setVoteComment(position, vote_status);
+        setVoteComment(comment_id, vote_status);
 
         const komentarTeloPridajKomentarKontajner  = document.createElement('div');
         komentarTeloPridajKomentarKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+        komentarTeloPridajKomentarKontajner.style.width = '20px';
         komentarStred.appendChild(komentarTeloPridajKomentarKontajner);
 
         const komentarZnak = document.createElement('i');
@@ -675,12 +679,27 @@
             komentarePridajTlacitko.className = 'fa fa-paper-plane fa-1x';
             komentarePridajKontjaner.appendChild(komentarePridajTlacitko);
             komentarePridajKontjaner.addEventListener("click", function() {
-                sendComment(showPostCommentInput, show_comments[position].id);
+                sendComment(showPostCommentInput, comment_id);
             });
         });
+
+        if(profile_id == user.id || user_privilege > 0){
+            const komentarTeloZmazKomentarKontajner  = document.createElement('div');
+            komentarTeloZmazKomentarKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+            komentarTeloZmazKomentarKontajner.style.width = '20px';
+            komentarStred.appendChild(komentarTeloZmazKomentarKontajner);
+
+            const odstranZnak = document.createElement('i');
+            odstranZnak.className = 'fa fa-trash fa-1x';
+            komentarTeloZmazKomentarKontajner.appendChild(odstranZnak);
+            komentarTeloZmazKomentarKontajner.addEventListener("click", function() {
+                deleteComment(komentar, comment_id);
+            });
+        }
     }
 
-    function createLowerComment(position, profile_id, profile_image, profile_name, comment_text, comment_up_votes, comment_down_votes, vote_status){
+    function createLowerComment(profile_id, profile_image, profile_name, comment_id, comment_text, comment_up_votes, comment_down_votes, vote_status){
+        let position = fromCommentIDPosition(comment_id)
         const komentar = document.createElement('div');
         komentar.className = 'domov_zobrazenie_komentare_komentar';
         komentar.style.width = '90%';
@@ -739,7 +758,7 @@
         hlasZaCislo.textContent = comment_up_votes;
         komentarTeloHlasyZaKontajner.appendChild(hlasZaCislo);
         komentarTeloHlasyZaKontajner.addEventListener("click", function() {
-            voteComment(position, 1);
+            voteComment(comment_id, 1);
         });
 
         const komentarTeloHlasyProtiKontajner  = document.createElement('div');
@@ -754,14 +773,36 @@
         hlasProtiCislo.textContent = comment_down_votes;
         komentarTeloHlasyProtiKontajner.appendChild(hlasProtiCislo);
         komentarTeloHlasyProtiKontajner.addEventListener("click", function() {
-            voteComment(position, 0);
+            voteComment(comment_id, 0);
         });
-        setVoteComment(position, vote_status);
+        setVoteComment(comment_id, vote_status);
+
+        if(profile_id == user.id || user_privilege > 0){
+            const komentarTeloZmazKomentarKontajner  = document.createElement('div');
+            komentarTeloZmazKomentarKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
+            komentarTeloZmazKomentarKontajner.style.width = '20px';
+            komentarStred.appendChild(komentarTeloZmazKomentarKontajner);
+
+            const odstranZnak = document.createElement('i');
+            odstranZnak.className = 'fa fa-trash fa-1x';
+            komentarTeloZmazKomentarKontajner.appendChild(odstranZnak);
+            komentarTeloZmazKomentarKontajner.addEventListener("click", function() {
+                deleteComment(komentar, comment_id);
+            });
+        }
 
     }
 
-    function sendComment(inputText, upperCommentId){
+    function sendComment(inputText, comment_id){
+
         if(inputText.value !== ''){
+
+            let upperCommentId = null;
+            if(comment_id != null){
+                let position = fromCommentIDPosition(comment_id);
+                upperCommentId = show_comments[position].id;
+            }
+
             var post_id = posts[index].id;
 
             $.ajax({
@@ -769,7 +810,7 @@
                 method: 'POST',
                 data: { post_id: post_id, upper_comment_id: upperCommentId, comment_text: inputText.value, _token: '{{ csrf_token() }}' },
                 success: function (response) {
-                    if(upperCommentId === null){
+                    if(upperCommentId == null){
                         const comment = {
                             id: response.comment_id,
                             comment_upper_id: null,
@@ -787,31 +828,29 @@
                         show_comment_profiles[show_comment_profiles.length] = profile;
 
                         show_comment_user_voted[show_comment_user_voted.length] = '';
-                        createComment(showPostComments.length, user.id, user.image_name, user.name, inputText.value, show_comments[show_comments.length - 1].up_votes,
+                        createComment(user.id, user.image_name, user.name, response.comment_id, inputText.value, show_comments[show_comments.length - 1].up_votes,
                             show_comments[show_comments.length - 1].down_votes, '');
                         inputText.value = '';
                     }else {
-                        let position = 0;
-                        let mainCommentPosition = 0;
-                        let found = false;
-                        for (let i = 0; i < show_comments.length; i++) {
-                            if(found){
-                                if(show_comments[i].upper_comment_id === null){
-                                    position = i;
+
+                        let mainCommentPosition = fromCommentIDPosition(upperCommentId) + 1;
+                        let position;
+                        if(mainCommentPosition >= show_comments.length){
+                            position = mainCommentPosition;
+                        }else {
+                            for (let i = mainCommentPosition; i < show_comments.length; i++) {
+                                position = i;
+                                if(show_comments[i].upper_comment_id == null){
                                     break;
                                 }
+                                if(i == show_comments.length - 1){
+                                    position += 1;
+                                }
                             }
-                            if(upperCommentId === show_comments[i].id){
-                                found = true;
-                                mainCommentPosition = i+1;
-                            }
-                        }
-                        if(position == 0){
-                            position = mainCommentPosition;
                         }
                         const comment = {
                             id: response.comment_id,
-                            comment_upper_id: upperCommentId,
+                            upper_comment_id: upperCommentId,
                             text: inputText.value,
                             up_votes: 0,
                             down_votes: 0
@@ -824,9 +863,9 @@
                             name: user.name
                         };
                         show_comment_profiles.splice(position, 0, profile);
-
                         show_comment_user_voted.splice(position, 0, '');
-                        createLowerComment(position, user.id, user.image_name, user.name, inputText.value, show_comments[position].up_votes,
+
+                        createLowerComment(user.id, user.image_name, user.name, response.comment_id, inputText.value, show_comments[position].up_votes,
                             show_comments[position].down_votes, '');
 
                         inputText.value = '';
@@ -839,8 +878,8 @@
         }
     }
 
-    function voteComment(position, up_vote){
-        let comment_id = show_comments[position].id;
+    function voteComment(comment_id, up_vote){
+        let position = fromCommentIDPosition(comment_id)
 
         $.ajax({
             url: '/domov/zobrazenie/hlasuj_koment',
@@ -850,7 +889,7 @@
 
                 show_comments[position].up_votes = response.comment_up_votes;
                 show_comments[position].down_votes  =response.comment_down_votes;
-                setVoteComment(position, response.comment_vote_result);
+                setVoteComment(comment_id, response.comment_vote_result);
                 //show_post_vote_status = response.post_vote_status;
 
             },
@@ -860,7 +899,9 @@
         });
     }
 
-    function setVoteComment(position, vote_status){
+    function setVoteComment(comment_id, vote_status){
+        let position = fromCommentIDPosition(comment_id)
+
         let upVoteDiv = showPostComments[position].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_za_kontajner");
         let downVoteDiv = showPostComments[position].getElementsByClassName("domov_zobrazenie_komentare_hlasovanie_proti_kontajner");
 
@@ -879,6 +920,64 @@
         upVoteNumP.textContent = show_comments[position].up_votes;
         let downVoteNumP = downVoteDiv[0].querySelector("p");
         downVoteNumP.textContent = show_comments[position].down_votes;
+    }
+
+    function deleteComment(div, comment_id){
+        let position = fromCommentIDPosition(comment_id);
+        $.ajax({
+            url: '/domov/zobrazenie/vymaz_koment',
+            method: 'POST',
+            data: { comments: show_comments, comment_id: comment_id, _token: '{{ csrf_token() }}' },
+            success: function () {
+                let num_com_to_del = 1;
+                if(show_comments[position].upper_comment_id == null){
+                    for (let i = position + 1; i < show_comments.length; i++) {
+                        if (show_comments[i].upper_comment_id == null){
+                            break;
+                        }
+                        num_com_to_del += 1;
+                    }
+
+                    showPostCommentsDiv.removeChild(div);
+                    var indexToRemove = showPostComments.indexOf(div);
+                    showPostComments.splice(indexToRemove, 1);
+
+                }else {
+                    mainPosition = position;
+                    while (true){
+                        mainPosition--;
+                        if (show_comments[mainPosition].upper_comment_id == null){
+                            break;
+                        }
+                    }
+                    let hlavnyKomentar = showPostComments[mainPosition].querySelector('#domov_zobrazenie_komentare_komentar_komentare');
+                    hlavnyKomentar.removeChild(div);
+                }
+
+                show_comments.splice(position, num_com_to_del);
+                show_comment_profiles.splice(position, num_com_to_del);
+                show_comment_user_voted.splice(position, num_com_to_del);
+
+
+
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function fromCommentIDPosition(comment_id){
+        let position = 0;
+        while (show_comments[position].id != comment_id){
+            position += 1;
+            if(position > show_comments.length){
+                break;
+                position = 0;
+            }
+        }
+        return position;
     }
 
 
@@ -969,7 +1068,6 @@
                 posts_images = response.posts_images;
                 posts_tags = response.posts_tags;
                 posts_regions = response.posts_regions;
-                alert(posts.length)
                 scrollListener = true;
 
             },

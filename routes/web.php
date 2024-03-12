@@ -43,6 +43,7 @@ Route::post('/domov/zobrazenie/anketa_hlasuj', [\App\Http\Controllers\PollContro
 Route::post('/domov/zobrazenie/post_hlasuj', [\App\Http\Controllers\PostController::class, 'post_hlasujPost'])->name('post_hlasuj.post');
 Route::post('/domov/zobrazenie/pridaj_koment', [\App\Http\Controllers\PostController::class, 'post_pridaj_komentPost'])->name('post_pridaj_koment.post');
 Route::post('/domov/zobrazenie/hlasuj_koment', [\App\Http\Controllers\PostController::class, 'post_hlasuj_komentPost'])->name('post_hlasuj_koment.post');
+Route::post('/domov/zobrazenie/vymaz_koment', [\App\Http\Controllers\PostController::class, 'post_vymaz_komentPost'])->name('post_vymaz_koment.post');
 Route::post('/domov/nacitaj_prispevky', [\App\Http\Controllers\PostController::class, 'nacitaj_prispevkyPost'])->name('nacitaj_prispevky.post');
 
 

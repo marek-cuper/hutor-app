@@ -648,6 +648,8 @@ domov_zobrazenie_komentare_komentar_komentare{
     display: flex;
     padding-left: 1%;
     padding-right: 1%;
+    text-align: center;
+    justify-content: center;
 }
 
 .domov_zobrazenie_komentare_hlasovanie_za_kontajner i, .domov_zobrazenie_komentare_hlasovanie_proti_kontajner i{

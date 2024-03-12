@@ -69,17 +69,14 @@ class PostController extends Controller
         foreach ($comments_main as $comment) {
             $comments[] = $comment;
             $comments_lower = Post_comment::where('upper_comment_id', $comment->id)->orderBy('order')->get();
-            if ($comments_lower){
-                foreach ($comments_lower as $comment_lower) {
-                    $comments[] = $comment_lower;
-                }
+            foreach ($comments_lower as $comment_lower) {
+                $comments[] = $comment_lower;
             }
         }
         $comment_profiles = [];
         $post_comments_user_voted = [];
         foreach ($comments as $comment) {
-            $comment_user_id = $comment->user_id;
-            $comment_profiles[] = User::where('id', $comment_user_id)->first();
+            $comment_profiles[] = User::where('id',  $comment->user_id)->first();
 
             $comment_user_vote = User_comment_vote::where('comment_id', $comment->id)->where('user_id', Auth::user()->id)->first();
             if($comment_user_vote){
@@ -266,6 +263,19 @@ class PostController extends Controller
             'comment_up_votes' => $post_comment_up_votes,
             'comment_down_votes' => $post_comment_down_votes,
         ]);
+    }
+
+    public function post_vymaz_komentPost(Request $request){
+
+        $input_comment_id = $request->input('comment_id');
+        $user_comment = Post_comment::where('id', $input_comment_id)->first();
+        if($user_comment->upper_comment_id != null){
+            $lower_comments = Post_comment::where('upper_comment_id', $input_comment_id)->get();
+            foreach ($lower_comments as $comment) {
+                $comment->delete();
+            }
+        }
+        $user_comment->delete();
     }
 
     public function pridaj_prispevokPost(Request $request){
