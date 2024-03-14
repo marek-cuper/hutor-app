@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversation_message;
 use App\Models\Post;
+use App\Models\Post_comment;
 use App\Models\Post_image;
 use App\Models\Post_region;
 use App\Models\Post_tag;
 use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\User_comment_vote;
 use App\Models\User_moderator;
+use App\Models\User_post_vote;
 use App\Models\User_region;
 use App\Models\User_tag;
+use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\PostController;
 use function Sodium\add;
 
@@ -82,7 +89,9 @@ class AuthController extends Controller
             return redirect()->route('domov');
         }
 
-        return redirect(route('prihlasenie'))->with('error', 'Invalid Credentials!');
+
+        return redirect()->back()->with('error', 'Chyba. Nespravne prihlasovacie udaje.');
+
     }
 
 
@@ -117,7 +126,23 @@ class AuthController extends Controller
 
     function profil($id){
         $user = User::findOrFail($id);
+
+        $numberOfPosts = Post::where('creator_id', $id)->count();
+        $numberOfComments = Post_comment::where('user_id', $id)->count();
+        $numberOfPostsUpVotes = User_post_vote::where('user_id', $id)->where('up_vote', true)->count();
+        $numberOfPostsDownVotes = User_post_vote::where('user_id', $id)->where('up_vote', false)->count();
+        $numberOfCommentsUpVotes = User_comment_vote::where('user_id', $id)->where('up_vote', true)->count();
+        $numberOfCommentsDownVotes = User_comment_vote::where('user_id', $id)->where('up_vote', false)->count();
+        $numberOfMessages = Conversation_message::where('sender_id', $id)->count();
+
         $data = [
+            'numberOfPosts' => $numberOfPosts,
+            'numberOfComments' => $numberOfComments,
+            'numberOfPostsUpVotes' => $numberOfPostsUpVotes,
+            'numberOfPostsDownVotes' => $numberOfPostsDownVotes,
+            'numberOfCommentsUpVotes' => $numberOfCommentsUpVotes,
+            'numberOfCommentsDownVotes' => $numberOfCommentsDownVotes,
+            'numberOfMessages' => $numberOfMessages,
             'another_user' => $user
         ];
         return view('profil', compact('data'));
@@ -159,6 +184,132 @@ class AuthController extends Controller
         return redirect(route(('profil_uprava')));
     }
 
+    function overenie_menoPost(Request $request){
+        $unique = false;
+        $text = '';
+
+        // Define the validation rules
+        $rules = [
+            'name' => ['required', 'string', 'min:5', 'alpha_num'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            $text = 'Meno neobsahuje len pismena a cisla alebo neobsahuje aspon 5 znakov';
+        }else{
+            $exists = User::all()->contains('name', $request->input('name'));
+            if($exists){
+                $text = 'Dane meno je uz pouzivane.';
+            }else{
+                $unique = true;
+            }
+        }
+
+        return response()->json([
+            'unique' => $unique,
+            'text' => $text
+        ]);
+    }
+
+    function overenie_emailPost(Request $request){
+        $unique = false;
+        $text = '';
+
+        // Define the validation rules
+        $rules = [
+            'email' => ['required', 'email'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            $text = 'Zadany email nema format emailu.';
+        }else{
+            $exists = User::all()->contains('email', $request->input('email'));
+            if($exists){
+                $text = 'Dany email je uz pouzivany.';
+            }else{
+                $unique = true;
+            }
+        }
+
+        return response()->json([
+            'unique' => $unique,
+            'text' => $text
+        ]);
+    }
+
+    function nastevenie_udajovPost(Request $request){
+
+
+        $relogin = false;
+
+        $user = Auth::user();
+
+        if(Hash::check($request->old_password, $user->password)){
+            if($request->name != ''){
+
+                try {
+                    $request->validate([
+                        'name' => 'required|min:5|regex:/^[a-zA-Z0-9]+$/',
+                    ]);
+                } catch (ValidationException $e) {
+                    return redirect()->back()->with('error', 'Chyba. Meno nesplna poziadavky.');
+                }
+
+                $exists = User::all()->contains('name', $request->name);
+                if(!$exists){
+                    $user->name = $request->name;
+                }
+            }
+            if($request->email != ''){
+
+                try {
+                    $request->validate([
+                        'email' => 'required|email',
+                    ]);
+                } catch (ValidationException $e) {
+                    return redirect()->back()->with('error', 'Chyba. Email nesplna poziadavky.');
+                }
+
+                $exists = User::all()->contains('email', $request->email);
+                if(!$exists){
+                    $user->email = $request->email;
+                    $relogin = true;
+                }
+            }
+            if($request->new_password1 != ''){
+
+                try {
+                    $request->validate([
+                        'new_password1' => 'required|min:8|regex:/^[a-zA-Z0-9]+$/', // Validation for the first password
+                        'new_password2' => 'required|same:new_password1',
+                    ]);
+                } catch (ValidationException $e) {
+                    return redirect()->back()->with('error', 'Chyba. hesla nesplnaju poziadavky.');
+                }
+                $user->password = Hash::make($request->new_password1);
+                $relogin = true;
+            }
+        }else{
+            return redirect()->back()->with('error', 'Chyba. Stare heslo je nespravne.');
+        }
+        $user->save();
+
+
+        if ($relogin){
+            $request->session()->flush();
+            Auth::logout();
+            return redirect(route(('domov')));
+        }else{
+            $request->session()->put('user', Auth::user());
+            return redirect()->back()->with('success', 'Meno bolo uspesne zmenene.');
+        }
+    }
+
     public function moderator_panel(Request $request){
         return view('moderator_panel');
     }
@@ -186,6 +337,18 @@ class AuthController extends Controller
     public function odober_moderatoraPost(Request $request){
         User_moderator::where('user_id', $request->input('user_id'))->where('admin', false)->delete();
         $this->moderatoriSet($request);
+    }
+
+    public function vymaz_pouzivatelaPost(Request $request){
+        $selfDelete = false;
+        if ($request->input('user_id') == Auth::user()->id){
+            $selfDelete = true;
+        }
+        User::where('id', $request->input('user_id'))->delete();
+
+        if($selfDelete){
+            $this->odhlasenie($request);
+        }
     }
 
 }

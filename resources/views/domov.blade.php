@@ -310,6 +310,18 @@
                 var newTag = document.createElement("div");
                 newTag.className = 'domov_oznacenie';
                 newTag.textContent = tags.find(tag => tag.id === posts_tags[postIndex][i]).name;
+
+                let found = false;
+                for (let j = 0; j < user_tags_pref.length; j++) {
+                    if(posts_tags[postIndex][i] == user_tags_pref[j]){
+                        found = true;
+                    }
+                }
+                if(found){
+                    newTag.style.backgroundColor = '#ffb955';
+                    newTag.style.fontWeight = "bold";
+                }
+
                 oznaceniaDiv.appendChild(newTag);
             }
             oznaceniaRegionyDiv.appendChild(oznaceniaDiv);
@@ -326,6 +338,18 @@
                 var newReg = document.createElement("div");
                 newReg.className = 'domov_region';
                 newReg.textContent = regions.find(region => region.id === posts_regions[postIndex][i]).name;
+
+                let found = false;
+                for (let j = 0; j < user_regions.length; j++) {
+                    if(posts_regions[postIndex][i] == user_regions[j]){
+                        found = true;
+                    }
+                }
+                if(found){
+                    newReg.style.backgroundColor = '#ffb955';
+                    newReg.style.fontWeight = "bold";
+                }
+
                 regionyDiv.appendChild(newReg);
             }
 
@@ -386,6 +410,7 @@
         const hlasovanieTeloZobrazeniaCislaKontajner  = document.createElement('div');
         showPostStats[showPostStats.length] = hlasovanieTeloZobrazeniaCislaKontajner;
         hlasovanieTeloZobrazeniaCislaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
+        hlasovanieTeloZobrazeniaCislaKontajner.style.marginBottom = '2%';
         hlasovanieTeloZobrazenia.appendChild(hlasovanieTeloZobrazeniaCislaKontajner);
         const zobrazenieUzivatelia = document.createElement('i');
         zobrazenieUzivatelia.className = 'fa fa-users  fa-1x';
@@ -413,14 +438,32 @@
         //autor
         const autorTelo = document.createElement('div');
         autorTelo.className = 'domov_zobrazenie_telo_hlasovanie';
+        autorTelo.style.marginLeft = 'auto';
+        autorTelo.style.marginRight = 'auto';
         containerDiv.appendChild(autorTelo);
 
-        const autorTelotext = document.createElement('div');
-        autorTelotext.className = 'domov_zobrazenie_telo_hlasovanie_hlasy';
-        autorTelo.appendChild(autorTelotext);
+        const autorTeloVnutreo = document.createElement('div');
+        autorTeloVnutreo.className = 'domov_zobrazenie_telo_hlasovanie_hlasy';
+        autorTeloVnutreo.style.marginLeft = 'auto';
+        autorTeloVnutreo.style.marginRight = 'auto';
+        autorTelo.appendChild(autorTeloVnutreo);
         const autorTelotextLabel = document.createElement('label');
         autorTelotextLabel.textContent = 'Autor: ';
-        autorTelotext.appendChild(autorTelotextLabel);
+        autorTeloVnutreo.appendChild(autorTelotextLabel);
+
+        const autorObrazokDiv = document.createElement('a');
+        autorObrazokDiv.href = '/profil/' + show_post_creator.id;
+        autorObrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
+        autorObrazokDiv.style.marginLeft = '7%';
+        autorTeloVnutreo.appendChild(autorObrazokDiv);
+        const autoObrazokImg = document.createElement('img');
+        autoObrazokImg.src = '/storage/' + show_post_creator.image_name;
+        autorObrazokDiv.appendChild(autoObrazokImg);
+
+        const autorTeloMeno = document.createElement('p');
+        autorTeloMeno.textContent = show_post_creator.name;
+        autorTeloMeno.style.fontWeight = 'bold';
+        autorTeloVnutreo.appendChild(autorTeloMeno);
 
 
         //KOMENTARE

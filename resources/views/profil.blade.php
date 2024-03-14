@@ -26,9 +26,11 @@
                 </div>
                 <div class="profil_uprava_profil_obrazok_vstup">
                     <label>Meno:</label>
-                    <label id="profil_meno"></label>
+                    <h2 id="profil_meno"></h2>
                 </div>
 
+            </div>
+            <div id="profil_kontajner_statistiky" class="profil_kontajner_statistiky">
             </div>
 
         </div>
@@ -40,10 +42,19 @@
 
 <script>
     var user = @json(session('user'));
-    var another_user = @json($data['another_user']);;
+    var another_user = @json($data['another_user']);
+
+    var numberOfPosts = @json($data['numberOfPosts']);
+    var numberOfComments = @json($data['numberOfComments']);
+    var numberOfPostsUpVotes = @json($data['numberOfPostsUpVotes']);
+    var numberOfPostsDownVotes = @json($data['numberOfPostsDownVotes']);
+    var numberOfCommentsUpVotes = @json($data['numberOfCommentsUpVotes']);
+    var numberOfCommentsDownVotes = @json($data['numberOfCommentsDownVotes']);
+    var numberOfMessages = @json($data['numberOfMessages']);
 
     let profilName = document.getElementById('profil_meno');
     let profilImage = document.getElementById('profil_obrazok');
+    let statsContainerDiv = document.getElementById('profil_kontajner_statistiky');
 
     var user_privilege = @json(session('privileges'));
     var mods = @json(session('mods'));
@@ -88,15 +99,29 @@
                 openChat();
             });
         }
-        if(user.id == 1){
+
+        if(user_privilege > 0 || user.id == another_user.id){
             const banDiv = document.createElement('div');
             banDiv.className = 'domov_zobrazenie_komentare_pridaj_kontajner';
             panel.appendChild(banDiv);
 
             const banIkona = document.createElement('i');
-            banIkona.className = 'fa fa-ban fa-2x';
+            banIkona.className = 'fa fa-trash fa-2x';
             banDiv.appendChild(banIkona);
+
+            banDiv.addEventListener("click", function() {
+                deleteUser();
+            });
         }
+
+        //Adding stats
+        createStat('Prispevky', numberOfPosts);
+        createStat('Komentáre', numberOfComments);
+        createStat('Poslané správy', numberOfMessages);
+        createStat('Hlas za prispevok', numberOfPostsUpVotes);
+        createStat('Hlas proti prispevok', numberOfPostsDownVotes);
+        createStat('Hlas za komentár', numberOfCommentsUpVotes);
+        createStat('Hlas proti komentár', numberOfCommentsDownVotes);
     });
 
     function openChat(){
@@ -132,6 +157,42 @@
                 console.error('Error:', error);
             }
         });
+    }
+
+    function deleteUser(){
+        var result = window.confirm("Ste si isty zmazanim pouzivatela?");
+
+        // Check the result of the confirmation
+        if (result) {
+            var user_id = another_user.id;
+
+            $.ajax({
+                url: '/pouzivatel/vymaz',
+                method: 'POST',
+                data: { user_id: user_id, _token: '{{ csrf_token() }}' },
+                success: function () {
+                    window.location.href = '/domov';
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+    }
+
+    function createStat(text, number) {
+        var statDiv = document.createElement('div');
+        statDiv.classList.add('profil_kontajner_statistiky_okno');
+        statsContainerDiv.appendChild(statDiv);
+
+        var labelText = document.createElement('label');
+        labelText.textContent = text;
+        statDiv.appendChild(labelText);
+
+        var h3Number = document.createElement('h3');
+        h3Number.textContent = number;
+        statDiv.appendChild(h3Number);
     }
 
 </script>

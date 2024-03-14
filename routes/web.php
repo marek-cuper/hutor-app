@@ -63,6 +63,11 @@ Route::get('/profil/{id}', [AuthController::class, 'profil'])->name('profil');
 Route::get('/profil_uprava', [AuthController::class, 'profil_uprava'])->name('profil_uprava');
 Route::post('/profil_uprava/pridaj_obrazok', [AuthController::class, 'pridaj_obrazokPost'])->name('pridaj_obrazok.post');
 Route::post('/profil_uprava/uloz_obrazok', [AuthController::class, 'uloz_obrazokPost'])->name('uloz_obrazok.post');
+Route::post('/profil_uprava/overenie_meno', [AuthController::class, 'overenie_menoPost'])->name('overenie_meno.post');
+Route::post('/profil_uprava/overenie_email', [AuthController::class, 'overenie_emailPost'])->name('overenie_email.post');
+Route::post('/profil_uprava/nastevenie_udajov', [AuthController::class, 'nastevenie_udajovPost'])->name('nastevenie_udajov.post');
+
+Route::post('/pouzivatel/vymaz', [AuthController::class, 'vymaz_pouzivatelaPost'])->name('vymaz_pouzivatela.post');
 
 Route::get('/moderator/panel', [AuthController::class, 'moderator_panel'])->name('moderator_panel');
 Route::post('/moderator/pridaj', [AuthController::class, 'pridaj_moderatoraPost'])->name('moderator_pridaj.post');

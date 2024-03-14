@@ -68,7 +68,7 @@ class TagController extends Controller
         app('App\Http\Controllers\PostController')->vymaz_nacitane($request);
         app('App\Http\Controllers\PostController')->nacitaj_prispevkyPost($request);
 
-        return view('/domov');
+        return view('/preferencie');
     }
 
     public function pouzivatelRegionySet(Request $request){
@@ -102,7 +102,7 @@ class TagController extends Controller
         app('App\Http\Controllers\PostController')->vymaz_nacitane($request);
         app('App\Http\Controllers\PostController')->nacitaj_prispevkyPost($request);
 
-        return view('/domov');
+        return view('/preferencie');
     }
 
 }

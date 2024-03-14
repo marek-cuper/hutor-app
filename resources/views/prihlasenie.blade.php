@@ -15,7 +15,17 @@
     <script>window.location = "{{ route('domov') }}";</script>
 @endauth
 <div class="prihlasenie_stranka">
+    @if(session('error'))
+        <div class="profil_uprava_odozva profil_uprava_odozva_chyba">
+            {{ session('error') }}
+        </div>
+    @endif
 
+    @if(session('success'))
+        <div class="profil_uprava_odozva profil_uprava_odozva_uspech">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="prihlasenie_stranka_logo">
         <img src="images/hutor_cierne_cierne.png" alt="">
     </div>
@@ -35,11 +45,6 @@
 
                 <button class="prihlasenie_stranka_formular_tlacitko_prih" type="submit">Prihlasenie</button>
             </form>
-            @if(session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
             <form action="{{ route('registracia') }}" method="GET">
                 <button class="prihlasenie_stranka_formular_tlacitko_reg" type="submit">Registracia</button>
             </form>

@@ -11,6 +11,7 @@ html, body {
 }
 /* Prihlasenie */
 .prihlasenie_stranka{
+    overflow-y: auto;
     display: flex;
     margin: auto;
     height: 50%;
@@ -124,7 +125,7 @@ html, body {
 
 #navbar-menu{
     display: flex;
-    margin-right: 3%;
+    margin-right: 4%;
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -469,11 +470,11 @@ html, body {
     margin-right: 5%;
 }
 
-
-.domov_zobrazenie_anketa_telo .preferencie_tlacitka_okno{
-    width: 90%;
-    margin: 2% auto 1%;
+.preferencie_tlacitka_okno{
+    width: 80%;
+    margin: auto;
 }
+
 
 .domov_zobrazenie_anketa_telo .preferencie_tlacitko_uloz{
     font-size: 1.5vh;
@@ -577,7 +578,7 @@ html, body {
 }
 
 .domov_zobrazenie_komentare_komentar{
-    width: 98%;
+    width: 96%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -763,6 +764,7 @@ input:checked + .slider:before {
 #vybrate_regiony{
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     overflow-x: auto;
     margin-top: 1%;
 }
@@ -986,6 +988,7 @@ input:checked + .slider:before {
 #pridaj_prispevok_vybrate_oznacenia, #pridaj_prispevok_vybrate_regiony{
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     overflow-x: auto;
     margin-top: 1%;
 }
@@ -1019,6 +1022,40 @@ input:checked + .slider:before {
 }
 
 /* Profil uprava */
+.profil_uprava_meno{
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 4%;
+    padding-right: 4%;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+
+.profil_uprava_odozva{
+    width: 75%;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+
+.profil_uprava_odozva_chyba{
+    background-color: lightcoral;
+}
+
+.profil_uprava_odozva_uspech{
+    background-color: lightgreen;
+}
+
 .profil_uprava_kontajner{
     /* display: grid;
     grid-template-rows: auto; */
@@ -1029,8 +1066,10 @@ input:checked + .slider:before {
 
 .profil_uprava_kontajner_cast{
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 
@@ -1050,13 +1089,54 @@ input:checked + .slider:before {
     max-width: 200px;
 
 }
-.profil_uprava_profil_obrazok_vstup{
+.profil_uprava_obrazok_formular{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     margin: auto;
 }
-.profil_uprava_profil_obrazok_vstup > * {
+.profil_uprava_obrazok_formular > * {
     margin-bottom: 10px; /* Adjust spacing as needed */
+}
+
+.profil_uprava_profil_text_formular{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    border:2px solid lightgray;
+}
+.profil_uprava_profil_text_vstup{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin-bottom: 5%;
+
+}
+
+.profil_uprava_profil_text_vstup p{
+    width: 130px;
+    margin-right: 5%;
+
+}
+.profil_uprava_profil_text_vstup input{
+    height: 25px;
+    width: 120px;
+}
+
+.profil_uprava_profil_text_vstup button{
+    margin: auto;
+}
+
+.profil_uprava_profil_text_vstup i{
+    margin: auto;
 }
 
 /* Profil */
@@ -1084,6 +1164,37 @@ input:checked + .slider:before {
     border-radius: 5px;
     border:2px solid lightgray;
 }
+
+.profil_kontajner_statistiky{
+    display: flex;
+    flex-wrap: wrap;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.profil_kontajner_statistiky_okno{
+    height: 100px;
+    width: 140px;
+    margin: 1%;
+    border:2px solid lightgray;
+    display: flex;
+    flex-direction: column;
+}
+.profil_kontajner_statistiky_okno label{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: 5%;
+}
+
+.profil_kontajner_statistiky_okno h3{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: auto;
+}
+
+
 
 /* Spravy */
 .spravy_kontajner_konverzacie{
@@ -1282,7 +1393,7 @@ input:checked + .slider:before {
         transform: scale(0.9);
     }
     #navbar #navbar-menu{
-        margin-right: 3%;
+        margin-right: 4%;
     }
     .navbar-icon{
         margin-right: 20%;
@@ -1331,7 +1442,7 @@ input:checked + .slider:before {
         transform: scale(0.8);
     }
     #navbar #navbar-menu{
-        margin-right: 3%;
+        margin-right: 5%;
     }
     .navbar-icon{
         margin-right: 15%;
