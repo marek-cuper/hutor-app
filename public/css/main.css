@@ -14,8 +14,8 @@ html, body {
     overflow-y: auto;
     display: flex;
     margin: auto;
-    height: 50%;
     width: 80%;
+    height: 100%;
 }
 
 .prihlasenie_stranka_logo{
@@ -1366,7 +1366,6 @@ input:checked + .slider:before {
 @media (max-width: 1200px){
     .prihlasenie_stranka{
         display: grid;
-        height: 100%;
         width: 100%;
     }
 
@@ -1383,7 +1382,6 @@ input:checked + .slider:before {
     .prihlasenie_stranka_formular{
         margin: auto;
         width: 60%;
-        height: 50%;
     }
     #footbar i {
         transform: scale(0.8);

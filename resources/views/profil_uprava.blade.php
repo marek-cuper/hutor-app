@@ -102,6 +102,9 @@
     const emailI = document.getElementById('emailI');
     const passwordI = document.getElementById('passwordI');
 
+    const nameChars = /^[a-zA-Z0-9]+$/;
+    const emailRegex = /^\S+@\S+\.\S+$/;
+
     const nameInput = document.getElementById('name_input');
     const emailInput = document.getElementById('email_input');
     const newPassword1Input = document.getElementById('new_password1_input');
@@ -164,8 +167,6 @@
         hiddenImageNameInput.value = user.image_name;
     }
 
-    var nameChars = /^[a-zA-Z0-9]+$/;
-
     function checkName(){
         let input = nameInput.value;
 
@@ -194,8 +195,6 @@
         }
 
     }
-
-    const emailRegex = /^\S+@\S+\.\S+$/;
 
     function checkEmail(){
         let input = emailInput.value;

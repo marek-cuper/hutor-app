@@ -32,7 +32,7 @@
 
     <div class="prihlasenie_stranka_formular">
         <div class="prihlasenie_formular">
-            <form action="{{ route('prihlasenie.post') }}" method="POST">
+            <form id="prihlasenie_straka_formular" action="{{ route('prihlasenie.post') }}" method="POST">
                 @csrf
                 <div class="prihlasenie_formular_kolonka">
                     <label><b>Email</b></label>
@@ -52,6 +52,33 @@
     </div>
 
 </div>
+
+<script>
+    const nameChars = /^[a-zA-Z0-9]+$/;
+    const emailRegex = /^\S+@\S+\.\S+$/;
+
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    document.getElementById('prihlasenie_straka_formular').addEventListener('submit', function(event) {
+        let inputEmail = emailInput.value;
+        let inputPassword = passwordInput.value;
+
+        if (inputEmail == '' && inputPassword == '') {
+            alert('Email a heslo neboli vyplnene.');
+            event.preventDefault();
+        }else{
+            if(!emailRegex.test(inputEmail)){
+                alert('Zadany email nema format emailu.');
+                event.preventDefault();
+            }else if (inputPassword.length < 8 || !nameChars.test(inputPassword)){
+                alert('Heslo musi obsahovat len pismena a cisla. \nHeslo musi pozostavat z aspon 8 znakov.');
+                event.preventDefault();
+            }
+        }
+    });
+
+</script>
 
 </body>
 </html>

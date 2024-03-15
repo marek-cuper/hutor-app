@@ -37,9 +37,8 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|string|min:8|alpha_num',
         ]);
-
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
@@ -101,21 +100,43 @@ class AuthController extends Controller
 
     public function registraciaPost(Request $request){
 
-        $request->validate([
-            'name' => 'required',
+
+        $rules = [
+            'name' => 'required|string|min:5|alpha_num',
             'email' => 'required|email',
-            'password' => 'required'
-        ]);
+            'password1' => 'required|string|min:8|alpha_num',
+            'password2' => 'same:password1',
+        ];
+
+        // Define custom error messages
+        $messages = [
+            'name' => 'Meno nesplna poziadavky aspon 5 znakov pozostavajucich z cisiel a pismen.',
+            'email' => 'Email ma neplatny format.',
+            'password1' => 'Heslo nesplna poziadavky aspon 8 znakov pozostavajucich z cisiel a pismen.',
+            'password2' => 'Opakovane heslo sa nezhoduje s heslom.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            // If validation fails, redirect back with errors
+            //return redirect()->back()->withErrors($validator)->withInput();
+            //return redirect()->back()->with('error', $validator->errors())->withInput();
+            //return redirect()->back()->with('error', 'skap');
+            $error =  $validator->errors()->first();
+            return redirect()->back()->with('error', $error)->withInput();
+        }
+
 
         $data['name'] = $request->name;
         $data['email'] = $request->email;
-        $data['password'] = Hash::make($request->password);
+        $data['password'] = Hash::make($request->password1);
         $user = User::create($data);
 
         if(!$user){
             return redirect(route(('registracia')))->with(['error', 'Invalid Credentials!']);
         }
-        return redirect(route(('prihlasenie')))->with(['success', 'Uspesna registracia']);
+        return redirect(route(('prihlasenie')))->with('success', 'Uspesna registracia');
     }
 
     function odhlasenie(Request $request){
