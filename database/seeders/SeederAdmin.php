@@ -17,7 +17,7 @@ class SeederAdmin extends Seeder
                 'id' => 1,
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
-                'password' => 'admin123'
+                'password' => '$2y$10$5sTNA0e19sSNWlO9UK/qpe2yeK1XqACSVsQlwUixzC5o6Nm/h3PAa'
             ]
 
         ]);
