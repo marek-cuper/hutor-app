@@ -101,7 +101,6 @@
     const password1I = document.getElementById('password1I');
     const password2I = document.getElementById('password2I');
 
-    const nameChars = /^[a-zA-Z0-9]+$/;
     const emailRegex = /^\S+@\S+\.\S+$/;
 
     const nameInput = document.getElementById('name_input');
