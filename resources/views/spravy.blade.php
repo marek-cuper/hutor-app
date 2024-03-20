@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <title>Title</title>
-
-</head>
+@include('include.head')
 
 <body>
 
@@ -204,6 +193,13 @@
             openConversation(conversations[$index].id);
         });
     }
+
+    inputTextMessage.addEventListener('keydown', function(event) {
+        // Check if Enter key is pressed
+        if (event.key === 'Enter') {
+            sendMessage(); // Call sendMessage function
+        }
+    });
 
     function createMessage($user_id, $text){
         const spravaTelo = document.createElement('div');

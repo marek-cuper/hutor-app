@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-</head>
+@include('include.head')
 
 <body>
 
@@ -29,40 +20,42 @@
         </div>
     @endif
 
-    <div class="prihlasenie_stranka_logo">
-        <img src="images/hutor_cierne_cierne.png" alt="">
-    </div>
+        <div class="prihlasenie_stranka_obsah">
+            <div class="prihlasenie_stranka_logo">
+                <img src="images/hutor_cierne_cierne.png" alt="">
+            </div>
 
-    <div class="prihlasenie_stranka_formular">
-        <div class="prihlasenie_formular">
+            <div class="prihlasenie_stranka_formular">
+                <div class="prihlasenie_formular">
 
-            <form id="prihlasenie_straka_formular" action="{{ route('registracia.post') }}" method="POST">
-                @csrf
-                <div class="prihlasenie_formular_kolonka">
-                    <label title="Meno musi obsahovat aspon 5 znakov(len cisla a pismena)"><b>Meno</b></label>
-                    <input type="text" placeholder="Zadaj Meno" id="name" name="name" required>
-                </div>
-                <div class="prihlasenie_formular_kolonka">
-                    <label><b>Email</b></label>
-                    <input type="text" placeholder="Zadaj Email" id="email" name="email" required>
-                </div>
-                <div class="prihlasenie_formular_kolonka">
-                    <label title="Heslo musi obsahovat aspon 8 znakov(len cisla a pismena)"><b>Heslo</b></label>
-                    <input type="password" placeholder="Zadaj Heslo" id="password1" name="password1" required>
-                </div>
-                <div class="prihlasenie_formular_kolonka">
-                    <label title="Opakovane heslo sa musi rovnat s heslom"><b>Heslo</b></label>
-                    <input type="password" placeholder="Zadaj Heslo znova" id="password2" name="password2" required>
-                </div>
+                    <form id="prihlasenie_straka_formular" action="{{ route('registracia.post') }}" method="POST">
+                        @csrf
+                        <div class="prihlasenie_formular_kolonka">
+                            <label title="Meno musi obsahovat aspon 5 znakov(len cisla a pismena)"><b>Meno</b></label>
+                            <input type="text" placeholder="Zadaj Meno" id="name" name="name" required>
+                        </div>
+                        <div class="prihlasenie_formular_kolonka">
+                            <label><b>Email</b></label>
+                            <input type="text" placeholder="Zadaj Email" id="email" name="email" required>
+                        </div>
+                        <div class="prihlasenie_formular_kolonka">
+                            <label title="Heslo musi obsahovat aspon 8 znakov(len cisla a pismena)"><b>Heslo</b></label>
+                            <input type="password" placeholder="Zadaj Heslo" id="password1" name="password1" required>
+                        </div>
+                        <div class="prihlasenie_formular_kolonka">
+                            <label title="Opakovane heslo sa musi rovnat s heslom"><b>Heslo</b></label>
+                            <input type="password" placeholder="Zadaj Heslo znova" id="password2" name="password2" required>
+                        </div>
 
 
-                <button class="prihlasenie_stranka_formular_tlacitko_prih" type="submit">Registracia</button>
-            </form>
-            <form action="{{ route('prihlasenie') }}" method="GET">
-                <button class="prihlasenie_stranka_formular_tlacitko_reg" type="submit">Uz som zaregistrovany</button>
-            </form>
+                        <button class="prihlasenie_stranka_formular_tlacitko prihlasenie_stranka_formular_tlacitko_prih" type="submit">Registracia</button>
+                    </form>
+                    <form action="{{ route('prihlasenie') }}" method="GET">
+                        <button class="prihlasenie_stranka_formular_tlacitko prihlasenie_stranka_formular_tlacitko_reg" type="submit">Uz som zaregistrovany</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
 </div>
 
@@ -99,6 +92,14 @@
                 alert('Heslo sa nezhoduje s zopakovanym heslom.');
                 event.preventDefault();
             }
+        }
+    });
+
+    newPassword2Input.addEventListener('keydown', function(event) {
+        // Check if Enter key is pressed
+        if (event.key === 'Enter') {
+            const myForm = document.getElementById('prihlasenie_straka_formular');
+            myForm.submit();
         }
     });
 

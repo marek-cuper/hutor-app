@@ -66,6 +66,8 @@ Route::post('/profil_uprava/uloz_obrazok', [AuthController::class, 'uloz_obrazok
 Route::post('/profil_uprava/overenie_meno', [AuthController::class, 'overenie_menoPost'])->name('overenie_meno.post');
 Route::post('/profil_uprava/overenie_email', [AuthController::class, 'overenie_emailPost'])->name('overenie_email.post');
 Route::post('/profil_uprava/nastevenie_udajov', [AuthController::class, 'nastevenie_udajovPost'])->name('nastevenie_udajov.post');
+Route::get('/profil_vyhladavanie', [AuthController::class, 'vyhladaj_profil'])->name('vyhladaj_profil');
+Route::post('/profil_vyhladavanie', [AuthController::class, 'vyhladaj_profilPost'])->name('vyhladaj_profil.post');
 
 Route::post('/pouzivatel/vymaz', [AuthController::class, 'vymaz_pouzivatelaPost'])->name('vymaz_pouzivatela.post');
 

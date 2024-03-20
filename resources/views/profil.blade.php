@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-</head>
+@include('include.head')
 
 <body>
 
@@ -24,7 +13,7 @@
                 <div class="profil_uprava_profil_obrazok">
                     <img id="profil_obrazok">
                 </div>
-                <div class="profil_uprava_profil_obrazok_vstup">
+                <div class="profil_uprava_profil_meno">
                     <label>Meno:</label>
                     <h2 id="profil_meno"></h2>
                 </div>

@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-</head>
+@include('include.head')
 
 <body>
 
@@ -17,9 +6,9 @@
 
 <div class="domov_prispevok">
     <div class="pridaj_prispevok_telo" onclick="">
-        <div class="profil_uprava_meno">
+        <a class="profil_uprava_meno" id="profil_uprava_meno">
             <h3 id="profil_meno" >Admin</h3>
-        </div>
+        </a>
         @if(session('error'))
             <div class="profil_uprava_odozva profil_uprava_odozva_chyba">
                 {{ session('error') }}
@@ -36,50 +25,59 @@
                 <div class="profil_uprava_profil_obrazok">
                     <img id="profil_obrazok" src="">
                 </div>
-                <form id="profil_uprava_obrazok_formular" class="profil_uprava_obrazok_formular" action="{{ route('nastevenie_udajov.post') }}" method="post" enctype="multipart/form-data">
+                <form id="profil_uprava_obrazok_formular" class="profil_uprava_obrazok_formular" action="{{ route('uloz_obrazok.post') }}" method="post">
                     @csrf
                     <h4>Vyber profilovu fotku</h4>
                     <input type="file" name="profil_obrazok_vstup" id="profil_obrazok_vstup" class="form-control-file">
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                     <div class="preferencie_tlacitka_okno">
-                        <button type="submit" class="preferencie_tlacitko_uloz">Uloz</button>
+                        <button type="submit" form="profil_uprava_obrazok_formular" class="preferencie_tlacitko_uloz">Uloz</button>
                         <button onclick="resetFunction()" class="preferencie_tlacitko_reset">Reset</button>
                     </div>
                 </form>
             </div>
-            <form id="profil_uprava_profil_text_formular" class="profil_uprava_profil_text_formular" action="{{ route('nastevenie_udajov.post') }}" method="POST">
+            <form id="profil_uprava_profil_text_formular" class="profil_uprava_profil_text_formular" action="{{ route('nastevenie_udajov.post') }}" method="post">
                 @csrf
                 <h4>Zmena mena, emailu a hesla</h4>
+                <div class="profil_uprava_profil_text_formular_napoveda">
+                    <p><b>Nápoveda</b></p>
+                    <p>Pre ktorúkoľvek zmenu je potrebné zadať staré/aktuálne heslo.</p>
+                    <p>Je potrebné vyplniť len tie polička ktoré chcete zmeniť.</p>
+                </div>
+
                 <div class="profil_uprava_profil_text_vstup">
                     <p>Zadaj nove meno</p>
-                    <input type="text" placeholder="Meno" id="name_input" name="name">
+                    <input type="text" id="name_input" name="name">
                     <button type="button" onclick="checkName()">Overit</button>
                     <i id="nameI" class="fa fa-question fa-2x"></i>
                 </div>
                 <div class="profil_uprava_profil_text_vstup">
                     <p>Zadaj novy email</p>
-                    <input type="text" placeholder="Email" id="email_input" name="email">
+                    <input type="text" id="email_input" name="email">
                     <button type="button" onclick="checkEmail()">Overit</button>
                     <i id="emailI" class="fa fa-question fa-2x"></i>
                 </div>
                 <div class="profil_uprava_profil_text_vstup">
                     <p>Zadaj nove heslo</p>
                     <input type="password" placeholder="Nove heslo" id="new_password1_input" name="new_password1">
-                    <button type="button" onclick="checkPassword()">Overit</button>
-                    <i id="passwordI" class="fa fa-question fa-2x"></i>
+                    <button type="button" onclick="checkPassword1()">Overit</button>
+                    <i id="password1I" class="fa fa-question fa-2x"></i>
                 </div>
                 <div class="profil_uprava_profil_text_vstup">
                     <p>Zadaj znova nove heslo</p>
                     <input type="password" placeholder="Nove heslo" id="new_password2_input" name="new_password2">
+                    <button type="button" onclick="checkPassword2()">Overit</button>
+                    <i id="password2I" class="fa fa-question fa-2x"></i>
                 </div>
                 <div style="margin-top: 5%; margin-bottom: 0;" class="profil_uprava_profil_text_vstup">
-                    <p>Zadaj stare meno</p>
+                    <p>Zadaj stare heslo</p>
                     <input type="password" placeholder="Stare heslo" id="old_password_input" name="old_password" required>
                 </div>
-                <div class="preferencie_tlacitka_okno">
-                    <button type="submit" class="preferencie_tlacitko_uloz">Uloz</button>
+                <div style="margin-bottom: 3%" class="preferencie_tlacitka_okno">
+                    <button type="submit" form="profil_uprava_profil_text_formular" class="preferencie_tlacitko_uloz">Uloz</button>
                 </div>
             </form>
+            <div class="empty_space"></div>
 
         </div>
 
@@ -100,7 +98,8 @@
 
     const nameI = document.getElementById('nameI');
     const emailI = document.getElementById('emailI');
-    const passwordI = document.getElementById('passwordI');
+    const password1I = document.getElementById('password1I');
+    const password2I = document.getElementById('password2I');
 
     const nameChars = /^[a-zA-Z0-9]+$/;
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -122,6 +121,12 @@
         hiddenImageNameInput.type = 'text';
         hiddenImageNameInput.style.display = 'none';
         formProfileImageInput.appendChild(hiddenImageNameInput);
+
+        nameInput.placeholder = user.name;
+        emailInput.placeholder = user.email;
+
+        var nameLink = document.getElementById('profil_uprava_meno');
+        nameLink.href = '/profil/' + user.id;
 
     });
 
@@ -224,14 +229,26 @@
         }
     }
 
-    function checkPassword(){
+    function checkPassword1(){
         let input = newPassword1Input.value;
 
         if(nameChars.test(input) && input.length >= 8){
-            passwordI.className = 'fa fa-check fa-2x';
+            password1I.className = 'fa fa-check fa-2x';
         }else {
-            passwordI.className = 'fa fa-times fa-2x';
+            password1I.className = 'fa fa-times fa-2x';
             alert('heslo musi obsahovat len pismena a cisla. \nHeslo musi pozostavat z aspon 8 znakov.');
+        }
+    }
+
+    function checkPassword2(){
+        let input1 = newPassword1Input.value;
+        let input2 = newPassword2Input.value;
+
+        if(input1 == input2){
+            password2I.className = 'fa fa-check fa-2x';
+        }else {
+            password2I.className = 'fa fa-times fa-2x';
+            alert('Opakovane heslo sa nezhoduje s prvym novym');
         }
     }
 
@@ -264,6 +281,14 @@
                 alert('Nove heslo sa nezhoduje s zopakovanym novym heslom.');
                 event.preventDefault();
             }
+        }
+    });
+
+    oldPasswordInput.addEventListener('keydown', function(event) {
+        // Check if Enter key is pressed
+        if (event.key === 'Enter') {
+            const myForm = document.getElementById('profil_uprava_profil_text_formular');
+            myForm.submit();
         }
     });
 

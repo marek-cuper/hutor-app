@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{{ asset("/css/main.css")}}" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-</head>
+@include('include.head')
 
 <body>
 @include('include.navbar')
@@ -482,6 +472,11 @@
         komentarePridajKontjaner.addEventListener("click", function() {
             sendComment(showPostCommentInput ,null);
         });
+        showPostCommentInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                sendComment(showPostCommentInput ,null);
+            }
+        });
 
         showPostCommentsDiv = document.createElement('div');
         showPostCommentsDiv.className = 'domov_zobrazenie_komentare_telo_komentare_kontajner';
@@ -755,6 +750,11 @@
             komentarePridajKontjaner.appendChild(komentarePridajTlacitko);
             komentarePridajKontjaner.addEventListener("click", function() {
                 sendComment(showPostCommentInput, comment_id);
+            });
+            showPostCommentInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    sendComment(showPostCommentInput, comment_id);
+                }
             });
         });
 
@@ -1191,6 +1191,7 @@
             }, 450);
         }
     });
+
 
     document.addEventListener('DOMContentLoaded', function() {
         buttonBack.style.display = "none";

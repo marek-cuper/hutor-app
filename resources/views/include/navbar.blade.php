@@ -1,11 +1,11 @@
 <div id="navbar">
-    <div id="navbar-logo" href="#">
+    <a id="navbar-logo" href="{{ route('domov') }}">
         <img src="{{ asset('images/hutor_cierne_cierne.png') }}" width="100" height="50">
-    </div>
+    </a>
 
 
     <div id="navbar-search-duo" >
-        <input id="navbar-search-bar" type="text" class="round" />
+        <input id="navbar-search-bar" placeholder="Vyhladaj pouzivatela" type="text" class="round" />
         <div class="domov_prispevok_icon_pozadie" id="navbar-sipka-icon">
             <i class="fa fa-arrow-right fa-3x"></i>
         </div>
@@ -29,6 +29,9 @@
 
     var buttonLogout = document.getElementById('button-logout');
 
+    var searchInput = document.getElementById('navbar-search-bar');
+    var searchButton = document.getElementById('navbar-sipka-icon');
+
     buttonLogout.addEventListener('click', function() {
         localStorage.removeItem("oldIndex");
     });
@@ -41,5 +44,40 @@
             modIkona.href = '';
         }
     });
+
+    const nameChars = /^[a-zA-Z0-9]+$/;
+
+    function searchProfile(){
+        let input = searchInput.value;
+        if(input.length > 0){
+            if(nameChars.test(input)){
+                $.ajax({
+                    url: '/profil_vyhladavanie', // Replace with your server endpoint
+                    method: 'POST',
+                    data: { input: input, _token: '{{ csrf_token() }}' },
+                    success: function (response) {
+                        window.location.href = '/profil_vyhladavanie';
+
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        }else {
+            alert('');
+        }
+    }
+
+    searchInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            searchProfile();
+        }
+    });
+
+    searchButton.addEventListener('click', function() {
+        searchProfile();
+    });
+
 
 </script>

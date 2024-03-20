@@ -372,4 +372,21 @@ class AuthController extends Controller
         }
     }
 
+    public function vyhladaj_profil(Request $request){
+        return view('vyhladavanie_profilu');
+    }
+
+    public function vyhladaj_profilPost(Request $request){
+
+        $find_users = User::where('name', 'like', '%' .  $request->input('input') . '%')->get();
+        $find = false;
+        if($find_users->first() != null){
+            $find = true;
+        }
+        $request->session()->put('find_users', $find_users);
+        $request->session()->put('find_text', $request->input('input'));
+        $request->session()->put('find', $find);
+
+    }
+
 }

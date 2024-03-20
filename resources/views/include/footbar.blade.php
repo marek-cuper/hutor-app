@@ -2,7 +2,6 @@
 @guest
     <script>window.location = "{{ route('prihlasenie') }}";</script>
 @endguest
-<script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 <div id="footbar">
     <a class="footbar_icon icon {{ Request::is('domov*') ? 'active_footbar_icon' : 'inactive_footbar_icon' }}" href="{{ route('domov') }}">

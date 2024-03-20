@@ -1,3 +1,7 @@
+.empty_space{
+    height: 20px;
+}
+
 /* Vseobecna stranka */
 html, body {
     margin: 0;
@@ -11,9 +15,28 @@ html, body {
 }
 /* Prihlasenie */
 .prihlasenie_stranka{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+.prihlasenie_stranka .profil_uprava_odozva{
+    width: 50%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 2%;
+}
+
+
+.prihlasenie_stranka_obsah{
     overflow-y: auto;
     display: flex;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     width: 80%;
     height: 100%;
 }
@@ -60,9 +83,21 @@ html, body {
     display: grid;
 }
 
+.prihlasenie_stranka_formular_tlacitko{
+    height: 35px;
+    border-radius: 5px;
+    color: black;
+    border-color: lightgray;
+}
+
 .prihlasenie_stranka_formular_tlacitko_prih{
-    margin-top: 3%;
-    margin-bottom: 4%;
+    margin-top: 1%;
+    margin-bottom: 10%;
+    background-color: #FF9908;
+}
+
+.prihlasenie_stranka_formular_tlacitko_reg{
+
 }
 
 
@@ -1045,7 +1080,7 @@ input:checked + .slider:before {
     text-align: center;
     font-weight: bold;
     border-radius: 5px;
-    border:2px solid lightgray;
+    border:2px solid black;
 }
 
 .profil_uprava_odozva_chyba{
@@ -1087,7 +1122,10 @@ input:checked + .slider:before {
 .profil_uprava_profil_obrazok img{
     max-height: 200px;
     max-width: 200px;
-
+}
+.profil_uprava_profil_meno{
+    margin: auto;
+    text-align: center;
 }
 .profil_uprava_obrazok_formular{
     display: flex;
@@ -1111,6 +1149,22 @@ input:checked + .slider:before {
     border-radius: 5px;
     border:2px solid lightgray;
 }
+
+.profil_uprava_profil_text_formular_napoveda{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2%;
+    opacity: 0.8;
+}
+
+.profil_uprava_profil_text_formular_napoveda p{
+    margin: 0;
+}
+
 .profil_uprava_profil_text_vstup{
     display: flex;
     flex-wrap: wrap;
@@ -1364,7 +1418,7 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 1200px){
-    .prihlasenie_stranka{
+    .prihlasenie_stranka_obsah{
         display: grid;
         width: 100%;
     }
