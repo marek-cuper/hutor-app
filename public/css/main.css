@@ -108,23 +108,24 @@ html, body {
     display: flex;
     top: 0;
     justify-content: space-between;
-    width: 100%;
+    width: 98%;
+    padding-left: 1%;
+    padding-right: 1%;
     background-color: white;
     border-bottom:1px solid lightgray;
     z-index: 2;
 }
 
 #navbar-logo{
-    margin-left: 0.5%;
     margin-top: auto;
     margin-bottom: auto;
-
 }
 
 #navbar-search-duo{
     display: flex;
     text-align: center;
-    margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 #navbar-search-bar {
@@ -141,33 +142,38 @@ html, body {
     z-index: 5;
 }
 
-#navbar-search-duo i{
-    scale: 0.8;
+.navbar_ikona_pozadie{
+    background-color: #FF9908;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-left: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#navbar-sipka-icon{
-    margin-left: 2.5%;
-    scale: 0.8;
-}
-
-.domov_prispevok_icon_pozadie{
+.vseobecne_ikona_pozadie{
     background-color: #FF9908;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#navbar-menu{
+.navbar-menu{
+
     display: flex;
-    margin-right: 4%;
-    margin-top: auto;
-    margin-bottom: auto;
+    justify-content: center;
+    align-items: center;
 }
 
 .navbar-icon{
-    margin-right: 25%;
     color: black;
+    margin-right: 10%;
 }
 
 #footbar{
@@ -769,6 +775,10 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
+.preferencie_stranka_regiony{
+    overflow-y: auto;
+}
+
 #mapa_preferencie{
     position: relative;
     background-color: white;
@@ -816,6 +826,10 @@ input:checked + .slider:before {
 .vybrate_regiony:hover {
     background-color: #ff3d00;
     color: white;
+}
+
+.mapa_regiony{
+    display: none;
 }
 
 #pref_form{
@@ -1402,6 +1416,32 @@ input:checked + .slider:before {
 
 }
 
+/* Stranka pravidla */
+.pravidla_telo{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding-bottom: 1.75%;
+    border:2px solid lightgray;
+    height: 80%;
+    width: 50%;
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color: white;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    transition: top 0.25s;
+    z-index: 1;
+    overflow-y:scroll;
+    text-align: left;
+}
+.pravidla_telo h2{
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 /* Prisposobenie k displayu */
 @media (max-width: 1600px){
@@ -1444,11 +1484,12 @@ input:checked + .slider:before {
         margin-left: 0;
         transform: scale(0.9);
     }
-    #navbar #navbar-menu{
-        margin-right: 4%;
+    navbar-menu{
+
     }
     .navbar-icon{
-        margin-right: 20%;
+        margin-right: 7%;
+
     }
 
     .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo, .moderator_panel_telo{
@@ -1493,11 +1534,12 @@ input:checked + .slider:before {
         margin-left: 0;
         transform: scale(0.8);
     }
-    #navbar #navbar-menu{
-        margin-right: 5%;
+    navbar-menu{
+
     }
     .navbar-icon{
-        margin-right: 15%;
+        margin-right: 4%;
+
     }
 
     #mapa_preferencie{
@@ -1528,7 +1570,7 @@ input:checked + .slider:before {
         width: 70%;
     }
     .domov_prispevok_icon_pozadie{
-        transform: scale(0.9);
+        margin-left: 1%;
     }
     .preferencie_stranka{
         width: 60%;
@@ -1563,21 +1605,18 @@ input:checked + .slider:before {
         transform: scale(0.6);
     }
     #navbar-logo{
-        margin-left: 0;
+
         transform: scale(0.7);
     }
     #navbar #navbar-search-duo{
         transform: scale(0.9);
     }
-    #navbar #navbar-menu{
-        transform: scale(0.9);
-        margin-right: 5%;
+    navbar-menu{
+
     }
     .navbar-icon{
-        margin-right: 10%;
-    }
-    .domov_prispevok_icon_pozadie{
-        transform: scale(0.8);
+        margin-right: 1.5%;
+        transform: scale(0.75);
     }
     .domov_prispevok_telo, .spravy_kontajner_konverzacie_telo, .moderator_panel_telo{
         width: 85%;

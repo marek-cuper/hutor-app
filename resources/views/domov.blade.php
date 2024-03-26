@@ -158,7 +158,7 @@
 
         const obrazkyTlacitkoLaveDiv = document.createElement('div');
         obrazkyTlacitkoLaveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_lave';
-        obrazkyTlacitkoLaveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
+        obrazkyTlacitkoLaveDiv.className = 'vseobecne_ikona_pozadie domov_zobrazenie_obrazky_tlacitka';
         const lavaSipka = document.createElement('i');
         lavaSipka.className = 'fa fa-arrow-left fa-3x';
         obrazkyTlacitkoLaveDiv.appendChild(lavaSipka);
@@ -169,7 +169,7 @@
 
         const obrazkyTlacitkoPraveDiv = document.createElement('div');
         obrazkyTlacitkoPraveDiv.id = 'domov_zobrazenie_obrazky_tlacitko_prave';
-        obrazkyTlacitkoPraveDiv.className = 'domov_prispevok_icon_pozadie domov_zobrazenie_obrazky_tlacitka';
+        obrazkyTlacitkoPraveDiv.className = 'vseobecne_ikona_pozadie domov_zobrazenie_obrazky_tlacitka';
         const pravaSipka = document.createElement('i');
         pravaSipka.className = 'fa fa-arrow-right fa-3x';
         obrazkyTlacitkoPraveDiv.appendChild(pravaSipka);

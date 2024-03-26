@@ -6,12 +6,15 @@
 
     <div id="navbar-search-duo" >
         <input id="navbar-search-bar" placeholder="Vyhladaj pouzivatela" type="text" class="round" />
-        <div class="domov_prispevok_icon_pozadie" id="navbar-sipka-icon">
-            <i class="fa fa-arrow-right fa-3x"></i>
+        <div class="navbar_ikona_pozadie" id="navbar-sipka-icon">
+            <i class="fa fa-search fa-1x"></i>
         </div>
     </div>
 
-    <div id="navbar-menu" >
+    <div class="navbar-menu" >
+        <a href="{{URL::route('pravidla') }}" class="navbar-icon">
+            <i class="fa fa-info-circle fa-2x"></i>
+        </a>
         <a id="moderator_ikona" href="{{ route('moderator_panel') }}" class="navbar-icon" style="display: none;">
             <i class="fa fa-cogs fa-2x"></i>
         </a>
@@ -65,7 +68,7 @@
                 });
             }
         }else {
-            alert('');
+            alert('Je potrebné zadať aspoň jeden znak');
         }
     }
 

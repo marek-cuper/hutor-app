@@ -7,7 +7,7 @@
 <div class="preferencie_stranka">
 
     <div class="prepinac_medzi_preferenciami_mapou">
-        <div class="domov_prispevok_icon_pozadie">
+        <div class="vseobecne_ikona_pozadie">
             <i class="fa fa-tasks fa-3x"></i>
         </div>
 
@@ -17,7 +17,7 @@
             <span class="slider"></span>
         </label>
 
-        <div class="domov_prispevok_icon_pozadie">
+        <div class="vseobecne_ikona_pozadie">
             <i class="fa fa-map fa-3x"></i>
         </div>
     </div>
@@ -43,10 +43,31 @@
 
             <img id="sk_regs" src="{{ asset('images/regions/Slovak_reg_map_trans.png') }}">
 
-            <img id="reg1" src="{{ asset('images/regions/org_reg1.png') }}">
-            <img id="reg2" src="{{ asset('images/regions/org_reg2.png') }}">
-            <img id="reg3" src="{{ asset('images/regions/org_reg3.png') }}">
-            <img id="reg4" src="{{ asset('images/regions/org_reg4.png') }}">
+            <img id="reg1" class="mapa_regiony" src="{{ asset('images/regions/color_reg1.png') }}">
+            <img id="reg2" class="mapa_regiony" src="{{ asset('images/regions/color_reg2.png') }}">
+            <img id="reg3" class="mapa_regiony" src="{{ asset('images/regions/color_reg3.png') }}">
+            <img id="reg4" class="mapa_regiony" src="{{ asset('images/regions/color_reg4.png') }}">
+            <img id="reg5" class="mapa_regiony" src="{{ asset('images/regions/color_reg5.png') }}">
+            <img id="reg6" class="mapa_regiony" src="{{ asset('images/regions/color_reg6.png') }}">
+            <img id="reg7" class="mapa_regiony" src="{{ asset('images/regions/color_reg7.png') }}">
+            <img id="reg8" class="mapa_regiony" src="{{ asset('images/regions/color_reg8.png') }}">
+            <img id="reg9" class="mapa_regiony" src="{{ asset('images/regions/color_reg9.png') }}">
+            <img id="reg10" class="mapa_regiony" src="{{ asset('images/regions/color_reg10.png') }}">
+            <img id="reg11" class="mapa_regiony" src="{{ asset('images/regions/color_reg11.png') }}">
+            <img id="reg12" class="mapa_regiony" src="{{ asset('images/regions/color_reg12.png') }}">
+            <img id="reg13" class="mapa_regiony" src="{{ asset('images/regions/color_reg13.png') }}">
+            <img id="reg14" class="mapa_regiony" src="{{ asset('images/regions/color_reg14.png') }}">
+            <img id="reg15" class="mapa_regiony" src="{{ asset('images/regions/color_reg15.png') }}">
+            <img id="reg16" class="mapa_regiony" src="{{ asset('images/regions/color_reg16.png') }}">
+            <img id="reg17" class="mapa_regiony" src="{{ asset('images/regions/color_reg17.png') }}">
+            <img id="reg18" class="mapa_regiony" src="{{ asset('images/regions/color_reg18.png') }}">
+            <img id="reg19" class="mapa_regiony" src="{{ asset('images/regions/color_reg19.png') }}">
+            <img id="reg20" class="mapa_regiony" src="{{ asset('images/regions/color_reg20.png') }}">
+            <img id="reg21" class="mapa_regiony" src="{{ asset('images/regions/color_reg21.png') }}">
+            <img id="reg22" class="mapa_regiony" src="{{ asset('images/regions/color_reg22.png') }}">
+            <img id="reg23" class="mapa_regiony" src="{{ asset('images/regions/color_reg23.png') }}">
+            <img id="reg24" class="mapa_regiony" src="{{ asset('images/regions/color_reg24.png') }}">
+            <img id="reg25" class="mapa_regiony" src="{{ asset('images/regions/color_reg25.png') }}">
 
         </div>
         <form id="map_form" action="{{ route('regiony.post') }}" method="post" enctype="multipart/form-data">
@@ -100,13 +121,6 @@
     var selectedRegions = document.getElementById("vybrate_regiony");
     var hiddenInputsDivRegions = document.getElementById("skryte_regiony");
 
-    const reg1 = document.getElementById('reg1');
-    const reg2 = document.getElementById('reg2');
-    const reg3 = document.getElementById('reg3');
-    const reg4 = document.getElementById('reg4');
-
-    const regionsDiv = [reg1, reg2, reg3, reg4];
-
     regionPage.style.display = "none";
 
     let blockBackColour = '#ff3d00';
@@ -124,9 +138,6 @@
             tagPage.style.display = "none";
             regionPage.style.display = "block";
 
-            regionsDiv.forEach(function (region) {
-                region.style.display = "none";
-            });
         } else {
             tagPage.style.display = "block";
             regionPage.style.display = "none";
@@ -298,6 +309,10 @@
             selectedRegions.appendChild(newReg);
             hiddenInputsDivRegions.append(newHiddenInput);
 
+            let idRegion = 'reg' + selectedOption.value;
+            let mapReg = document.getElementById(idRegion);
+            mapReg.style.display = 'block';
+
             newReg.addEventListener("click", function() {
                 // Show the corresponding option
                 selectedOption.style.display = "block";
@@ -305,9 +320,12 @@
                 hiddenInputsDivRegions.removeChild(newHiddenInput);
                 // Remove the created div
                 selectedRegions.removeChild(newReg);
+                mapReg.style.display = 'none';
             });
+
         }
     }
+
 
     function hideSelectedOption() {
         // Get the select element

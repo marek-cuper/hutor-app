@@ -68,9 +68,10 @@ Route::post('/profil_uprava/overenie_email', [AuthController::class, 'overenie_e
 Route::post('/profil_uprava/nastevenie_udajov', [AuthController::class, 'nastevenie_udajovPost'])->name('nastevenie_udajov.post');
 Route::get('/profil_vyhladavanie', [AuthController::class, 'vyhladaj_profil'])->name('vyhladaj_profil');
 Route::post('/profil_vyhladavanie', [AuthController::class, 'vyhladaj_profilPost'])->name('vyhladaj_profil.post');
-
 Route::post('/pouzivatel/vymaz', [AuthController::class, 'vymaz_pouzivatelaPost'])->name('vymaz_pouzivatela.post');
 
 Route::get('/moderator/panel', [AuthController::class, 'moderator_panel'])->name('moderator_panel');
 Route::post('/moderator/pridaj', [AuthController::class, 'pridaj_moderatoraPost'])->name('moderator_pridaj.post');
 Route::post('/moderator/odober', [AuthController::class, 'odober_moderatoraPost'])->name('moderator_odober.post');
+
+Route::get('pravidla', [AuthController::class, 'pravidla'])->name('pravidla');

@@ -389,4 +389,8 @@ class AuthController extends Controller
 
     }
 
+    public function pravidla(Request $request){
+        return view('pravidla');
+    }
+
 }

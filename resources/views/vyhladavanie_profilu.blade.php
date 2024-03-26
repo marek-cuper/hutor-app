@@ -41,13 +41,13 @@
     });
 
     function createUser($index){
-        const moderatorDiv = document.createElement('div');
+        const moderatorDiv = document.createElement('a');
         moderatorDiv.className = 'moderator_panel_telo_tabulka_riadok';
+        moderatorDiv.href = '/profil/' + find_user[$index].id;
         usersTable.appendChild(moderatorDiv);
 
-        const obrazokDiv = document.createElement('a');
+        const obrazokDiv = document.createElement('div');
         obrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
-        obrazokDiv.href = '/profil/' + find_user[$index].id;
         const obrazokImage = document.createElement('img');
         obrazokImage.src = '/storage/' + find_user[$index].image_name;
         obrazokDiv.appendChild(obrazokImage);
