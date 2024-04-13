@@ -1,8 +1,3 @@
-
-@guest
-    <script>window.location = "{{ route('prihlasenie') }}";</script>
-@endguest
-
 <div id="footbar">
     <a class="footbar_icon icon {{ Request::is('domov*') ? 'active_footbar_icon' : 'inactive_footbar_icon' }}" href="{{ route('domov') }}">
         <i class="fa fa-globe fa-3x"></i>

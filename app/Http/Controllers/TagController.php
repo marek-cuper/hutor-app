@@ -42,7 +42,6 @@ class TagController extends Controller
                         'user_id' => Auth::user()->id,
                         'tag_id' => $tags[$x]->id,
                         'tag_status' => true,
-
                     ]);
                     $user_tag->save();
                     $user_tags_pref[] = $tags[$x]->id;
@@ -52,7 +51,6 @@ class TagController extends Controller
                         'user_id' => Auth::user()->id,
                         'tag_id' => $tags[$x]->id,
                         'tag_status' => false,
-
                     ]);
                     $user_tag->save();
                     $user_tags_block[] = $tags[$x]->id;

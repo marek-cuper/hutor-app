@@ -119,10 +119,6 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            // If validation fails, redirect back with errors
-            //return redirect()->back()->withErrors($validator)->withInput();
-            //return redirect()->back()->with('error', $validator->errors())->withInput();
-            //return redirect()->back()->with('error', 'skap');
             $error =  $validator->errors()->first();
             return redirect()->back()->with('error', $error)->withInput();
         }
@@ -145,7 +141,7 @@ class AuthController extends Controller
         return redirect(route(('prihlasenie')));
     }
 
-    function profil($id){
+    function profilGet($id){
         $user = User::findOrFail($id);
 
         $numberOfPosts = Post::where('creator_id', $id)->count();
@@ -169,7 +165,7 @@ class AuthController extends Controller
         return view('profil', compact('data'));
     }
 
-    function profil_uprava(Request $request){
+    function profil_upravaGet(Request $request){
         return view('profil_uprava');
     }
 

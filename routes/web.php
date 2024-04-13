@@ -59,8 +59,8 @@ Route::get('/registracia', [AuthController::class, 'registracia'])->name('regist
 Route::post('/registracia', [AuthController::class, 'registraciaPost'])->name('registracia.post');
 Route::get('/odhlasenie', [AuthController::class, 'odhlasenie'])->name('odhlasenie');
 
-Route::get('/profil/{id}', [AuthController::class, 'profil'])->name('profil');
-Route::get('/profil_uprava', [AuthController::class, 'profil_uprava'])->name('profil_uprava');
+Route::get('/profil/{id}', [AuthController::class, 'profilGet'])->name('profil');
+Route::get('/profil_uprava', [AuthController::class, 'profil_upravaGet'])->name('profil_uprava');
 Route::post('/profil_uprava/pridaj_obrazok', [AuthController::class, 'pridaj_obrazokPost'])->name('pridaj_obrazok.post');
 Route::post('/profil_uprava/uloz_obrazok', [AuthController::class, 'uloz_obrazokPost'])->name('uloz_obrazok.post');
 Route::post('/profil_uprava/overenie_meno', [AuthController::class, 'overenie_menoPost'])->name('overenie_meno.post');

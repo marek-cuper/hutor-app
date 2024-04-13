@@ -1,3 +1,7 @@
+@guest
+    <script>window.location = "{{ route('prihlasenie') }}";</script>
+@endguest
+
 <div id="navbar">
     <a id="navbar-logo" href="{{ route('domov') }}">
         <img src="{{ asset('images/hutor_cierne_cierne.png') }}" width="100" height="50">

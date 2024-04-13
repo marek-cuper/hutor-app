@@ -49,13 +49,13 @@
                             <input type="file" name="option_image" id="option_image" class="form-control-file">
                             <meta name="csrf-token" content="{{ csrf_token() }}">
                         </div>
-                        <button class="btn btn-primary" id="poll_option_button">Pridaj moznost</button>
+                        <button class="btn btn-primary" id="poll_option_button">Pridaj možnosť</button>
                     </div>
 
 
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka" id="pridaj_prispevok_anketa_pridane_moznosti">
-                    <label><b>Moznosti ankety</b></label>
+                    <label><b>Možnosti ankety</b></label>
                     <div id="pridaj_prispevok_anketa_moznosti" class="pridaj_prispevok_anketa_moznosti">
 
                     </div>
@@ -66,13 +66,13 @@
 
 
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Oznacenie prispevku</b></label>
+                    <label><b>Označenia príspevku</b></label>
                     <select id="pridaj_prispevok_select_oznacenia" onchange="hideSelectedOptionTags()">
-                        <option value="" disabled selected>Vyber oznacenia(max 5)</option>
+                        <option value="" disabled selected>Vyber označenia(max 5)</option>
                     </select>
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Vybrate oznacenia</b></label>
+                    <label><b>Vybraté označenia</b></label>
                     <div id="pridaj_prispevok_vybrate_oznacenia">
 
                     </div>
@@ -82,13 +82,13 @@
                 </div>
 
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Regiony prispevku</b></label>
+                    <label><b>Regiony príspevku</b></label>
                     <select id="pridaj_prispevok_select_regiony" onchange="hideSelectedOptionRegions()">
                         <option value="" disabled selected>Vyber regiony(max 4)</option>
                     </select>
                 </div>
                 <div class="pridaj_prispevok_formular_kolonka">
-                    <label><b>Vybrate regiony</b></label>
+                    <label><b>Vybraté regióny</b></label>
                     <div id="pridaj_prispevok_vybrate_regiony">
 
                     </div>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Create Post</button>
+                <button type="submit" class="btn btn-primary">Vytvor príspevok</button>
                 <div class="empty_space"></div>
             </form>
 

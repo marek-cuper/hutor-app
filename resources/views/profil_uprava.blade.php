@@ -74,7 +74,7 @@
                     <input type="password" placeholder="Stare heslo" id="old_password_input" name="old_password" required>
                 </div>
                 <div style="margin-bottom: 3%" class="preferencie_tlacitka_okno">
-                    <button type="submit" form="profil_uprava_profil_text_formular" class="preferencie_tlacitko_uloz">Uloz</button>
+                    <button type="submit" form="profil_uprava_profil_text_formular" class="preferencie_tlacitko_uloz">ULOŽ</button>
                 </div>
             </form>
             <div class="empty_space"></div>

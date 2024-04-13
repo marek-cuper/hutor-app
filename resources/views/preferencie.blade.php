@@ -28,7 +28,7 @@
             <div id="prepinace_preferencie" class="prepinace_preferencie"></div>
 
             <div class="preferencie_tlacitka_okno">
-                <button type="submit" onclick="resetIndexHome()" class="preferencie_tlacitko_uloz">ULOZ</button>
+                <button type="submit" onclick="resetIndexHome()" class="preferencie_tlacitko_uloz">ULOŽ</button>
 
                 <button class="preferencie_tlacitko_reset">RESET</button>
 
@@ -90,7 +90,7 @@
             </div>
 
             <div class="preferencie_tlacitka_okno">
-                <button type="submit" onclick="resetIndexHome()" class="preferencie_tlacitko_uloz">ULOZ</button>
+                <button type="submit" onclick="resetIndexHome()" class="preferencie_tlacitko_uloz">ULOŽ</button>
 
                 <button class="preferencie_tlacitko_reset">RESET</button>
 
