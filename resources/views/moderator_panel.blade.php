@@ -29,9 +29,14 @@
 
 
     document.addEventListener('DOMContentLoaded', function() {
-        for (let i = 0; i < mods_user.length; i++) {
-            createModerator(i);
+        if(user_privilege < 1){
+            window.location = "{{ route('domov') }}"
+        } else {
+            for (let i = 0; i < mods_user.length; i++) {
+                createModerator(i);
+            }
         }
+
     });
 
     function createModerator($index){

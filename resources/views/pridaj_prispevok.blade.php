@@ -187,30 +187,28 @@
 
 
     $('#poll_option_button').click(function(event) {
-        event.preventDefault(); // Prevent the default button click behavior
+        event.preventDefault();
 
         if(checkboxPollImg.checked){
-            var imageData = $('#option_image')[0].files[0]; // Get the selected image file
+            var imageData = $('#option_image')[0].files[0];
 
-            var formData = new FormData(); // Create FormData object
-            formData.append('image', imageData); // Append the image file to FormData
+            var formData = new FormData();
+            formData.append('image', imageData);
 
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-            // Set the CSRF token in the request headers
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
                 }
             });
 
-            // Make AJAX request
             $.ajax({
-                url: '/pridaj_prispevok/pridaj_moznost_anketa', // Replace with your server endpoint
+                url: '/pridaj_prispevok/pridaj_moznost_anketa',
                 method: 'POST',
                 data: formData,
-                contentType: false, // Important: set contentType to false
-                processData: false, // Important: set processData to false
+                contentType: false,
+                processData: false,
                 success: function(response) {
                     // Handle success response
                     createPollOption(pollOptionTextInput.value, response.imageName)
@@ -218,8 +216,7 @@
                     pollOptionImageInput.value = '';
                 },
                 error: function(error) {
-                    // Handle error
-                    alert('Error');
+                    alert('Je potrebne vybrat obrazok pre moznost v ankete');
                 }
             });
         }else {

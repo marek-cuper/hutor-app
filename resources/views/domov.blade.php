@@ -60,7 +60,7 @@
     let showPostImagesLeftButton;
     let showPostImagesRightButton;
 
-    let showPostChosoenPollOption;
+    let showPostChosoenPollOption = -1;
     let showPostPollOptions = [];
 
     let showPostStats = [];
@@ -393,14 +393,15 @@
 
         const hlasovanieTeloZobrazeniaKontajner = document.createElement('div');
         hlasovanieTeloZobrazeniaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
-        hlasovanieTeloZobrazeniaKontajner.style.border = '';
         const zobrazenieLabel = document.createElement('label');
         zobrazenieLabel.textContent = 'Zobrazenia: ';
         hlasovanieTeloZobrazenia.appendChild(zobrazenieLabel);
         const hlasovanieTeloZobrazeniaCislaKontajner  = document.createElement('div');
         showPostStats[showPostStats.length] = hlasovanieTeloZobrazeniaCislaKontajner;
         hlasovanieTeloZobrazeniaCislaKontajner.className = 'domov_zobrazenie_telo_hlasovanie_kontajner';
-        hlasovanieTeloZobrazeniaCislaKontajner.style.marginBottom = '2%';
+        hlasovanieTeloZobrazeniaCislaKontajner.style.border = 'none';
+
+
         hlasovanieTeloZobrazenia.appendChild(hlasovanieTeloZobrazeniaCislaKontajner);
         const zobrazenieUzivatelia = document.createElement('i');
         zobrazenieUzivatelia.className = 'fa fa-users  fa-1x';
@@ -430,6 +431,7 @@
         autorTelo.className = 'domov_zobrazenie_telo_hlasovanie';
         autorTelo.style.marginLeft = 'auto';
         autorTelo.style.marginRight = 'auto';
+        autorTelo.style.marginTop = '1%';
         containerDiv.appendChild(autorTelo);
 
         const autorTeloVnutreo = document.createElement('div');
@@ -547,20 +549,25 @@
     }
 
     function votePollOption(){
-        var post_id = posts[index].id;
-        $.ajax({
-            url: '/domov/zobrazenie/anketa_hlasuj',
-            method: 'POST',
-            data: { post_id: post_id, poll_option_number: showPostChosoenPollOption, _token: '{{ csrf_token() }}' },
-            success: function (response) {
-                show_poll_option_votes = response.poll_option_votes
-                show_poll_options = response.poll_options;
-                userVotedPoll();
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
+        if(showPostChosoenPollOption > -1){
+            var post_id = posts[index].id;
+            $.ajax({
+                url: '/domov/zobrazenie/anketa_hlasuj',
+                method: 'POST',
+                data: { post_id: post_id, poll_option_number: showPostChosoenPollOption, _token: '{{ csrf_token() }}' },
+                success: function (response) {
+                    show_poll_option_votes = response.poll_option_votes
+                    show_poll_options = response.poll_options;
+                    userVotedPoll();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }else {
+            alert("Je potrebné kliknúť na možnost za ktorú chcete zahlasovať");
+        }
+
     }
 
     function userVotedPoll(){
@@ -1157,8 +1164,29 @@
         });
     }
 
+    //Listener for scrolling on cumputer
     window.addEventListener("wheel", (event) => {
-        //Enable or disable scroll listener if user watch just one post
+        scrollListenerFuntion(event.deltaY > 0);
+    });
+
+    //Listener for scrolling on mobile
+    var startY = null;
+    window.addEventListener('touchstart', function(event) {
+        startY = event.touches[0].clientY;
+    });
+
+    window.addEventListener('touchmove', function(event) {
+        var currentY = event.touches[0].clientY;
+
+        var deltaY = currentY - startY;
+
+        var direction = deltaY < 0;
+
+        scrollListenerFuntion(direction)
+    });
+
+
+    function scrollListenerFuntion(up){
         if(scrollListener){
             //This block fast scrolling
             if (!canScroll) {
@@ -1166,32 +1194,25 @@
             }
             canScroll = false;
 
-            if (event.deltaY > 0) {
+            if (up) {
                 if(posts.length - 1 > index ){
                     index++;
                     updateLoadPostsAnimation(true);
-                    //updatePost(index);
                 }
                 if(posts.length - 2 === index ){
                     loadAnotherPosts();
                 }
-
-
-            } else if (event.deltaY < 0) {
+            } else{
                 if(0 < index){
                     index--;
                     updateLoadPostsAnimation(false);
-                    //updatePost(index);
                 }
             }
-
-            // Set a timeout to re-enable scrolling after a delay (e.g., 1000 milliseconds)
             setTimeout(() => {
                 canScroll = true;
             }, 450);
         }
-    });
-
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         buttonBack.style.display = "none";

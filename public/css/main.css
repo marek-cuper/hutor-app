@@ -526,7 +526,8 @@ html, body {
     text-align: center;
 }
 .domov_zobrazenie_telo .domov_oznacenia_a_regiony {
-
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
 }
 
 .domov_zobrazenie_telo .domov_oznacenia {
@@ -572,11 +573,14 @@ html, body {
 
 .domov_zobrazenie_telo_hlasovanie_kontajner{
     display: flex;
+    height: 35px;
+    width: 45px;
     border-radius: 5px;
     border:2px solid lightgray;
-    padding-right: 5%;
-    padding-top: 2%;
-    padding-bottom: 2%;
+    margin-right: 1%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .domov_zobrazenie_telo_hlasovanie_kontajner i{
@@ -601,7 +605,7 @@ html, body {
 
 .domov_zobrazenie_komentare_pridaj_kontajner{
     width: 100%;
-    margin-top: 2%;
+    margin-top: 2.5%;
     margin-bottom: 5%;
 }
 

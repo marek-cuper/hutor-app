@@ -99,19 +99,17 @@ class AuthController extends Controller
     }
 
     public function registraciaPost(Request $request){
-
-
         $rules = [
-            'name' => 'required|string|min:5|alpha_num',
-            'email' => 'required|email',
+            'name' => 'required|string|min:5|alpha_num|unique:users',
+            'email' => 'required|email|unique:users',
             'password1' => 'required|string|min:8|alpha_num',
             'password2' => 'same:password1',
         ];
 
         // Define custom error messages
         $messages = [
-            'name' => 'Meno nesplna poziadavky aspon 5 znakov pozostavajucich z cisiel a pismen.',
-            'email' => 'Email ma neplatny format.',
+            'name' => 'Meno nie je unikátne alebo nespĺnňa požiadavky aspoň 5 znakov pozostavajucich z čisiel a pismen.',
+            'email' => 'Email nie je unikátny alebo má neplatny format.',
             'password1' => 'Heslo nesplna poziadavky aspon 8 znakov pozostavajucich z cisiel a pismen.',
             'password2' => 'Opakovane heslo sa nezhoduje s heslom.',
         ];

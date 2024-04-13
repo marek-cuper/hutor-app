@@ -290,6 +290,12 @@ class PostController extends Controller
             'tags' => 'nullable',
         ]);
 
+        //Controll if poll have at least 2 options
+        $pollText = $request->input('poll_text');
+        $poll_question = null;
+        if(sizeof($pollText) > 1){
+            $poll_question = $request->input('poll_question');
+        }
 
         $post = new Post([
             'up_votes' => 0,
@@ -299,7 +305,7 @@ class PostController extends Controller
             'creator_id' => Auth::user()->id,
             'title' => $request->input('title'),
             'text' => $request->input('text'),
-            'poll_text' => $request->input('poll_question'),
+            'poll_text' => $poll_question,
         ]);
 
         $post->save();
@@ -322,9 +328,9 @@ class PostController extends Controller
         }
 
         $checkboxPoll = $request->input('poll_question');
-        if(isset($checkboxPoll)){
+        //Controll if checkbox is on, poll have at least 2 options and poll question is set
+        if(isset($checkboxPoll) && sizeof($pollText) > 1 && $poll_question != null){
             $checkboxPollImg = $request->input('checkBoxPollImage');
-            $pollText = $request->input('poll_text');
             $pollImages = $request->input('poll_images');
             if (!isset($checkboxPollImg)){
                 for ($i = 0; $i < sizeof($pollImages); $i++) {
