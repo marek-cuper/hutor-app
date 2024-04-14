@@ -93,6 +93,7 @@ class PostController extends Controller
         }
 
         return response()->json([
+            'post' => $post,
             'show_post_creator' => $post_creator,
             'show_posts_images' => $show_posts_images,
             'poll_options' => $poll_options,
@@ -126,6 +127,13 @@ class PostController extends Controller
                 }
                 $post_vote->up_vote = $input_up_vote;
                 $post_vote->save();
+            }else{
+                if ($input_up_vote == 1){
+                    $post->up_votes -= 1;
+                }else{
+                    $post->down_votes -= 1;
+                }
+                $post_vote->delete();
             }
         }else{
             $user_post_vote_to_save = new User_post_vote([
@@ -217,23 +225,29 @@ class PostController extends Controller
 
         $input_comment_id = $request->input('comment_id');
         $input_comment_vote = $request->input('up_vote');
-        $user_comment = Post_comment::where('id', $input_comment_id)->first();
+
+        $post_comment = Post_comment::where('id', $input_comment_id)->first();
+
         $user_comment_vote = User_comment_vote::where('comment_id', $input_comment_id)->where('user_id', Auth::user()->id)->first();
-
-
         if($user_comment_vote){
             if($input_comment_vote != $user_comment_vote->up_vote){
                 if ($input_comment_vote == 1){
-                    $user_comment->up_votes += 1;
-                    $user_comment->down_votes -= 1;
+                    $post_comment->up_votes += 1;
+                    $post_comment->down_votes -= 1;
                 }else{
-                    $user_comment->down_votes += 1;
-                    $user_comment->up_votes -= 1;
+                    $post_comment->down_votes += 1;
+                    $post_comment->up_votes -= 1;
                 }
-                $user_comment->save();
                 $user_comment_vote->up_vote = $input_comment_vote;
                 $user_comment_vote->save();
-            }
+            }else{
+                if ($input_comment_vote == 1){
+                    $post_comment->up_votes -= 1;
+                }else{
+                    $post_comment->down_votes -= 1;
+                }
+                $user_comment_vote->delete();
+        }
         }else{
             $vote = new User_comment_vote([
                 'comment_id' => $input_comment_id,
@@ -243,26 +257,28 @@ class PostController extends Controller
             $vote->save();
 
             if ($input_comment_vote){
-                $user_comment->up_votes += 1;
+                $post_comment->up_votes += 1;
             }else{
-                $user_comment->down_votes += 1;
+                $post_comment->down_votes += 1;
             }
-            $user_comment->save();
-
-        }
-        if ($input_comment_vote){
-            $comment_vote_result = '+';
-        }else{
-            $comment_vote_result = '-';
         }
 
-        $user_comment = Post_comment::where('id', $input_comment_id)->first();
-        $post_comment_up_votes = $user_comment->up_votes;
-        $post_comment_down_votes = $user_comment->down_votes;
+        $post_comment_up_votes = $post_comment->up_votes;
+        $post_comment_down_votes = $post_comment->down_votes;
+        $comment_vote_status = '';
 
+        $user_comment_vote = User_comment_vote::where('user_id', Auth::user()->id)->where('comment_id', $input_comment_id)->first();
+        if($user_comment_vote){
+            if($user_comment_vote->up_vote == 1){
+                $comment_vote_status = '+';
+            }else{
+                $comment_vote_status = '-';
+            }
+        }
+        $post_comment->save();
 
         return response()->json([
-            'comment_vote_result' => $comment_vote_result,
+            'comment_vote_result' => $comment_vote_status,
             'comment_up_votes' => $post_comment_up_votes,
             'comment_down_votes' => $post_comment_down_votes,
         ]);

@@ -91,6 +91,7 @@
             method: 'POST',
             data: { post_id: post_id, _token: '{{ csrf_token() }}' },
             success: function (response) {
+                posts[index] = response.post;
                 show_post_creator = response.show_post_creator;
                 show_posts_images = response.show_posts_images;
 
@@ -970,7 +971,7 @@
             success: function (response) {
 
                 show_comments[position].up_votes = response.comment_up_votes;
-                show_comments[position].down_votes  =response.comment_down_votes;
+                show_comments[position].down_votes  = response.comment_down_votes;
                 setVoteComment(comment_id, response.comment_vote_result);
                 //show_post_vote_status = response.post_vote_status;
 
