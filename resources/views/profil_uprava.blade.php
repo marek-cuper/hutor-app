@@ -130,36 +130,32 @@
     });
 
     $('#profil_obrazok_vstup').on('input', function(event) {
-        event.preventDefault(); // Prevent the default button click behavior
+        event.preventDefault();
 
         if (profileImageInput.value.trim() !== '') {
-            var imageData = $('#profil_obrazok_vstup')[0].files[0]; // Get the selected image file
+            var imageData = $('#profil_obrazok_vstup')[0].files[0];
 
-            var formData = new FormData(); // Create FormData object
-            formData.append('image', imageData); // Append the image file to FormData
+            var formData = new FormData();
+            formData.append('image', imageData);
 
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            // Set the CSRF token in the request headers
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
                 }
             });
 
-            // Make AJAX request
             $.ajax({
-                url: '/profil_uprava/pridaj_obrazok', // Replace with your server endpoint
+                url: '/profil_uprava/pridaj_obrazok',
                 method: 'POST',
                 data: formData,
-                contentType: false, // Important: set contentType to false
-                processData: false, // Important: set processData to false
+                contentType: false,
+                processData: false,
                 success: function(response) {
-                    // Handle success response
                     profileImageImg.src = '/storage/' + response.imageName;
                     hiddenImageNameInput.value = response.imageName;
                 },
                 error: function(error) {
-                    // Handle error
                     alert('Error');
                 }
             });
@@ -176,7 +172,7 @@
 
         if(nameChars.test(input) && input.length >= 5){
             $.ajax({
-                url: '/profil_uprava/overenie_meno', // Replace with your server endpoint
+                url: '/profil_uprava/overenie_meno',
                 method: 'POST',
                 data: { name: input, _token: '{{ csrf_token() }}' },
                 success: function (response) {
@@ -205,7 +201,7 @@
 
         if(emailRegex.test(input)){
             $.ajax({
-                url: '/profil_uprava/overenie_email', // Replace with your server endpoint
+                url: '/profil_uprava/overenie_email',
                 method: 'POST',
                 data: { email: input, _token: '{{ csrf_token() }}' },
                 success: function (response) {
@@ -284,7 +280,6 @@
     });
 
     oldPasswordInput.addEventListener('keydown', function(event) {
-        // Check if Enter key is pressed
         if (event.key === 'Enter') {
             const myForm = document.getElementById('profil_uprava_profil_text_formular');
             myForm.submit();

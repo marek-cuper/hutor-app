@@ -114,7 +114,6 @@
     });
 
     function openChat(){
-        //After click to post disable scrolling
         var user_id = another_user.id;
 
         $.ajax({
@@ -132,7 +131,6 @@
     }
 
     function addMod(){
-        //After click to post disable scrolling
         var user_id = another_user.id;
 
         $.ajax({
@@ -151,7 +149,6 @@
     function deleteUser(){
         var result = window.confirm("Ste si isty zmazanim pouzivatela?");
 
-        // Check the result of the confirmation
         if (result) {
             var user_id = another_user.id;
 

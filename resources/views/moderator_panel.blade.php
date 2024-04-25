@@ -36,7 +36,6 @@
                 createModerator(i);
             }
         }
-
     });
 
     function createModerator($index){
@@ -90,7 +89,6 @@
                 }
             });
         }
-
 
     }
 </script>

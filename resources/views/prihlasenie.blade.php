@@ -72,7 +72,6 @@
     });
 
     passwordInput.addEventListener('keydown', function(event) {
-        // Check if Enter key is pressed
         if (event.key === 'Enter') {
             const myForm = document.getElementById('prihlasenie_straka_formular');
             myForm.submit();

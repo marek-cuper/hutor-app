@@ -15,8 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use function Sodium\add;
+
 
 class PostController extends Controller
 {
@@ -150,7 +149,6 @@ class PostController extends Controller
             }
         }
 
-
         $post_up_votes = $post->up_votes;
         $post_down_votes = $post->down_votes;
         $post_openned = $post->openned;
@@ -175,11 +173,6 @@ class PostController extends Controller
         ]);
     }
 
-    public function domov_prispevokGet($id_post){
-        $post = Post::find($id_post);
-        return view('domov_prispevky')->with('post', $post);
-    }
-
     public function pridaj_prispevokGet(){
         $tags = Tag::all();
         return view('pridaj_prispevok')->with('tags', $tags);
@@ -201,7 +194,6 @@ class PostController extends Controller
                 $order = 0;
             }
             $upper_comment_id = $request->input('upper_comment_id');
-
         }
 
         $post_comment = new Post_comment([
@@ -329,7 +321,6 @@ class PostController extends Controller
         if ($request->hasFile('images.*')) {
 
             $order = 0;
-            //$imagePath = $request->file('image')->store('images/posts', 'public');
             foreach ($request->file('images') as $image_input) {
                 // Save or handle each image as needed
                 $imageName = $image_input->store('images/posts', 'public');
@@ -366,7 +357,6 @@ class PostController extends Controller
             }
         }
 
-
         $tags = $request->input('tags');
         $post->tags()->attach($tags);
 
@@ -395,14 +385,12 @@ class PostController extends Controller
                 array_splice($big_container_posts_id_sorted, $index, 0, $post->id);
             }
         }
-
     }
 
     function index_to_insert($sortedArray, $number) {
         $left = 0;
         $right = count($sortedArray) - 1;
 
-        // Handle the case when the array is empty
         if (count($sortedArray) === 0) {
             return 0;
         }
@@ -581,6 +569,4 @@ class PostController extends Controller
             'posts_regions' => $posts_regions,
         ]);
     }
-
-
 }

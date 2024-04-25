@@ -132,24 +132,20 @@
         showContainer.appendChild(containerDiv);
 
 
-// Create the nadpis (title) div
         const nadpisDiv = document.createElement('div');
         nadpisDiv.className = 'domov_nadpis_prispevok';
         const nadpisParagraph = document.createElement('p');
         nadpisParagraph.id = 'nadpis' + post.id;
         nadpisParagraph.textContent = post.title;
         nadpisDiv.appendChild(nadpisParagraph);
-
         containerDiv.appendChild(nadpisDiv);
 
-// Create the popis (description) div
         const popisDiv = document.createElement('div');
         popisDiv.className = 'domov_popis_prispevok';
         const textParagraph = document.createElement('p');
         textParagraph.id = 'text' + post.id;
         textParagraph.textContent = post.text;
         popisDiv.appendChild(textParagraph);
-
         containerDiv.appendChild(popisDiv);
 
 
@@ -179,7 +175,6 @@
             moveImageContainer('+');
         });
 
-// Create the obrazok (image) div
         const obrazkyDiv = document.createElement('div');
         obrazkyDiv.id = 'domov_obrazok_prispevok' + post.id;
         obrazkyDiv.className = 'domov_obrazok_prispevok';
@@ -215,8 +210,6 @@
 
             const anketaOtazkaDiv = document.createElement('label');
             anketaOtazkaDiv.textContent = post.poll_text;
-
-            // Append the main container to the document body or any other desired parent element
             anketaKontajner.appendChild(anketaOtazkaDiv);
 
             for (let i = 0; i < show_poll_options.length; i++) {
@@ -249,7 +242,6 @@
 
                 const anketaMoznostTextCislo = document.createElement('p');
                 anketaMoznostTextCislo.className = 'domov_zobrazenie_anketa_moznost_text_cislo'
-                //anketaMoznostTextCislo.textContent = '70' + '%';
 
                 const anketaMoznostTextPozadie = document.createElement('div');
                 anketaMoznostTextPozadie.className = 'domov_zobrazenie_anketa_moznost_text_pozadie'
@@ -291,7 +283,7 @@
         oznaceniaRegionyDiv.id = 'domov_oznacenia_a_regiony' + post.id;
         oznaceniaRegionyDiv.className = 'domov_oznacenia_a_regiony';
 
-        // Create the oznacenia (tags) div
+
         if(posts_tags[postIndex].length > 0){
             const oznaceniaDiv = document.createElement('div');
             oznaceniaDiv.id = 'domov_oznacenia' + post.id;
@@ -318,7 +310,7 @@
             oznaceniaRegionyDiv.appendChild(oznaceniaDiv);
         }
 
-        // Create the regiony (regions) div
+
         if(posts_regions[postIndex].length > 0){
             const regionyDiv = document.createElement('div');
             regionyDiv.id = 'domov_regiony' + post.id;
@@ -654,8 +646,6 @@
     }
 
     function createComment(profile_id, profile_image, profile_name, comment_id, comment_text, comment_up_votes, comment_down_votes, vote_status){
-        let position = fromCommentIDPosition(comment_id)
-
         const komentar = document.createElement('div');
         komentar.className = 'domov_zobrazenie_komentare_komentar';
         showPostCommentsDiv.appendChild(komentar);
@@ -719,7 +709,6 @@
         });
 
         const komentarTeloHlasyProtiKontajner  = document.createElement('div');
-        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
         komentarTeloHlasyProtiKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
         komentarStred.appendChild(komentarTeloHlasyProtiKontajner);
 
@@ -746,8 +735,6 @@
             komentarTeloPridajKomentarKontajner.style.display = 'none';
             const komentarePridajKontjaner = document.createElement('div');
             komentarePridajKontjaner.className = 'domov_zobrazenie_komentare_pridaj_kontajner';
-            //komentarePridajKontjaner.style.width = "80%";
-            //komentarePridajKontjaner.style.marginRight = "auto";
             komentarSpodok.appendChild(komentarePridajKontjaner);
             komentarSpodok.style.height = "35px";
 
@@ -830,7 +817,6 @@
         komentarTelo.appendChild(komentarTeloText);
 
         const komentarTeloHlasyZaKontajner  = document.createElement('div');
-        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
         komentarTeloHlasyZaKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_za_kontajner';
         komentarStred.appendChild(komentarTeloHlasyZaKontajner);
 
@@ -845,7 +831,6 @@
         });
 
         const komentarTeloHlasyProtiKontajner  = document.createElement('div');
-        //showPostStats[showPostStats.length] = hlasovanieTeloHlasyZaKontajner;
         komentarTeloHlasyProtiKontajner.className = 'domov_zobrazenie_komentare_hlasovanie_proti_kontajner';
         komentarStred.appendChild(komentarTeloHlasyProtiKontajner);
 
@@ -873,7 +858,6 @@
                 deleteComment(komentar, comment_id);
             });
         }
-
     }
 
     function sendComment(inputText, comment_id){
@@ -973,7 +957,6 @@
                 show_comments[position].up_votes = response.comment_up_votes;
                 show_comments[position].down_votes  = response.comment_down_votes;
                 setVoteComment(comment_id, response.comment_vote_result);
-                //show_post_vote_status = response.post_vote_status;
 
             },
             error: function (error) {
@@ -1008,7 +991,6 @@
     function deleteComment(div, comment_id){
         var result = window.confirm("Ste si isty zmazanim komentaru?");
 
-        // Check the result of the confirmation
         if (result) {
             let position = fromCommentIDPosition(comment_id);
             $.ajax({
@@ -1127,7 +1109,6 @@
 
     function animate() {
 
-        // Apply positions
         if (loadedPosts[0] !== null) {
             loadedPosts[0].style.top = top0 + '%';
         }
@@ -1225,11 +1206,9 @@
             }
         }
 
-
         loadedPosts[0] = null;
         loadedPosts[1] = null;
         loadedPosts[2] = null;
-
 
         if (index > 0){
             createPost(0);
@@ -1238,13 +1217,10 @@
         if (index < posts.length - 1){
             createPost(2);
         }
-
-
     });
 
     function deletePost(post_id){
         var result = window.confirm("Ste si isty zmazanim prispevku?");
-        // Check the result of the confirmation
         if (result) {
             $.ajax({
                 url: '/domov/vymaz_prispevok',
@@ -1275,7 +1251,6 @@
             setDataShowPost();
         });
 
-// Create the nadpis (title) div
         const nadpisDiv = document.createElement('div');
         nadpisDiv.className = 'domov_nadpis_prispevok';
         const nadpisParagraph = document.createElement('p');
@@ -1283,7 +1258,6 @@
         nadpisParagraph.textContent = post.title;
         nadpisDiv.appendChild(nadpisParagraph);
 
-// Create the popis (description) div
         const popisDiv = document.createElement('div');
         popisDiv.className = 'domov_popis_prispevok';
         const textParagraph = document.createElement('p');
@@ -1294,7 +1268,6 @@
         fadeoutDiv.className = 'fadeout';
         popisDiv.appendChild(fadeoutDiv);
 
-// Create the obrazok (image) div
         const obrazokDiv = document.createElement('div');
         obrazokDiv.id = 'domov_obrazok_prispevok' + post.id;
         obrazokDiv.className = 'domov_obrazok_prispevok';
@@ -1307,10 +1280,8 @@
             obrazokImage.src = '/storage/' + posts_images[postIndex];
         }
         obrazokImage.alt = '';
-
         obrazokDiv.appendChild(obrazokImage);
 
-// Create the prieskum (chart) div
         const prieskumDiv = document.createElement('div');
         prieskumDiv.id = 'domov_prispevok_prieskum' + post.id;
         prieskumDiv.className = 'domov_prispevok_prieskum';
@@ -1345,7 +1316,7 @@
         oznaceniaRegionyDiv.id = 'domov_oznacenia_a_regiony' + post.id;
         oznaceniaRegionyDiv.className = 'domov_oznacenia_a_regiony';
 
-        // Create the oznacenia (tags) div
+
         if(posts_tags[postIndex].length > 0){
             const oznaceniaDiv = document.createElement('div');
             oznaceniaDiv.id = 'domov_oznacenia' + post.id;
@@ -1374,7 +1345,7 @@
             oznaceniaRegionyDiv.appendChild(oznaceniaDiv);
         }
 
-        // Create the regiony (regions) div
+
         if(posts_regions[postIndex].length > 0){
             const regionyDiv = document.createElement('div');
             regionyDiv.id = 'domov_regiony' + post.id;
@@ -1404,7 +1375,7 @@
         }
         containerDiv.appendChild(oznaceniaRegionyDiv);
 
-// Append the main container to the document body or any other desired parent element
+
         homeContainer.appendChild(containerDiv);
 
         loadedPosts[positionInLoadedPosts] = containerDiv;

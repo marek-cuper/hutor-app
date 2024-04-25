@@ -100,9 +100,7 @@ html, body {
 
 }
 
-
 /* Navbad a footbar */
-
 #navbar{
     position:fixed;
     display: flex;
@@ -327,7 +325,6 @@ html, body {
     flex-direction: row;
     width: 100%;
     height: 25px;
-    /*height: 50%;*/
     margin-top: auto;
     overflow-x: auto;
 }
@@ -456,10 +453,7 @@ html, body {
 .domov_zobrazenie_anketa_moznost_kontajner {
     display: flex;
     width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0.5%;
-    margin-bottom: 0.5%;
+    margin: 0.5% auto;
     border-radius: 5px;
     border:2px solid lightgray;
 }
@@ -645,9 +639,6 @@ html, body {
     display: flex;
     width: 100%;
 }
-domov_zobrazenie_komentare_komentar_komentare{
-
-}
 
 .domov_zobrazenie_komentare_komentar_obrazok{
     display: flex;
@@ -708,8 +699,6 @@ domov_zobrazenie_komentare_komentar_komentare{
     margin-bottom: auto;
 }
 
-
-
 /* Stranka s preferenciami */
 .preferencie_stranka{
     display: inline;
@@ -729,7 +718,7 @@ domov_zobrazenie_komentare_komentar_komentare{
     margin-top: 2%;
 }
 
-/* Container for the switch */
+/* Kontajner pre switch */
 .switch {
     margin-top: auto;
     margin-bottom: auto;
@@ -740,12 +729,10 @@ domov_zobrazenie_komentare_komentar_komentare{
     transform: scale(0.9);
 }
 
-/* Hide the default HTML checkbox */
 .switch input {
     display: none;
 }
 
-/* Create the slider (the "ball" part) */
 .slider {
     position: absolute;
     top: 0;
@@ -757,7 +744,7 @@ domov_zobrazenie_komentare_komentar_komentare{
     border-radius: 24px;
 }
 
-/* Create the circle inside the slider */
+/* Kruhovy slider */
 .slider:before {
     position: absolute;
     content: "";
@@ -770,7 +757,6 @@ domov_zobrazenie_komentare_komentar_komentare{
     border-radius: 50%;
 }
 
-/* Update background and position when the switch is "checked" */
 input:checked + .slider {
     background-color: #FF9908;
 }
@@ -846,7 +832,6 @@ input:checked + .slider:before {
     border-radius: 5px;
     border:2px solid lightgray;
     width: 90%;
-    /*height: 80%;*/
     overflow-y: auto;
     margin-left: auto;
     margin-right: auto;
@@ -866,7 +851,6 @@ input:checked + .slider:before {
     width: 100%;
     margin-top: 3%;
     margin-bottom: 2%;
-
 }
 
 .preferencia_oznacenie_ikony{
@@ -1017,7 +1001,6 @@ input:checked + .slider:before {
 
 .pridaj_prispevok_anketa_moznosti{
     width: 100%;
-
 }
 
 .pridaj_prispevok_anketa_moznost{
@@ -1036,7 +1019,6 @@ input:checked + .slider:before {
 .pridaj_prispevok_anketa_moznost i{
     margin: auto 1.5% auto auto;
 }
-
 
 #pridaj_prispevok_vybrate_oznacenia, #pridaj_prispevok_vybrate_regiony{
     width: 100%;
@@ -1087,10 +1069,7 @@ input:checked + .slider:before {
 
 .profil_uprava_odozva{
     width: 75%;
-    margin-top: 10%;
-    margin-bottom: 5%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 10% auto 5%;
     padding-top: 5%;
     padding-bottom: 5%;
     justify-content: center;
@@ -1110,11 +1089,8 @@ input:checked + .slider:before {
 }
 
 .profil_uprava_kontajner{
-    /* display: grid;
-    grid-template-rows: auto; */
     height: 100%;
     width: 100%;
-
 }
 
 .profil_uprava_kontajner_cast{
@@ -1128,8 +1104,8 @@ input:checked + .slider:before {
 
 .profil_uprava_profil_obrazok{
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    justify-content: center;
+    align-items: center;
     background-color: white;
     border-radius: 5px;
     border:2px solid lightgray;
@@ -1153,7 +1129,7 @@ input:checked + .slider:before {
     margin: auto;
 }
 .profil_uprava_obrazok_formular > * {
-    margin-bottom: 10px; /* Adjust spacing as needed */
+    margin-bottom: 10px;
 }
 
 .profil_uprava_profil_text_formular{
@@ -1218,10 +1194,7 @@ input:checked + .slider:before {
     align-items: center;
     height: 70px;
     width: 90%;
-    margin-left: auto;
-    margin-right: 5%;
-    margin-top: 1%;
-    margin-bottom: 1%;
+    margin: 1% 5% 1% auto;
 }
 
 .profil_kontajner_panel .domov_zobrazenie_komentare_pridaj_kontajner{
@@ -1253,20 +1226,12 @@ input:checked + .slider:before {
     flex-direction: column;
 }
 .profil_kontajner_statistiky_okno label{
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: 5%;
+    margin: auto auto 5%;
 }
 
 .profil_kontajner_statistiky_okno h3{
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 0;
-    margin-bottom: auto;
+    margin: 0 auto auto;
 }
-
-
 
 /* Spravy */
 .spravy_kontajner_konverzacie{
@@ -1341,10 +1306,7 @@ input:checked + .slider:before {
 .spravy_zobrazena_konverzacia_telo_profil{
     display: flex;
     width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin: 2% auto;
 }
 .spravy_zobrazena_konverzacia_telo_profil a{
     margin-right: 5%;
@@ -1488,9 +1450,6 @@ input:checked + .slider:before {
         margin-left: 0;
         transform: scale(0.9);
     }
-    navbar-menu{
-
-    }
     .navbar-icon{
         margin-right: 7%;
 
@@ -1537,9 +1496,6 @@ input:checked + .slider:before {
     #navbar-logo{
         margin-left: 0;
         transform: scale(0.8);
-    }
-    navbar-menu{
-
     }
     .navbar-icon{
         margin-right: 4%;
@@ -1615,9 +1571,6 @@ input:checked + .slider:before {
     #navbar #navbar-search-duo{
         transform: scale(0.9);
     }
-    navbar-menu{
-
-    }
     .navbar-icon{
         margin-right: 1.5%;
         transform: scale(0.75);
@@ -1673,4 +1626,3 @@ input:checked + .slider:before {
         width: 90%;
     }
 }
-

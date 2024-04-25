@@ -167,19 +167,18 @@
         });
     });
 
-    //If your layer is update to visible lower layer will automaticly go visible too, so we need there update automaticly lower layer to change his visibility depends on checkbox
 
     function changePollOptionImage(){
         var images = pollOptionsDiv.querySelectorAll("img");
         if (checkboxPollImg.checked) {
             pollAddedOptionWithImage.style.display = 'flex';
             images.forEach(function(image) {
-                image.style.display = 'flex'; // Set the new src attribute here
+                image.style.display = 'flex';
             });
         }else{
             pollAddedOptionWithImage.style.display = 'none';
             images.forEach(function(image) {
-                image.style.display = 'none'; // Set the new src attribute here
+                image.style.display = 'none';
             });
         }
         hiddenInputPollOptions.style.display = 'none';
@@ -224,8 +223,6 @@
             pollOptionTextInput.value = '';
             pollOptionImageInput.value = '';
         }
-
-
     });
 
 
@@ -257,8 +254,8 @@
         const polloptionI = document.createElement('i');
         polloptionI.className = 'fa fa-times fa-2x';
 
+        //delete option on click
         polloptionI.addEventListener('click', function() {
-            // Remove the polloptionDiv when the delete icon is clicked
             pollOptionsDiv.removeChild(polloptionDiv);
             hiddenInputPollOptions.removeChild(hiddenpollOptionText);
             hiddenInputPollOptions.removeChild(hiddenpollOptionImg);
@@ -289,70 +286,52 @@
     function pridajOznacenie() {
 
         if(selectedTags.childElementCount < 5){
-            // Get the select element
             var selectElement = document.getElementById("pridaj_prispevok_select_oznacenia");
-
-            // Get the selected option
             var selectedOption = selectElement.options[selectElement.selectedIndex];
 
-            // Create a new div element
             var newTag = document.createElement("div");
             var newHiddenInput = document.createElement("input");
 
-            // Set the text content of the new div to the selected option's text
             newTag.className = 'pridaj_prispevok_vybrate_oznacenie';
             newTag.textContent = selectedOption.text;
             newHiddenInput.value = selectedOption.value;
             newHiddenInput.name = 'tags[]';
             newHiddenInput.type = 'number';
 
-
-            // Append the new div to the output div
             selectedTags.appendChild(newTag);
             hiddenInputsDivTags.append(newHiddenInput);
 
             newTag.addEventListener("click", function() {
-                // Show the corresponding option
                 selectedOption.style.display = "block";
 
                 hiddenInputsDivTags.removeChild(newHiddenInput);
-                // Remove the created div
                 selectedTags.removeChild(newTag);
             });
         }
-
     }
 
     function pridajRegion() {
 
         if(selectedRegions.childElementCount < 4){
 
-
-            // Get the selected option
             var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
 
-            // Create a new div element
             var newReg = document.createElement("div");
             var newHiddenInput = document.createElement("input");
 
-            // Set the text content of the new div to the selected option's text
             newReg.className = 'pridaj_prispevok_vybraty_region';
             newReg.textContent = selectedOption.text;
             newHiddenInput.value = selectedOption.value;
             newHiddenInput.name = 'regions[]';
             newHiddenInput.type = 'number';
 
-
-            // Append the new div to the output div
             selectedRegions.appendChild(newReg);
             hiddenInputsDivRegions.append(newHiddenInput);
 
             newReg.addEventListener("click", function() {
-                // Show the corresponding option
                 selectedOption.style.display = "block";
 
                 hiddenInputsDivRegions.removeChild(newHiddenInput);
-                // Remove the created div
                 selectedRegions.removeChild(newReg);
             });
         }
@@ -360,25 +339,18 @@
 
     function hideSelectedOptionTags() {
         if(selectedTags.childElementCount < 5){
-            // Get the selected option
             var selectedOption = selectDivTags.options[selectDivTags.selectedIndex];
-
-            // Hide the selected option
             selectedOption.style.display = "none";
         }
     }
 
     function hideSelectedOptionRegions() {
         if(selectedRegions.childElementCount < 4){
-            // Get the selected option
             var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
-
-            // Hide the selected option
             selectedOption.style.display = "none";
         }
     }
 
-    // Attach the createDiv function to the change event of the select element
     document.getElementById("pridaj_prispevok_select_oznacenia").addEventListener("change", pridajOznacenie);
     document.getElementById("pridaj_prispevok_select_regiony").addEventListener("change", pridajRegion);
 

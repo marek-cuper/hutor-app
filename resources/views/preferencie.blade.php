@@ -133,7 +133,6 @@
 
 
     mapSwitch.addEventListener('change', function () {
-        // Check the current state of the switch
         if (mapSwitch.checked) {
             tagPage.style.display = "none";
             regionPage.style.display = "block";
@@ -178,7 +177,6 @@
 
     //choosedOption -1 blokovat, 0 neutral, 1 je preferuje
     function createTag(tagId, tagName, choosedOption){
-        // Create div elements
         const preferenciaOznacenieTelo = document.createElement("div");
         preferenciaOznacenieTelo.classList.add("preferencia_oznacenie_telo");
         preferenciaOznacenieTelo.id = 'pref' + tagId;
@@ -235,7 +233,6 @@
 
         chooseTagStatus(zakazIkona, zakazFontAwesome, neutralIkona, neutralFontAwesome, oblubenaIkona, oblubenaFontAwesome, choosedOption)
 
-        // Append elements to the DOM
         prefSwitchsContainer.appendChild(preferenciaOznacenieTelo);
         preferenciaOznacenieTelo.appendChild(sportParagraph);
         preferenciaOznacenieTelo.appendChild(preferenciaOznacenieIkony);
@@ -269,9 +266,6 @@
         }
     }
 
-
-
-
     function setHiddenInput(fatherDiv, value){
         const inputElement = fatherDiv.querySelector('input');
         inputElement.value = value;
@@ -289,23 +283,16 @@
 
         if(selectedRegions.childElementCount < 5){
 
-
-            // Get the selected option
             var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
-
-            // Create a new div element
             var newReg = document.createElement("div");
             var newHiddenInput = document.createElement("input");
 
-            // Set the text content of the new div to the selected option's text
             newReg.className = 'pridaj_prispevok_vybrate_oznacenie';
             newReg.textContent = selectedOption.text;
             newHiddenInput.value = selectedOption.value;
             newHiddenInput.name = 'user_regions[]';
             newHiddenInput.type = 'number';
 
-
-            // Append the new div to the output div
             selectedRegions.appendChild(newReg);
             hiddenInputsDivRegions.append(newHiddenInput);
 
@@ -313,12 +300,10 @@
             let mapReg = document.getElementById(idRegion);
             mapReg.style.display = 'block';
 
+            //delete selected
             newReg.addEventListener("click", function() {
-                // Show the corresponding option
                 selectedOption.style.display = "block";
-
                 hiddenInputsDivRegions.removeChild(newHiddenInput);
-                // Remove the created div
                 selectedRegions.removeChild(newReg);
                 mapReg.style.display = 'none';
             });
@@ -326,20 +311,15 @@
         }
     }
 
-
+    //hide option in selector
     function hideSelectedOption() {
-        // Get the select element
         if(selectedRegions.childElementCount < 5){
-
-            // Get the selected option
             var selectedOption = selectDivRegions.options[selectDivRegions.selectedIndex];
-
-            // Hide the selected option
             selectedOption.style.display = "none";
         }
     }
 
-    // Attach the createDiv function to the change event of the select element
+    //on change selector choose that region
     document.getElementById("select_regiony").addEventListener("change", pridajRegion);
 </script>
 </body>

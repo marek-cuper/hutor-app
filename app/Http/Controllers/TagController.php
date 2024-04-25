@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User_region;
 use App\Models\User_tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use function Sodium\add;
 
 class TagController extends Controller
 {
@@ -102,5 +100,4 @@ class TagController extends Controller
 
         return view('/preferencie');
     }
-
 }

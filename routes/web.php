@@ -4,20 +4,6 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-
-
 #CONVERSATION
 Route::get('/spravy', [\App\Http\Controllers\ConversationController::class, 'spravyGet'])->name('spravy');
 Route::get('/spravy/konverzacie', [\App\Http\Controllers\ConversationController::class, 'spravyKonverzacieGet'])->name('spravy_konverzacie');
@@ -27,7 +13,6 @@ Route::post('/spravy/konverzacia_id', [\App\Http\Controllers\ConversationControl
 Route::post('/spravy/konverzacia/posli_spravu', [\App\Http\Controllers\ConversationController::class, 'posli_spravuPost'])->name('posli_spravu.post');
 Route::post('/neprecitane', [\App\Http\Controllers\ConversationController::class, 'neprecitane_spravyPost'])->name('neprecitane.post');
 
-
 #TAG
 Route::get('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieGet'])->name('preferencie');
 Route::post('/preferencie', [\App\Http\Controllers\TagController::class, 'pouzivatelPreferencieSet'])->name('preferencie.post');
@@ -35,9 +20,6 @@ Route::post('/preferencie/regiony', [\App\Http\Controllers\TagController::class,
 
 #POST
 Route::get('/domov', [\App\Http\Controllers\PostController::class, 'domovGet'])->name('domov');
-Route::get('/domov/prispevok/dalsi', [\App\Http\Controllers\PostController::class, 'domov_prispevok_dalsiGet'])->name('domov_dalsi');
-Route::get('/domov/prispevok/predosli', [\App\Http\Controllers\PostController::class, 'domov_prispevok_predosliGet'])->name('domov_predosli');
-Route::get('/domov/prispevok/{id_post}', [\App\Http\Controllers\PostController::class, 'domov_prispevokGet'])->name('domov_prispevok');
 Route::post('/domov/zobrazenie', [\App\Http\Controllers\PostController::class, 'domov_zobrazeniePost'])->name('domov_zobrazenie');
 Route::post('/domov/zobrazenie/anketa_hlasuj', [\App\Http\Controllers\PollController::class, 'anketa_hlasujPost'])->name('anketa_hlasuj.post');
 Route::post('/domov/zobrazenie/post_hlasuj', [\App\Http\Controllers\PostController::class, 'post_hlasujPost'])->name('post_hlasuj.post');
@@ -46,7 +28,6 @@ Route::post('/domov/zobrazenie/hlasuj_koment', [\App\Http\Controllers\PostContro
 Route::post('/domov/zobrazenie/vymaz_koment', [\App\Http\Controllers\PostController::class, 'post_vymaz_komentPost'])->name('post_vymaz_koment.post');
 Route::post('/domov/nacitaj_prispevky', [\App\Http\Controllers\PostController::class, 'nacitaj_prispevkyPost'])->name('nacitaj_prispevky.post');
 Route::post('/domov/vymaz_prispevok', [\App\Http\Controllers\PostController::class, 'vymaz_prispevokPost'])->name('vymaz_prispevok.post');
-
 
 Route::get('/pridaj_prispevok', [\App\Http\Controllers\PostController::class, 'pridaj_prispevokGet'])->name('pridaj_prispevok');
 Route::post('/pridaj_prispevok', [\App\Http\Controllers\PostController::class, 'pridaj_prispevokPost'])->name('pridaj_prispevok.post');
@@ -73,5 +54,4 @@ Route::post('/pouzivatel/vymaz', [AuthController::class, 'vymaz_pouzivatelaPost'
 Route::get('/moderator/panel', [AuthController::class, 'moderator_panel'])->name('moderator_panel');
 Route::post('/moderator/pridaj', [AuthController::class, 'pridaj_moderatoraPost'])->name('moderator_pridaj.post');
 Route::post('/moderator/odober', [AuthController::class, 'odober_moderatoraPost'])->name('moderator_odober.post');
-
 Route::get('pravidla', [AuthController::class, 'pravidla'])->name('pravidla');

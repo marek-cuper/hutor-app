@@ -78,7 +78,6 @@
                 console.error('Error:', error);
             }
         });
-
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -153,7 +152,6 @@
         konverzacia.appendChild(komentarVrch);
 
         const konverzaciaObrazokDiv = document.createElement('a');
-        //konverzaciaObrazokDiv.href = '/profil/' + profile_id;
         konverzaciaObrazokDiv.className = 'domov_zobrazenie_komentare_komentar_obrazok';
         komentarVrch.appendChild(konverzaciaObrazokDiv);
         const konverzaciaObrazokImg = document.createElement('img');
@@ -195,9 +193,8 @@
     }
 
     inputTextMessage.addEventListener('keydown', function(event) {
-        // Check if Enter key is pressed
         if (event.key === 'Enter') {
-            sendMessage(); // Call sendMessage function
+            sendMessage();
         }
     });
 
@@ -233,7 +230,6 @@
                 }
             });
         }
-
     }
 
 </script>

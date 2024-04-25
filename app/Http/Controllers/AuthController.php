@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Conversation_message;
 use App\Models\Post;
 use App\Models\Post_comment;
-use App\Models\Post_image;
-use App\Models\Post_region;
-use App\Models\Post_tag;
 use App\Models\Region;
 use App\Models\Tag;
 use App\Models\User;
@@ -16,16 +13,11 @@ use App\Models\User_moderator;
 use App\Models\User_post_vote;
 use App\Models\User_region;
 use App\Models\User_tag;
-use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use App\Http\Controllers\PostController;
-use function Sodium\add;
 
 class AuthController extends Controller
 {
@@ -90,7 +82,6 @@ class AuthController extends Controller
 
 
         return redirect()->back()->with('error', 'Chyba. Nespravne prihlasovacie udaje.');
-
     }
 
 
@@ -106,7 +97,6 @@ class AuthController extends Controller
             'password2' => 'same:password1',
         ];
 
-        // Define custom error messages
         $messages = [
             'name' => 'Meno nie je unikátne alebo nespĺnňa požiadavky aspoň 5 znakov pozostavajucich z čisiel a pismen.',
             'email' => 'Email nie je unikátny alebo má neplatny format.',
@@ -172,22 +162,18 @@ class AuthController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed
         ]);
 
-        // Store the uploaded image
         if ($request->hasFile('image')) {
             $imageName = $request->file('image')->store('images/profiles', 'public');
-
-            // Return the image name or any other response
             return response()->json(['imageName' => $imageName], 200);
         }
 
-        // Handle the case if no image is uploaded
         return response()->json(['error' => 'No image uploaded'], 400);
 
     }
 
     function uloz_obrazokPost(Request $request){
         $request->validate([
-            'profile_image_name' => 'required|string' // Adjust the validation rules as needed
+            'profile_image_name' => 'required|string'
         ]);
 
         $user = Auth::user();
@@ -203,14 +189,11 @@ class AuthController extends Controller
         $unique = false;
         $text = '';
 
-        // Define the validation rules
         $rules = [
             'name' => ['required', 'string', 'min:5', 'alpha_num'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
-
-        // Check if validation fails
         if ($validator->fails()) {
             $text = 'Meno neobsahuje len pismena a cisla alebo neobsahuje aspon 5 znakov';
         }else{
@@ -232,14 +215,12 @@ class AuthController extends Controller
         $unique = false;
         $text = '';
 
-        // Define the validation rules
         $rules = [
             'email' => ['required', 'email'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        // Check if validation fails
         if ($validator->fails()) {
             $text = 'Zadany email nema format emailu.';
         }else{

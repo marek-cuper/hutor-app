@@ -37,7 +37,6 @@
         }else {
             findTextH4.textContent = "Vyhladávaný text sa nepodarilo vyhladať... ";
         }
-
     });
 
     function createUser($index){
